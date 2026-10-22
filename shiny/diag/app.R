@@ -322,7 +322,6 @@ server <- function(input, output, session) {
       pal <- colorFactor(palette = RColorBrewer::brewer.pal(min(length(atividades_ativas), 8), "Set2"),
                          domain = atividades_ativas)
       leaflet(df_mapa) %>%
-        addProviderTiles("CartoDB.Positron") %>%
         addPolygons(
           fillColor = ~pal(atividade),
           weight = 1, color = "white", fillOpacity = 0.7,
@@ -332,7 +331,6 @@ server <- function(input, output, session) {
     } else {
       pal <- colorNumeric("YlGnBu", domain = df_mapa$QL, na.color = "transparent")
       leaflet(df_mapa) %>%
-        addProviderTiles("CartoDB.Positron") %>%
         addPolygons(
           fillColor = ~pal(QL),
           weight = 1, color = "white", fillOpacity = 0.7,
@@ -394,7 +392,6 @@ server <- function(input, output, session) {
     ) %>% lapply(htmltools::HTML)
     
     leaflet(df_mapa) %>%
-      addProviderTiles("CartoDB.Positron") %>%
       addPolygons(
         fillColor = ~pal(valores),
         weight = 1,

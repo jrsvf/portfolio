@@ -173,7 +173,7 @@ dom <- locais_cadeia %>% filter(ano == ult, emprego >= par$indicadores$emprego_m
   left_join(cad$meta %>% select(cadeia_id, cadeia), by = c("atividade" = "cadeia_id"))
 m <- malha %>% left_join(dom, by = "id_municipio")
 pal <- leaflet::colorFactor(PALETA$categorias, domain = m$cadeia, na.color = "#F2F3F4")
-leaflet(m) %>% addProviderTiles("CartoDB.Positron") %>%
+leaflet(m) %>%
   addPolygons(fillColor = ~pal(cadeia), weight = 0.6, color = "white", fillOpacity = 0.85,
               label = ~lapply(sprintf("<strong>%s</strong><br/>%s<br/>QL %s", name_muni, coalesce(cadeia, "sem cadeia acompanhada"),
                                       fmt_num(ql, 2)), htmltools::HTML)) %>%

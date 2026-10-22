@@ -30,3 +30,6 @@ ul.lacunas li { margin-bottom: 6px; }
 
 .quarto-grid-item .card-title { font-weight: 700; color: #1F4E79; }
 .quarto-grid-item { border-radius: 10px; }
+
+// mapas sem camada de fundo: só os municípios sobre branco
+.leaflet-container { background: #ffffff; }

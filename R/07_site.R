@@ -190,7 +190,6 @@ mapa_municipios <- function(malha, dados, valor, rotulo_valor, municipios, forma
   rot <- sprintf("<strong>%s</strong><br/>%s: %s", m$name_muni, rotulo_valor,
                  ifelse(is.na(v), "sem vínculo formal", formato(v))) %>% lapply(htmltools::HTML)
   leaflet::leaflet(m, options = leaflet::leafletOptions(zoomSnap = 0.25)) %>%
-    leaflet::addProviderTiles("CartoDB.Positron") %>%
     leaflet::addPolygons(fillColor = ~pal(v), weight = 0.6, color = "white", fillOpacity = 0.85,
                          label = rot,
                          highlightOptions = leaflet::highlightOptions(weight = 2, color = "#2C3E50", bringToFront = TRUE)) %>%

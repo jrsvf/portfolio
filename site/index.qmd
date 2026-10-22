@@ -37,7 +37,7 @@ cartoes(list(
 - **[Encadeamentos](encadeamentos.qmd):** estimativa de ligações para trás e para frente dos setores da economia pernambucana, a partir da matriz insumo-produto nacional regionalizada.
 - **[Lacunas de dados](lacunas.qmd):** onde as fontes públicas não alcançam e qual informação resolveria.
 
-Tudo é gerado por um pipeline em R que consulta as fontes oficiais todo mês e reconstrói o site sozinho. O código é aberto e reproduzível.
+Tudo é gerado por um pipeline em R que consulta as fontes oficiais e reconstrói o site a cada atualização. O código é aberto e reproduzível.
 
 ## Cadeias em destaque
 

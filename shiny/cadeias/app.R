@@ -109,7 +109,7 @@ server <- function(input, output, session) {
            else colorBin("Blues", v, bins = unique(signif(quantile(pos, c(0, .2, .4, .6, .8, 1)), 2)), na.color = "#F2F3F4")
     rot <- sprintf("<strong>%s</strong><br/>%s: %s", m$name_muni, names(INDICADORES)[INDICADORES == v_nome],
                    ifelse(is.na(v), "sem dado", fmt(v, ifelse(v_nome %in% c("ql", "pr"), 2, 0)))) %>% lapply(HTML)
-    leaflet(m) %>% addProviderTiles("CartoDB.Positron") %>%
+    leaflet(m) %>%
       addPolygons(layerId = ~id_municipio, fillColor = ~pal(valor), weight = 0.6, color = "white",
                   fillOpacity = 0.85, label = rot,
                   highlightOptions = highlightOptions(weight = 2, color = "#2C3E50", bringToFront = TRUE)) %>%
