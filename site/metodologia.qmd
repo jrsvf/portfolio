@@ -1,0 +1,81 @@
+---
+title: "Metodologia"
+description: "Fontes, definições, indicadores e limitações."
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+carregar("fontes_datas")
+```
+
+## Fontes
+
+| Fonte | O que mede | Recorte | Frequência |
+|---|---|---|---|
+| RAIS (MTE) | Estoque de vínculos formais e estabelecimentos | Município x classe CNAE | Anual |
+| Novo CAGED (MTE) | Admissões, desligamentos e salário de admissão | Município x subclasse CNAE | Mensal, desde 2020 |
+| PAM, PPM e PEVS (IBGE) | Área, rebanho, quantidade e valor da produção | Município x produto | Anual |
+| PIB dos Municípios (IBGE) | Valor adicionado por grande setor | Município | Anual |
+| ComexStat (MDIC) | Exportações e importações | Município (domicílio fiscal) x SH4 x país | Mensal |
+| Matriz insumo-produto (IBGE) | Coeficientes técnicos entre atividades | Brasil | Quinquenal |
+
+As bases da RAIS, CAGED, ComexStat, PIB e população são consultadas no BigQuery pela [Base dos Dados](https://basedosdados.org); as pesquisas agropecuárias pela API do SIDRA.
+
+### Períodos usados nesta atualização
+
+```{r}
+knitr::kable(fontes_datas %>% transmute(Fonte = fonte, `Órgão` = orgao, `Período usado` = cobertura, Acesso = onde, `Consultado em` = consultado_em))
+```
+
+## Comparações no tempo e com o Nordeste
+
+- **Janelas de 5 e 10 anos:** variação entre o último ano disponível de cada fonte e 5 ou 10 anos antes. Remuneração e valor da produção são corrigidos pelo IPCA (média anual) para preços do último ano; exportações ficam em dólares correntes.
+- **Nordeste:** PE é comparado aos outros 8 estados da região. A posição usa o emprego formal da cadeia no último ano da RAIS; o QL frente ao Nordeste divide o peso da cadeia no emprego de PE pelo peso dela no emprego do Nordeste; a comparação de crescimento usa o Nordeste **sem** PE, para não misturar o estado com a referência.
+
+## Cadeias e elos
+
+Cada cadeia é definida por **classes ou subclasses da CNAE 2.0** agrupadas em **elos**, por **posições SH4** do comércio exterior e por **produtos** do IBGE. A subclasse é usada quando a classe mistura cadeias diferentes (por exemplo, a classe 1012-1 junta abate de aves e de suínos). As posições SH4 vêm da lista da cadeia e da correspondência oficial NCM x CNAE do IBGE. Todos os códigos são conferidos contra o diretório CNAE a cada atualização. A configuração completa e aberta está em `config/cadeias.yml`. Quando uma classe CNAE é mais ampla que a cadeia (por exemplo, a apicultura está dentro de "criação de outros animais"), isso é sinalizado na página da cadeia e na página de lacunas.
+
+## Indicadores
+
+Notação: $E_{ij}$ é o emprego formal da atividade $j$ no município $i$; o ponto indica soma.
+
+- **Quociente locacional:** $QL_{ij} = \dfrac{E_{ij}/E_{i\cdot}}{E_{\cdot j}/E_{\cdot\cdot}}$. Acima de 1, o município é relativamente especializado na atividade. Só é considerado quando o município tem ao menos `r par$indicadores$emprego_minimo` vínculos na atividade, para evitar QL alto com poucos vínculos.
+- **Participação relativa:** $PR_{ij} = E_{ij}/E_{\cdot j}$, a fatia do município no emprego estadual da atividade.
+- **Peso local:** $E_{ij}/E_{i\cdot}$, quanto a atividade representa no emprego do município.
+- **IHH modificado** (Suzigan, 2006): $PR_{ij} - E_{i\cdot}/E_{\cdot\cdot}$, positivo quando o município tem na atividade um peso maior do que o seu peso na economia estadual.
+- **Concentração espacial (HHI):** $\sum_i PR_{ij}^2$.
+- **Índice de Krugman:** $\sum_j \left| E_{ij}/E_{i\cdot} - E_{\cdot j}/E_{\cdot\cdot} \right|$, entre 0 (estrutura igual à do estado) e 2.
+- **Shift-share:** decompõe a variação do emprego da cadeia em PE em crescimento nacional, composição e desempenho próprio (diferencial), tendo o Brasil como referência.
+
+## Encadeamentos
+
+A matriz de coeficientes técnicos nacional $A^n$ (68 atividades) é ligada à RAIS pela correspondência oficial do IBGE entre atividades da MIP e a CNAE 2.0 (educação e saúde públicas e privadas somadas) e regionalizada pelo **FLQ** (Flegg e Webber, 1997):
+
+$$a^{r}_{ij} = a^{n}_{ij} \cdot \min\left(1,\ \frac{SLQ_i}{SLQ_j}\cdot\lambda\right), \qquad \lambda = \left[\log_2\left(1 + \frac{E_r}{E_n}\right)\right]^{\delta}$$
+
+com $\delta$ = `r par$mip$flq_delta`. Os índices de ligação de Rasmussen-Hirschman vêm da inversa de Leontief $B=(I-A^r)^{-1}$:
+
+$$BL_j = \frac{\frac{1}{n}\sum_i b_{ij}}{\frac{1}{n^2}\sum_{ij} b_{ij}}, \qquad FL_i = \frac{\frac{1}{n}\sum_j b_{ij}}{\frac{1}{n^2}\sum_{ij} b_{ij}}$$
+
+**Limitações:** a tecnologia é a nacional e o ajuste regional usa apenas emprego formal. Quando houver uma matriz estadual oficial, ela substitui esta estimativa (basta trocar o arquivo de entrada).
+
+## Detecção de lacunas
+
+As regras são simples e públicas (`R/05_lacunas_destaques.R`):
+
+1. **Produção sem emprego formal:** município com ao menos 1% do valor da produção estadual do produto e menos de 5 vínculos no elo primário.
+2. **Exportação sem base produtiva formal:** município com mais de US$ 100 mil exportados nas posições da cadeia e nenhum vínculo nos elos.
+3. **Elo ausente ou invisível:** elo com menos de 50 vínculos no estado.
+4. **Valores omitidos:** células do IBGE marcadas como sigilosas (X) ou não disponíveis (...).
+5. **Classificação ampla:** ressalvas declaradas na configuração da cadeia.
+6. **Defasagem:** diferença entre o ano corrente e o último ano publicado de cada fonte.
+
+## Reprodutibilidade
+
+Todo o site é gerado por um pipeline em R ([targets](https://docs.ropensci.org/targets/)) que roda mensalmente no GitHub Actions: consulta as fontes, recalcula os indicadores, regenera as páginas das cadeias e publica. Cuidados técnicos tratados no código:
+
+- colunas da RAIS armazenadas como texto (`SAFE_CAST`), contagens em `integer64` convertidas;
+- CNAE sempre como texto de 5 dígitos, para não perder zeros à esquerda;
+- conferência automática do esquema das tabelas antes de extrair, com erro explícito se uma coluna mudar de nome.

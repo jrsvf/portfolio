@@ -1,0 +1,82 @@
+name: Atualizar portfólio
+
+# Atualização mensal automática: desligada até o secret GCP_SA_KEY existir.
+# Para ligar, apague o "#" das duas linhas do schedule e, em Settings > Pages,
+# troque a origem para "GitHub Actions". Enquanto isso o site publicado é a
+# pasta docs/ (renderizada localmente com: quarto render site; depois
+# copiar site/_site para docs/).
+on:
+  # schedule:
+  #   - cron: "17 9 5 * *"   # todo dia 5, 06h17 em Brasília
+  workflow_dispatch:          # botão "Run workflow" para rodar na hora
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      GCP_PROJECT: ${{ vars.GCP_PROJECT || 'analises1' }}
+      SHINY_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
+      SHINY_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+      SHINY_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 1
+          needs: website
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Autenticar no Google Cloud (conta de serviço)
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Rodar o pipeline de dados
+        run: Rscript -e 'targets::tar_make()'
+
+      - name: Testes
+        run: Rscript -e 'testthat::test_dir("tests/testthat", stop_on_failure = TRUE)'
+
+      - name: Renderizar o site
+        run: quarto render site
+
+      - name: Publicar painéis no shinyapps.io
+        if: ${{ env.SHINY_TOKEN != '' }}
+        run: |
+          mkdir -p shiny/cadeias/dados
+          cp dados/{cad,municipios,malha,rd,locais_cadeia,locais_elo,atualizado_em}.rds shiny/cadeias/dados/
+          Rscript -e '
+            rsconnect::setAccountInfo(Sys.getenv("SHINY_ACCOUNT"), Sys.getenv("SHINY_TOKEN"), Sys.getenv("SHINY_SECRET"))
+            rsconnect::deployApp("shiny/cadeias", appName = "cadeias", forceUpdate = TRUE, launch.browser = FALSE)
+            rsconnect::deployApp("shiny/diag",    appName = "diag",    forceUpdate = TRUE, launch.browser = FALSE)
+          '
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/_site
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

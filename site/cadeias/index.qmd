@@ -1,0 +1,14 @@
+---
+title: "Cadeias produtivas"
+listing:
+  contents: "*.qmd"
+  type: grid
+  grid-columns: 3
+  categories: true
+  sort: "title"
+  fields: [title, description, categories]
+  image-placeholder: ../imagens/favicon.svg
+toc: false
+---
+
+Cada cadeia é dividida em **elos** (insumos, produção primária, processamento, distribuição), definidos por classes da CNAE 2.0 e ligados às posições do comércio exterior e aos produtos das pesquisas agropecuárias do IBGE. A definição de cada cadeia está em um arquivo de configuração aberto: incluir uma nova cadeia é escrever um bloco de texto.

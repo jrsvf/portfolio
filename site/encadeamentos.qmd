@@ -1,0 +1,65 @@
+---
+title: "Encadeamentos produtivos"
+description: "Ligações para trás e para frente dos setores da economia pernambucana, estimadas a partir da matriz insumo-produto nacional regionalizada."
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+carregar("mip", "mip_cadeia")
+```
+
+::: {.aviso}
+**Leitura com cautela.** Pernambuco não tem matriz insumo-produto oficial. Os números abaixo são uma **estimativa**: partem da matriz nacional do IBGE e ajustam, setor a setor, quanto das compras de insumos tende a ficar dentro do estado, com base no tamanho e na especialização do emprego formal em PE (método FLQ de Flegg). A tecnologia de produção é a média brasileira. Servem para **ordenar e comparar setores**, não como medida exata de fluxos.
+:::
+
+```{r}
+#| results: asis
+if (is.null(mip)) {
+  cat("O módulo de insumo-produto não rodou nesta atualização (arquivo da MIP indisponível). As demais páginas não são afetadas.\n")
+  knitr::knit_exit()
+}
+```
+
+## Como ler
+
+- **Ligação para trás** (maior que 1): o setor compra muito de outros setores. Expandi-lo puxa a demanda da economia.
+- **Ligação para frente** (maior que 1): o setor vende muito para outros setores. É insumo difundido.
+- **Setor-chave**: as duas acima de 1.
+
+## Pernambuco (estimado)
+
+```{r}
+df <- mip$regional %>% filter(presenca == "Relevante") %>% mutate(na_cadeia = classificacao == "Setor-chave")
+grafico_ligacoes(df)
+```
+
+Aparecem só os setores com presença relevante em PE (QL do emprego de pelo menos `r fmt_num(mip$slq_minimo %||% 0.3, 1)`). Setores muito pequenos no estado têm os coeficientes pouco reduzidos pelo método e pareceriam muito encadeados justamente por serem pequenos; eles estão na tabela abaixo, marcados.
+
+<p class="fonte">Em laranja, os setores-chave. Matriz IBGE `r mip$ano_mip`, regionalizada por FLQ (delta = `r mip$delta`, lambda = `r fmt_num(mip$lambda, 3)`). Emprego: RAIS `r par$mip$ano_emprego`.</p>
+
+## Pernambuco e Brasil lado a lado
+
+```{r}
+comp <- mip$regional %>% select(grupo, grupo_nome, bl_pe = bl, fl_pe = fl, slq, presenca, class_pe = classificacao) %>%
+  left_join(mip$nacional %>% select(grupo, bl_br = bl, fl_br = fl, class_br = classificacao), by = "grupo") %>%
+  arrange(presenca != "Relevante", desc(bl_pe))
+tabela(comp %>% transmute(Setor = grupo_nome,
+                          `QL do emprego` = round(slq, 2), `Presença em PE` = presenca,
+                          `Para trás PE` = round(bl_pe, 2), `Para frente PE` = round(fl_pe, 2),
+                          `Classe PE` = class_pe,
+                          `Para trás BR` = round(bl_br, 2), `Para frente BR` = round(fl_br, 2),
+                          `Classe BR` = class_br))
+```
+
+Setores com **QL do emprego abaixo de 1** tendem a ter ligações menores em PE do que no Brasil: parte dos insumos vem de fora do estado (vazamento). É aí que estão as oportunidades de adensamento de cadeia.
+
+## Onde estão as cadeias acompanhadas
+
+```{r}
+if (!is.null(mip_cadeia)) {
+  tabela(mip_cadeia %>% left_join(cad$meta %>% select(cadeia_id, cadeia), by = "cadeia_id") %>%
+           transmute(Cadeia = cadeia, Elo = elo, `Setor da MIP` = grupo_nome,
+                     `Para trás` = round(bl, 2), `Para frente` = round(fl, 2), Classificação = classificacao))
+}
+```

@@ -1,0 +1,26 @@
+---
+title: "Painéis interativos"
+description: "Aplicações em R/Shiny para explorar os dados por conta própria."
+toc: false
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+```
+
+## Explorador de cadeias produtivas
+
+Escolha a cadeia, o elo, o ano e o indicador (emprego, QL, participação, estabelecimentos) e veja o mapa, o ranking e a série histórica de cada município.
+
+[Abrir em tela cheia](https://jrsvf.shinyapps.io/cadeias/){.btn .btn-primary}
+
+<iframe src="https://jrsvf.shinyapps.io/cadeias/" width="100%" height="820" style="border:1px solid #E5E8EB;border-radius:10px;" loading="lazy"></iframe>
+
+## Diagnóstico Setorial de Pernambuco
+
+Especialização dos municípios por atividade, com mapas de QL e participação relativa e ranking por município.
+
+[Abrir em tela cheia](https://jrsvf.shinyapps.io/diag/){.btn .btn-primary}
+
+<iframe src="https://jrsvf.shinyapps.io/diag/" width="100%" height="820" style="border:1px solid #E5E8EB;border-radius:10px;" loading="lazy"></iframe>

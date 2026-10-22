@@ -1,0 +1,279 @@
+---
+title: "{{nome}}"
+description: "{{descricao}}"
+categories: ["{{macrossetor}}"]
+---
+
+```{r}
+#| include: false
+source("../_setup.R")
+CADEIA <- "{{id}}"
+carregar("cad_mun", "locais_cadeia", "locais_elo", "serie_comp", "caged_cad", "comex_cad",
+         "sidra_cad", "perfil_cad", "perfil_estado", "shift_share_cad", "mip", "mip_cadeia",
+         "lacunas", "destaques", "concentracao", "cmp_ne", "janelas_cad", "fontes_datas")
+meta <- cad$meta %>% filter(cadeia_id == CADEIA)
+elos <- cad$elos %>% filter(cadeia_id == CADEIA)
+d    <- cad_mun %>% filter(cadeia_id == CADEIA)
+ult  <- max(d$ano, na.rm = TRUE)
+# gráficos mostram os últimos 10 anos (o histórico completo está nos CSVs)
+ini  <- max(min(d$ano, na.rm = TRUE), ult - max(CORTES_PADRAO$janelas))
+d    <- d %>% filter(ano >= ini)
+tot  <- d %>% group_by(ano) %>% summarise(emprego = sum(emprego), estab = sum(estabelecimentos), .groups = "drop")
+pf   <- perfil_cad %>% filter(cadeia_id == CADEIA, ano == ult)
+cx   <- comex_cad %>% filter(cadeia_id == CADEIA)
+cx   <- cx %>% filter(ano >= max(c(ano, 0)) - max(CORTES_PADRAO$janelas))
+sc   <- sidra_cad %>% filter(cadeia_id == CADEIA)
+sc   <- sc %>% filter(ano >= max(c(ano, 0)) - max(CORTES_PADRAO$janelas))
+cg   <- caged_cad %>% filter(cadeia_id == CADEIA)
+```
+
+```{r}
+e_ult <- tot$emprego[tot$ano == ult]; e_ini <- tot$emprego[tot$ano == ini]
+itens <- list(
+  list(rotulo = paste("Empregos formais em", ult), valor = fmt_num(e_ult)),
+  list(rotulo = paste0("Variação em ", ult - ini, " anos (", ini, "-", ult, ")"), valor = sinal_pct(div0(e_ult, e_ini) - 1)),
+  list(rotulo = "Estabelecimentos com vínculo", valor = fmt_num(tot$estab[tot$ano == ult])),
+  list(rotulo = "Municípios com emprego formal",
+       valor = fmt_num(n_distinct(d$id_municipio[d$ano == ult & d$emprego > 0])))
+)
+if (nrow(pf) == 1) itens <- c(itens, list(list(rotulo = "Remuneração média", valor = paste0("R$ ", fmt_num(pf$remuneracao_media)),
+                                             nota = paste0(fmt_pct(pf$pct_mulheres), " mulheres · ", fmt_pct(pf$pct_superior), " com nível superior"))))
+if (nrow(cx) > 0) {
+  ucx <- max(cx$ano)
+  itens <- c(itens, list(list(rotulo = paste("Exportações em", ucx),
+                              valor = fmt_usd(sum(cx$valor_fob[cx$ano == ucx & cx$fluxo == "Exportação"])))))
+}
+cartoes(itens)
+```
+
+## O que os dados já mostram
+
+```{r}
+lista_html(destaques[[CADEIA]])
+```
+
+## Comparação no tempo
+
+```{r}
+tabela_janelas(janelas_cad %>% filter(cadeia_id == CADEIA))
+```
+
+<p class="fonte">Cortes de `r paste(CORTES_PADRAO$janelas, collapse = ", ")` anos e desde `r CORTES_PADRAO$desde`, contados a partir do último ano disponível de cada fonte. Valores em reais corrigidos pelo IPCA para preços do último ano; exportações em dólares correntes e só anos completos.</p>
+
+## Evolução do emprego formal por elo
+
+```{r}
+serie_elo <- d %>% group_by(ano, elo_ordem, elo) %>% summarise(emprego = sum(emprego), .groups = "drop") %>%
+  arrange(elo_ordem) %>% mutate(elo = factor(elo, levels = unique(elo)))
+grafico_area_empilhada(serie_elo, "ano", "emprego", "elo", "Vínculos ativos em 31/12")
+rodape_fonte(paste0("RAIS ", ini, "-", ult))
+```
+
+Códigos CNAE considerados em cada elo (classe ou subclasse):
+
+```{r}
+elos %>% arrange(elo_ordem) %>% group_by(elo_ordem, Elo = elo) %>%
+  summarise(`Códigos CNAE 2.0` = paste(fmt_cnae(codigo), collapse = ", "), .groups = "drop") %>%
+  select(-elo_ordem) %>% knitr::kable()
+```
+
+## Onde a cadeia está
+
+::: {.panel-tabset}
+
+### Especialização (QL)
+
+```{r}
+lc <- locais_cadeia %>% filter(atividade == CADEIA, ano == ult, emprego > 0)
+mapa_municipios(malha, lc %>% mutate(ql = ifelse(emprego >= par$indicadores$emprego_minimo, ql, NA)),
+                "ql", "QL", municipios, quebras = c(0, 0.5, 1, 2, 5, Inf), paleta = "YlGnBu")
+rodape_fonte(paste0("RAIS ", ult, ". Municípios com menos de ", par$indicadores$emprego_minimo, " vínculos ficam sem cor"))
+```
+
+### Emprego
+
+```{r}
+mapa_municipios(malha, lc, "emprego", "Vínculos", municipios, formato = function(x) fmt_num(x), paleta = "Blues")
+```
+
+### Ranking
+
+```{r}
+lc %>% arrange(desc(emprego)) %>%
+  transmute(Município = nome_mun(id_municipio), Vínculos = emprego, Estabelecimentos = estabelecimentos,
+            QL = round(ql, 2), `% do estado` = round(100 * pr, 1),
+            `Peso no município (%)` = round(100 * pl, 2)) %>%
+  tabela()
+```
+
+:::
+
+```{r}
+cc <- concentracao %>% filter(atividade == CADEIA) %>% arrange(ano)
+```
+
+Concentração espacial (HHI): `r fmt_num(cc$hhi[cc$ano == ini], 3)` em `r ini` e `r fmt_num(cc$hhi[cc$ano == ult], 3)` em `r ult`. Municípios especializados (QL ≥ `r par$indicadores$ql_minimo` e ao menos `r par$indicadores$emprego_minimo` vínculos): `r cc$n_especializados[cc$ano == ult]`.
+
+## Pernambuco frente ao Nordeste e ao Brasil
+
+```{r}
+rn <- cmp_ne$resumo %>% filter(cadeia_id == CADEIA)
+if (nrow(rn) == 1 && rn$emp_pe > 0) cartoes(list(
+  list(rotulo = "Posição de PE no Nordeste", valor = paste0(rn$posicao, "º de ", rn$n_estados),
+       nota = if (rn$posicao > 1) paste("Líder:", NOMES_UF[[rn$lider]] %||% rn$lider) else "PE lidera a região"),
+  list(rotulo = "Participação no emprego da cadeia no Nordeste", valor = fmt_pct(rn$part_ne)),
+  list(rotulo = "Especialização frente ao Nordeste (QL)", valor = fmt_num(rn$ql_ne, 2),
+       nota = "acima de 1: a cadeia pesa mais em PE que na região"),
+  list(rotulo = "Especialização frente ao Brasil (QL)", valor = fmt_num(rn$ql_br, 2))
+))
+```
+
+::: {.panel-tabset}
+
+### Estados do Nordeste
+
+```{r}
+pu <- cmp_ne$por_uf %>% filter(cadeia_id == CADEIA, ano == max(cmp_ne$por_uf$ano)) %>%
+  mutate(estado = unlist(NOMES_UF[sigla_uf]))
+grafico_barras_destaque(pu, "estado", "emprego", destaque = "Pernambuco", titulo_x = paste("Vínculos formais em", max(pu$ano)))
+```
+
+### Índice (`r ini` = 100)
+
+```{r}
+s <- serie_comp %>% filter(cadeia_id == CADEIA, ano >= ini) %>%
+  group_by(recorte) %>% arrange(ano, .by_group = TRUE) %>%
+  mutate(indice = 100 * div0(emprego, first(emprego))) %>% ungroup()
+grafico_linhas(s, "ano", "indice", "recorte", "Índice", formato = ",.1f")
+```
+
+### Participação de PE no Brasil
+
+```{r}
+grafico_linhas(s %>% filter(recorte == "Pernambuco") %>% mutate(part = 100 * part_brasil),
+               "ano", "part", titulo_y = "% do emprego formal da cadeia no Brasil", formato = ",.2f")
+```
+
+### Decomposição (shift-share)
+
+```{r}
+ss <- shift_share_cad %>% filter(atividade == CADEIA)
+if (nrow(ss) == 1) {
+  comp <- tibble::tibble(
+    componente = c("Crescimento nacional", "Composição da cadeia", "Desempenho próprio de PE"),
+    valor = c(ss$ef_nacional, ss$ef_estrutural, ss$ef_diferencial))
+  grafico_barras_h(comp, "componente", "valor", paste0("Vínculos, ", ss$ano_ini, "-", ss$ano_fim))
+}
+```
+
+Variação total de `r if (nrow(ss)==1) fmt_num(ss$variacao) else "-"` vínculos. O componente **desempenho próprio** mostra quanto PE cresceu acima (ou abaixo) do que cresceria se acompanhasse a mesma cadeia no Brasil.
+
+:::
+
+## Dinâmica recente (Novo CAGED)
+
+```{r}
+if (nrow(cg) > 0) {
+  grafico_saldo_caged(cg)
+} else htmltools::p("Sem movimentação registrada no Novo CAGED para as classes da cadeia.")
+```
+
+```{r}
+if (nrow(cg) > 0) rodape_fonte(paste0("Novo CAGED, até ", format(max(cg$data), "%m/%Y")))
+```
+
+## Produção física (IBGE)
+
+```{r}
+if (nrow(sc) > 0) {
+  vp <- sc %>% filter(str_detect(variavel, regex("^Valor da produção|^Quantidade produzida|^Efetivo|^Produção", ignore_case = TRUE)))
+  var_principal <- names(sort(table(vp$variavel), decreasing = TRUE))[1]
+  serie_p <- vp %>% filter(variavel == var_principal) %>% group_by(ano, produto) %>%
+    summarise(valor = sum(valor, na.rm = TRUE), .groups = "drop")
+  htmltools::tagList(
+    htmltools::h4(paste0(var_principal, " (", vp$unidade[vp$variavel == var_principal][1], ")")),
+    grafico_linhas(serie_p, "ano", "valor", "produto", NULL)
+  )
+} else htmltools::p("Esta cadeia não tem produto acompanhado pelas pesquisas agropecuárias do IBGE.")
+```
+
+```{r}
+if (nrow(sc) > 0) {
+  u <- max(sc$ano)
+  top <- sc %>% filter(ano == u, str_detect(variavel, regex("^Valor da produção", ignore_case = TRUE))) %>%
+    group_by(id_municipio) %>% summarise(valor = sum(valor, na.rm = TRUE), .groups = "drop") %>%
+    filter(valor > 0) %>% arrange(desc(valor)) %>% head(15) %>% mutate(municipio = nome_mun(id_municipio))
+  if (nrow(top) > 0) htmltools::tagList(
+    htmltools::h4(paste("Maiores produtores em", u, "(valor da produção, mil R$)")),
+    grafico_barras_h(top, "municipio", "valor"),
+    rodape_fonte(paste("IBGE, tabelas", paste(unique(sc$tabela), collapse = ", "))))
+}
+```
+
+## Comércio exterior
+
+```{r}
+if (nrow(cx) > 0) {
+  sx <- cx %>% group_by(ano, fluxo) %>% summarise(valor = sum(valor_fob) / 1e6, .groups = "drop")
+  ucx <- max(cx$ano)
+  dest <- cx %>% filter(ano == ucx, fluxo == "Exportação") %>% group_by(sigla, pais) %>%
+    summarise(valor = sum(valor_fob) / 1e6, .groups = "drop") %>% arrange(desc(valor)) %>% head(10)
+  htmltools::tagList(
+    grafico_linhas(sx, "ano", "valor", "fluxo", "US$ milhões FOB", formato = ",.1f"),
+    if (nrow(dest) > 0) htmltools::tagList(htmltools::h4(paste("Principais destinos em", ucx, "(US$ milhões)")),
+                                           grafico_barras_h(dest, "sigla", "valor", cor = PALETA$destaque, formato = ",.2f", hover = dest$pais)),
+    rodape_fonte("ComexStat (MDIC), por município de domicílio fiscal da empresa"))
+} else htmltools::p("A cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat).")
+```
+
+## Encadeamentos com o resto da economia
+
+```{r}
+mc <- if (!is.null(mip_cadeia)) mip_cadeia %>% filter(cadeia_id == CADEIA) else NULL
+if (is.null(mc) || nrow(mc) == 0) {
+  htmltools::div(class = "aviso", "Módulo de insumo-produto indisponível nesta atualização.")
+} else {
+  df <- mip$regional %>% filter(presenca == "Relevante") %>% mutate(na_cadeia = grupo %in% mc$grupo)
+  htmltools::tagList(
+    grafico_ligacoes(df),
+    htmltools::HTML(knitr::kable(mc %>% distinct(Elo = elo, `Setor da MIP` = grupo_nome,
+                                 `Para trás` = round(bl, 2), `Para frente` = round(fl, 2),
+                                 Classificação = classificacao, `QL do emprego` = round(slq, 2)), format = "html",
+                                 format.args = list(decimal.mark = ","),
+                                 table.attr = "class='table table-sm'")),
+    htmltools::div(class = "aviso", paste0(
+      "Estimativa: matriz insumo-produto nacional (IBGE, ", mip$ano_mip, ") regionalizada para Pernambuco pelo método FLQ (delta = ",
+      mip$delta, "). Em laranja, os setores onde estão os elos desta cadeia. Setores com QL do emprego abaixo de ",
+      fmt_num(mip$slq_minimo %||% 0.3, 1), " têm presença pequena em PE e ficam fora do gráfico. Veja a página Encadeamentos.")))
+}
+```
+
+## O que os dados públicos não mostram
+
+```{r}
+lc_cad <- lacunas %>% filter(cadeia_id == CADEIA)
+if (nrow(lc_cad) > 0) {
+  # uma linha por tipo de lacuna; municípios listados juntos
+  itens <- lapply(split(lc_cad, lc_cad$tipo), function(x) {
+    corpo <- if (all(is.na(x$municipio))) {
+      paste(unique(x$detalhe), collapse = " ")
+    } else {
+      muns <- x$municipio[!is.na(x$municipio)]
+      paste0(length(muns), " município(s): ", paste(head(muns, 12), collapse = ", "),
+             if (length(muns) > 12) paste0(" e mais ", length(muns) - 12) else "",
+             ". Exemplo: ", x$detalhe[1])
+    }
+    htmltools::tags$li(htmltools::strong(x$tipo[1]), ": ", corpo, htmltools::tags$br(),
+                       htmltools::em("O que faltaria: ", x$falta[1]))
+  })
+  htmltools::tags$ul(class = "lacunas", itens)
+} else htmltools::p("Nenhuma lacuna específica detectada automaticamente. Veja as lacunas gerais.")
+```
+
+## Dados usados nesta página
+
+```{r}
+tabela_fontes(fontes_datas)
+```
+
+<p class="fonte">Consultado em `r fontes_datas$consultado_em[1]`. Dados para download na página [Lacunas de dados](../lacunas.qmd#dados-abertos).</p>

@@ -1,0 +1,199 @@
+---
+title: "Panorama de Pernambuco"
+description: "Emprego formal, estrutura produtiva, especialização municipal e comércio exterior em séries longas."
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+carregar("serie_uf", "rais_secao", "krugman", "pib_pop", "comex_pe", "locais_cadeia", "janelas_uf", "cmp_ne", "fontes_datas")
+ult <- max(rais_secao$ano); ini <- max(min(rais_secao$ano), ult - max(CORTES_PADRAO$janelas))
+su <- serie_uf %>% arrange(ano) %>% filter(ano >= ini)
+rais_secao <- rais_secao %>% filter(ano >= ini)
+```
+
+```{r}
+p_ult <- pib_pop %>% filter(!is.na(pib)) %>% filter(ano == max(ano))
+cx_ult <- max(comex_pe$ano)
+cartoes(list(
+  list(rotulo = paste("Empregos formais em", ult), valor = fmt_num(su$pe[su$ano == ult])),
+  list(rotulo = "Participação no emprego formal do Brasil", valor = fmt_pct(su$part[su$ano == ult], 2),
+       nota = paste0(fmt_pct(su$part[su$ano == ini], 2), " em ", ini)),
+  list(rotulo = paste("PIB em", max(p_ult$ano)), valor = paste0("R$ ", fmt_num(sum(p_ult$pib) / 1e9, 1), " bi")),
+  list(rotulo = paste("Exportações em", cx_ult),
+       valor = fmt_usd(sum(comex_pe$valor_fob[comex_pe$ano == cx_ult & comex_pe$fluxo == "Exportação"])))
+))
+```
+
+## Emprego formal
+
+::: {.panel-tabset}
+
+### Estoque
+
+```{r}
+grafico_linhas(su, "ano", "pe", titulo_y = "Vínculos ativos em 31/12")
+```
+
+### Participação no Brasil
+
+```{r}
+grafico_linhas(su %>% mutate(p = 100 * part), "ano", "p", titulo_y = "% do Brasil", formato = ",.2f")
+```
+
+### Por grande setor
+
+```{r}
+sec <- rais_secao %>% group_by(ano, descricao_secao) %>% summarise(emprego = sum(emprego), .groups = "drop")
+top_sec <- sec %>% filter(ano == ult) %>% slice_max(emprego, n = 7) %>% pull(descricao_secao)
+sec <- sec %>% mutate(descricao_secao = ifelse(descricao_secao %in% top_sec, str_to_sentence(descricao_secao), "Demais seções")) %>%
+  group_by(ano, descricao_secao) %>% summarise(emprego = sum(emprego), .groups = "drop")
+grafico_area_empilhada(sec, "ano", "emprego", "descricao_secao", "Vínculos")
+```
+
+:::
+
+```{r}
+rodape_fonte(paste0("RAIS ", ini, "-", ult))
+```
+
+## Pernambuco no Nordeste
+
+```{r}
+ju <- janelas_uf %>% mutate(estado = unlist(NOMES_UF[sigla_uf]), var = 100 * var_pct)
+ne <- ju %>% group_by(rotulo, ordem) %>% summarise(v = sum(v_fim) / sum(v_ini) - 1, .groups = "drop")
+pe <- ju %>% filter(sigla_uf == "PE") %>% left_join(ne, by = c("rotulo", "ordem")) %>% arrange(ordem)
+pos <- ju %>% group_by(rotulo) %>% mutate(pos = rank(-var_pct), n = n()) %>% filter(sigla_uf == "PE")
+cartoes(lapply(seq_len(nrow(pe)), function(i) list(
+  rotulo = paste0("Emprego formal em PE, ", sub(" \\(desde.*", "", tolower(pe$rotulo[i])), " (", pe$ano_ini[i], "-", pe$ano_fim[i], ")"),
+  valor = sinal_pct(pe$var_pct[i]),
+  nota = paste0("Nordeste: ", sinal_pct(pe$v[i]), " · PE é o ", pos$pos[pos$rotulo == pe$rotulo[i]], "º de ",
+                pos$n[pos$rotulo == pe$rotulo[i]], " no crescimento"))))
+```
+
+::: {.panel-tabset}
+
+```{r}
+#| output: asis
+# uma aba por corte (10, 5, 2 anos e "desde 2023" quando não coincide com 2 anos)
+for (r in ju %>% distinct(ordem, rotulo) %>% arrange(ordem) %>% pull(rotulo)) {
+  x <- ju %>% filter(rotulo == r)
+  cat("\n\n### ", r, "\n\n", sep = "")
+  print(htmltools::tagList(grafico_barras_destaque(x, "estado", "var", destaque = "Pernambuco",
+    titulo_x = paste0("Variação do emprego formal, ", x$ano_ini[1], "-", x$ano_fim[1], " (%)"), formato = ",.1f")))
+  cat("\n\n")
+}
+```
+
+### Cadeias: PE na região
+
+```{r}
+jn <- cmp_ne$janelas %>% filter(ordem == 1) %>% select(cadeia_id, var_pe, var_ne_sem_pe)
+tabela(cmp_ne$resumo %>% left_join(jn, by = "cadeia_id") %>%
+         left_join(cad$meta %>% select(cadeia_id, cadeia), by = "cadeia_id") %>%
+         arrange(posicao, desc(ql_ne)) %>%
+         transmute(Cadeia = cadeia, `Posição no NE` = posicao, `Líder` = unlist(NOMES_UF[lider]),
+                   `% do emprego do NE` = round(100 * part_ne, 1), `QL frente ao NE` = round(ql_ne, 2),
+                   `Var. PE 10 anos (%)` = round(100 * var_pe, 1), `Var. resto do NE 10 anos (%)` = round(100 * var_ne_sem_pe, 1)))
+```
+
+:::
+
+<p class="fonte">QL frente ao Nordeste: peso da cadeia no emprego formal de PE dividido pelo peso dela no emprego formal do Nordeste. Fonte: RAIS. Elaboração própria.</p>
+
+## Concentração territorial
+
+```{r}
+emp_mun <- rais_secao %>% filter(ano == ult) %>% group_by(id_municipio) %>% summarise(e = sum(emprego), .groups = "drop") %>%
+  arrange(desc(e))
+carregar("rd")
+por_rd <- emp_mun %>% left_join(rd, by = "id_municipio") %>% filter(!is.na(rd)) %>%
+  group_by(rd) %>% summarise(e = sum(e), .groups = "drop") %>% arrange(desc(e))
+```
+
+Recife responde por **`r fmt_pct(emp_mun$e[emp_mun$id_municipio == "2611606"] / sum(emp_mun$e))`** do emprego formal do estado e os 10 maiores municípios concentram **`r fmt_pct(sum(head(emp_mun$e, 10)) / sum(emp_mun$e))`**.`r if (nrow(por_rd) > 0) paste0(" Por Região de Desenvolvimento, a ", por_rd$rd[1], " reúne ", fmt_pct(por_rd$e[1] / sum(emp_mun$e)), ".") else ""`
+
+::: {.panel-tabset}
+
+### Emprego formal por município
+
+```{r}
+mapa_municipios(malha, emp_mun %>% rename(emprego = e), "emprego", "Vínculos", municipios,
+                formato = function(x) fmt_num(x))
+```
+
+### Emprego formal por mil habitantes
+
+```{r}
+pop <- pib_pop %>% filter(!is.na(populacao)) %>% filter(ano == max(ano)) %>% select(id_municipio, populacao)
+dens <- emp_mun %>% inner_join(pop, by = "id_municipio") %>% mutate(por_mil = 1000 * e / populacao)
+mapa_municipios(malha, dens, "por_mil", "Vínculos por mil hab.", municipios, formato = function(x) fmt_num(x))
+```
+
+### PIB per capita
+
+```{r}
+pibpc <- pib_pop %>% filter(!is.na(pib), !is.na(populacao)) %>% filter(ano == max(ano)) %>%
+  mutate(pibpc = 1000 * pib / populacao / 1000)
+mapa_municipios(malha, pibpc, "pibpc", "PIB per capita (R$ mil)", municipios, formato = function(x) fmt_num(x, 1))
+```
+
+:::
+
+```{r}
+rodape_fonte("RAIS, IBGE (PIB dos Municípios e estimativas de população)")
+```
+
+## Especialização produtiva dos municípios
+
+O **índice de Krugman** compara a estrutura do emprego de cada município com a do estado: 0 significa estrutura igual à média estadual; quanto maior, mais especializado (ou mais dependente de poucas atividades) é o município.
+
+::: {.panel-tabset}
+
+### Mapa (`r ult`)
+
+```{r}
+mapa_municipios(malha, krugman %>% filter(ano == ult), "krugman", "Índice de Krugman", municipios,
+                paleta = "OrRd", formato = function(x) fmt_num(x, 2))
+```
+
+### Mais e menos especializados
+
+```{r}
+k <- krugman %>% filter(ano == ult) %>% inner_join(emp_mun, by = "id_municipio") %>% filter(e >= 500) %>%
+  arrange(desc(krugman)) %>% mutate(municipio = nome_mun(id_municipio))
+tabela(k %>% transmute(Município = municipio, `Índice de Krugman` = round(krugman, 3), Vínculos = e))
+```
+
+### Cadeia dominante
+
+```{r}
+dom <- locais_cadeia %>% filter(ano == ult, emprego >= par$indicadores$emprego_minimo) %>%
+  group_by(id_municipio) %>% slice_max(ql, n = 1, with_ties = FALSE) %>% ungroup() %>%
+  left_join(cad$meta %>% select(cadeia_id, cadeia), by = c("atividade" = "cadeia_id"))
+m <- malha %>% left_join(dom, by = "id_municipio")
+pal <- leaflet::colorFactor(PALETA$categorias, domain = m$cadeia, na.color = "#F2F3F4")
+leaflet(m) %>% addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(fillColor = ~pal(cadeia), weight = 0.6, color = "white", fillOpacity = 0.85,
+              label = ~lapply(sprintf("<strong>%s</strong><br/>%s<br/>QL %s", name_muni, coalesce(cadeia, "sem cadeia acompanhada"),
+                                      fmt_num(ql, 2)), htmltools::HTML)) %>%
+  addLegend("bottomright", pal = pal, values = ~cadeia, title = "Cadeia com maior QL", na.label = "Nenhuma")
+```
+
+:::
+
+## Comércio exterior
+
+```{r}
+cx <- comex_pe %>% group_by(ano, fluxo) %>% summarise(v = sum(valor_fob) / 1e6, .groups = "drop") %>%
+  pivot_wider(names_from = fluxo, values_from = v, values_fill = 0) %>%
+  mutate(Saldo = Exportação - Importação) %>% pivot_longer(-ano, names_to = "fluxo", values_to = "v")
+grafico_linhas(cx, "ano", "v", "fluxo", "US$ milhões FOB", formato = ",.1f")
+rodape_fonte("ComexStat (MDIC)")
+```
+
+## Dados usados nesta página
+
+```{r}
+tabela_fontes(fontes_datas %>% filter(!grepl("insumo|PAM", fonte)), acesso = FALSE)
+```

@@ -1,0 +1,437 @@
+# =============================================================================
+# CADEIAS PRODUTIVAS ACOMPANHADAS PELO PORTFÓLIO
+# =============================================================================
+# Cada cadeia é dividida em ELOS. Cada elo é definido por códigos CNAE 2.0,
+# sem hífen nem barra, em dois níveis possíveis:
+#   classe    5 dígitos  (0155-5    -> "01555")
+#   subclasse 7 dígitos  (0155-5/01 -> "0155501")
+# Use subclasse quando a classe mistura atividades de cadeias diferentes
+# (ex.: 1012-1 junta abate de aves e de suínos). O pipeline confere todos os
+# códigos contra o diretório CNAE da Base dos Dados e para com erro claro se
+# algum não existir.
+#
+# sh4:   posições do Sistema Harmonizado (4 dígitos) usadas no ComexStat.
+#        Além das listadas, o pipeline inclui automaticamente as posições
+#        ligadas às CLASSES (5 dígitos) da cadeia pela correspondência
+#        NCM x CNAE do IBGE (config/sh4_cnae.csv). Para desligar, use
+#        sh4_auto: false na cadeia.
+# sidra: produtos/rebanhos do IBGE. `tabela` é a tabela SIDRA e `padrao` é uma
+#        expressão regular aplicada ao NOME do produto (não ao código), para
+#        não depender de códigos de categoria que mudam entre tabelas.
+#          5457 = PAM (lavouras)            3939 = PPM efetivo dos rebanhos
+#          74   = PPM produção origem animal 3940 = PPM aquicultura
+#          289  = PEVS extração vegetal     291  = PEVS silvicultura
+# nota:  ressalvas conhecidas de cobertura (aparecem na página de lacunas).
+#
+# Para incluir uma cadeia nova basta copiar um bloco, ajustar e rodar o
+# pipeline. A página da cadeia é gerada automaticamente.
+# =============================================================================
+
+cadeias:
+
+  - id: avicultura
+    nome: Avicultura
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Criação de aves de corte e postura, ração, abate e distribuição.
+      Pernambuco tem um dos maiores plantéis de galinhas poedeiras do Nordeste,
+      concentrado no Agreste.
+    elos:
+      - nome: Insumos (ração)
+        cnae: ["10660"]
+      - nome: Produção de frangos e pintos
+        cnae: ["0155501", "0155502", "0155503", "0155504"]
+      - nome: Produção de ovos
+        cnae: ["0155505"]
+      - nome: Abate e processamento
+        cnae: ["1012101"]
+      - nome: Distribuição
+        cnae: ["4634602"]
+    sh4: ["0105", "0207", "0208", "0407", "0408", "1601", "1602"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 3939, padrao: "Galin|Galo|Frango"}
+      - {tabela: 74, padrao: "Ovos de galinha"}
+    nota: >
+      A ração (1066-0) atende também bovinos, suínos e aquicultura; o elo de
+      insumos é, portanto, um teto.
+
+  - id: bovinocultura
+    nome: Bovinocultura de leite e corte
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Rebanho bovino, produção de leite, laticínios, abate e couro. A bacia
+      leiteira do Agreste Meridional é o principal núcleo.
+    elos:
+      - nome: Insumos (ração)
+        cnae: ["10660"]
+      - nome: Pecuária de corte
+        cnae: ["0151201", "0151203"]
+      - nome: Pecuária de leite
+        cnae: ["0151202"]
+      - nome: Laticínios
+        cnae: ["10511", "10520"]
+      - nome: Abate e frigoríficos
+        cnae: ["1011201", "1011205"]
+      - nome: Couro
+        cnae: ["15106"]
+      - nome: Distribuição de carnes
+        cnae: ["4634601"]
+    sh4: ["0102", "0201", "0202", "0401", "0402", "0403", "0404", "0405", "0406", "4101", "4104"]
+    sidra:
+      - {tabela: 3939, padrao: "^Bovino"}
+      - {tabela: 74, padrao: "^Leite"}
+    nota: >
+      Grande parte da produção de leite e do abate ocorre na informalidade e
+      não aparece na RAIS.
+
+  - id: ovinocaprinocultura
+    nome: Ovinocaprinocultura
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Criação de caprinos e ovinos no Sertão, abate e couro. Atividade de
+      grande peso social e baixíssima formalização.
+    elos:
+      - nome: Caprinocultura
+        cnae: ["0153901"]
+      - nome: Ovinocultura
+        cnae: ["0153902"]
+      - nome: Abate
+        cnae: ["1011203"]
+    sh4: ["0104", "0204", "4102", "4105", "4106"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 3939, padrao: "Caprino|Ovino"}
+    nota: >
+      Quase todo o abate de caprinos e ovinos é informal ou feito em
+      matadouros públicos, que não aparecem como abate na RAIS.
+
+  - id: apicultura
+    nome: Apicultura
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Produção de mel e derivados, com destaque para o Sertão do Araripe e o
+      Sertão Central.
+    elos:
+      - nome: Produção primária
+        cnae: ["0159801"]
+      - nome: Beneficiamento
+        cnae: ["1099699"]
+    sh4: ["0409", "1521"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 74, padrao: "^Mel"}
+    nota: >
+      O beneficiamento do mel não tem código próprio: está na subclasse
+      1099-6/99 (outros produtos alimentícios), que é um teto. A produção
+      primária (0159-8/01) é quase toda informal.
+
+  - id: aquicultura
+    nome: Aquicultura e pesca
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Piscicultura (tilápia no Sertão do São Francisco e Itaparica),
+      carcinicultura no litoral e pesca artesanal.
+    elos:
+      - nome: Insumos (ração)
+        cnae: ["10660"]
+      - nome: Cultivo (piscicultura e carcinicultura)
+        cnae: ["03213", "03221"]
+      - nome: Pesca
+        cnae: ["03116", "03124"]
+      - nome: Processamento
+        cnae: ["10201"]
+      - nome: Distribuição de pescado
+        cnae: ["4634603"]
+    sh4: ["0301", "0302", "0303", "0304", "0306", "1604", "1605"]
+    sidra:
+      - {tabela: 3940, padrao: "Tilápia|Camarão|Tambaqui"}
+    nota: >
+      A pesca artesanal é quase toda informal. A PPM só cobre a aquicultura
+      e não há estatística municipal oficial de pesca desde 2011.
+
+  - id: fruticultura
+    nome: Fruticultura irrigada
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Uva, manga e outras frutas do Vale do São Francisco, além de abacaxi,
+      banana e coco no Agreste e na Mata. Principal pauta agroexportadora do
+      estado.
+    elos:
+      - nome: Cultivo
+        cnae: ["01326", "01334", "0119901", "0119907", "0119908"]
+      - nome: Pós-colheita e packing houses
+        cnae: ["01636"]
+      - nome: Processamento (sucos, polpas e vinhos)
+        cnae: ["10317", "10333", "11127"]
+      - nome: Distribuição
+        cnae: ["46338"]
+    sh4: ["0803", "0804", "0806", "0807", "0810", "0811", "2008", "2009", "2204"]
+    sidra:
+      - {tabela: 5457, padrao: "Uva|Manga|Banana|Goiaba|Coco|Acerola|Melão|Melancia|Abacaxi|Maracujá"}
+    nota: >
+      Abacaxi, melão e melancia são lavouras temporárias (subclasses
+      0119-9/01, /07 e /08). A pós-colheita (0163-6) atende outras lavouras
+      além das frutas, mas no Vale do São Francisco é dominada pelos packing
+      houses de manga e uva.
+
+  - id: sucroenergetico
+    nome: Sucroenergético
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Cana-de-açúcar, açúcar e etanol na Zona da Mata. Setor histórico em
+      transformação, com perda de área e emprego desde os anos 2000.
+    elos:
+      - nome: Cultivo
+        cnae: ["01130"]
+      - nome: Açúcar
+        cnae: ["10716", "10724"]
+      - nome: Etanol e biocombustíveis
+        cnae: ["19314", "19322"]
+    sh4: ["1701", "1703", "2207"]
+    sidra:
+      - {tabela: 5457, padrao: "^Cana-de-açúcar"}
+
+  - id: textil_confeccoes
+    nome: Têxtil e confecções
+    macrossetor: Indústria
+    descricao: >
+      Polo de Confecções do Agreste (Caruaru, Toritama, Santa Cruz do
+      Capibaribe), incluindo lavanderias de jeans e comércio atacadista.
+    elos:
+      - nome: Têxtil (tecelagem e artefatos)
+        cnae: ["1321900", "1351100", "1359600"]
+      - nome: Lavanderias e acabamento
+        cnae: ["1340599"]
+      - nome: Confecção e facção
+        cnae: ["1411801", "1411802", "1412601", "1412602", "1413401", "1413403"]
+      - nome: Comércio
+        cnae: ["46427", "47814"]
+    sh4: ["5208", "5209", "5211", "6103", "6104", "6105", "6106", "6109", "6203", "6204", "6205", "6206"]
+    nota: >
+      O polo é majoritariamente informal. Em Toritama e Santa Cruz do
+      Capibaribe o emprego formal capta uma fração pequena da produção.
+
+  - id: gesso
+    nome: Gesso (Polo Gesseiro do Araripe)
+    macrossetor: Indústria
+    descricao: >
+      Mineração de gipsita, calcinação e pré-moldados de gesso no Sertão do
+      Araripe, que concentra a maior parte da produção nacional de gesso.
+    elos:
+      - nome: Mineração de gipsita
+        cnae: ["0810005"]
+      - nome: Calcinação
+        cnae: ["23923"]
+      - nome: Pré-moldados e artefatos
+        cnae: ["2330399"]
+      - nome: Aplicação na construção
+        cnae: ["4330403"]
+    sh4: ["2520", "6809"]
+    sh4_auto: false
+    nota: >
+      A subclasse 0810-0/05 junta gesso e caulim, e a 2330-3/99 junta
+      artefatos de gesso com outros de cimento e concreto. Fora do Araripe,
+      esses elos tendem a refletir outras atividades.
+
+  - id: moveleiro
+    nome: Moveleiro
+    macrossetor: Indústria
+    descricao: >
+      Fabricação de móveis e colchões, com polos em Tacaimbó, João Alfredo e
+      Caruaru.
+    elos:
+      - nome: Madeira
+        cnae: ["16102"]
+      - nome: Fabricação de móveis e colchões
+        cnae: ["31012", "31021", "31039", "31047"]
+      - nome: Varejo
+        cnae: ["4754701"]
+    sh4: ["9401", "9403", "9404"]
+
+  - id: construcao_civil
+    nome: Construção civil
+    macrossetor: Indústria
+    descricao: >
+      Materiais de construção, edificações, obras de infraestrutura e
+      instalações.
+    elos:
+      - nome: Materiais
+        cnae: ["23206", "23303", "23427"]
+      - nome: Edificações
+        cnae: ["41204"]
+      - nome: Infraestrutura
+        cnae: ["42111", "42995"]
+      - nome: Serviços especializados
+        cnae: ["43215", "43304"]
+      - nome: Varejo de materiais
+        cnae: ["47440"]
+    sh4: ["2523", "6810", "6904", "6907"]
+
+  - id: automotivo
+    nome: Automotivo
+    macrossetor: Indústria
+    descricao: >
+      Montadora e fornecedores de autopeças em Goiana e região, além do
+      comércio de veículos e peças.
+    elos:
+      - nome: Montagem de veículos
+        cnae: ["29107", "29204", "29301"]
+      - nome: Autopeças
+        cnae: ["29417", "29425", "29433", "29441", "29450", "29492"]
+      - nome: Comércio de veículos e peças
+        cnae: ["45111", "45307"]
+    sh4: ["8703", "8704", "8708"]
+
+  - id: petroquimica_plasticos
+    nome: Petróleo, química e plásticos
+    macrossetor: Indústria
+    descricao: >
+      Refino, PTA, resina PET, fibras de poliéster e transformação de plásticos no complexo de Suape.
+    elos:
+      - nome: Refino
+        cnae: ["19217"]
+      - nome: Química de base (PTA, resinas, fibras)
+        cnae: ["20291", "20312", "20401"]
+      - nome: Transformação de plásticos
+        cnae: ["22218", "22226", "22293"]
+    sh4: ["2710", "2917", "3907", "3920", "3923"]
+
+  - id: ti_software
+    nome: Tecnologia da informação
+    macrossetor: Serviços
+    descricao: >
+      Desenvolvimento de software e serviços de TI, com núcleo no Porto
+      Digital (Recife).
+    elos:
+      - nome: Desenvolvimento de software
+        cnae: ["62015", "62023", "62031"]
+      - nome: Serviços de TI e dados
+        cnae: ["62040", "62091", "63119", "63194"]
+    sh4: []
+    sh4_auto: false
+    nota: >
+      Exportação de serviços não aparece no ComexStat, que só cobre bens.
+
+  - id: audiovisual
+    nome: Audiovisual
+    macrossetor: Serviços
+    descricao: >
+      Produção, pós-produção, distribuição e exibição de conteúdo
+      audiovisual, além de TV e rádio.
+    elos:
+      - nome: Produção e pós-produção
+        cnae: ["59111", "59120", "59201"]
+      - nome: Distribuição e exibição
+        cnae: ["59138", "59146"]
+      - nome: Televisão
+        cnae: ["60217", "60225"]
+    sh4: []
+    sh4_auto: false
+    nota: >
+      Grande parte dos profissionais atua como MEI ou por projeto, fora da RAIS.
+
+  - id: logistica
+    nome: Logística
+    macrossetor: Serviços
+    descricao: >
+      Transporte rodoviário de cargas, armazenagem, operação portuária e
+      entregas.
+    elos:
+      - nome: Transporte de cargas
+        cnae: ["49302"]
+      - nome: Armazenagem e movimentação
+        cnae: ["52117", "52125"]
+      - nome: Portos e agenciamento
+        cnae: ["52311", "52320", "52508"]
+      - nome: Entregas
+        cnae: ["53202"]
+    sh4: []
+    sh4_auto: false
+
+  - id: suinocultura
+    nome: Suinocultura
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Criação de suínos, abate e processamento de carne suína.
+    elos:
+      - nome: Produção primária
+        cnae: ["0154700"]
+      - nome: Abate e frigoríficos
+        cnae: ["1012103", "1012104"]
+      - nome: Produtos de carne
+        cnae: ["10139"]
+    sh4: ["0103", "0203", "0209", "0210"]
+    sh4_auto: false
+    nota: >
+      A classe 1013-9 (produtos de carne) também processa carne bovina e de
+      aves.
+
+  - id: mandiocultura
+    nome: Mandiocultura
+    macrossetor: Agropecuária e agroindústria
+    descricao: >
+      Cultivo de mandioca e produção de farinha e derivados, atividade
+      tradicional do Agreste e da Mata, com casas de farinha em grande parte
+      informais.
+    elos:
+      - nome: Cultivo
+        cnae: ["0119906"]
+      - nome: Farinha e derivados
+        cnae: ["10635"]
+    sidra:
+      - {tabela: 5457, padrao: "^Mandioca"}
+    nota: >
+      As casas de farinha são majoritariamente informais e familiares.
+
+  - id: bebidas
+    nome: Bebidas
+    macrossetor: Indústria
+    descricao: >
+      Aguardente, cervejas, refrigerantes, águas e vinhos. Pernambuco tem
+      tradição na cachaça e um polo de cervejarias e engarrafadoras.
+    elos:
+      - nome: Destilados
+        cnae: ["11119"]
+      - nome: Vinhos
+        cnae: ["11127"]
+      - nome: Cervejas
+        cnae: ["11135"]
+      - nome: Águas e refrigerantes
+        cnae: ["11216", "11224"]
+      - nome: Distribuição
+        cnae: ["46354"]
+
+  - id: higiene_limpeza
+    nome: Higiene, limpeza e cosméticos
+    macrossetor: Indústria
+    descricao: >
+      Sabões, detergentes, produtos de limpeza e cosméticos, com fábricas
+      concentradas na Região Metropolitana e no Agreste.
+    elos:
+      - nome: Sabões e detergentes
+        cnae: ["20614"]
+      - nome: Produtos de limpeza
+        cnae: ["20622"]
+      - nome: Cosméticos e higiene pessoal
+        cnae: ["20631"]
+
+  - id: turismo
+    nome: Turismo
+    macrossetor: Serviços
+    descricao: >
+      Hospedagem, alimentação fora do lar, agências e operadoras. Concentrado
+      no litoral (Recife, Ipojuca, Fernando de Noronha) e em polos do interior.
+    elos:
+      - nome: Hospedagem
+        cnae: ["55108", "55906"]
+      - nome: Alimentação
+        cnae: ["56112"]
+      - nome: Agências e operadoras
+        cnae: ["79112", "79121"]
+    sh4: []
+    sh4_auto: false
+    nota: >
+      Restaurantes atendem sobretudo a população local; o elo de alimentação
+      é um teto para o turismo.
+

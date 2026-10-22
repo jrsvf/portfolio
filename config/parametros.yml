@@ -1,0 +1,54 @@
+# Parâmetros gerais do pipeline. Altere aqui, não nos scripts.
+
+autor:
+  nome: "José Roberto Verçosa"
+  titulo: "Economista | Mestre em Economia Regional (UFPE)"
+  linkedin: "https://www.linkedin.com/in/jrsvf"
+  github: "https://github.com/jrsvf"
+  lattes: "https://lattes.cnpq.br/1066993955257243"
+
+bigquery:
+  # Projeto de faturamento. No GitHub Actions vem da variável GCP_PROJECT.
+  projeto: "analises1"
+
+territorio:
+  uf_sigla: "PE"
+  uf_codigo: 26
+  nome: "Pernambuco"
+
+anos:
+  rais_inicio: 2006      # início da série RAIS com CNAE 2.0
+  caged_inicio: 2020     # Novo CAGED
+  sidra_inicio: 2006
+  comex_inicio: 2010
+  # "auto" = último ano disponível na fonte
+  rais_fim: "auto"
+  sidra_fim: "auto"
+
+indicadores:
+  # Município é considerado especializado quando QL >= ql_minimo e o emprego
+  # no recorte >= emprego_minimo (evita QL alto com 2 ou 3 vínculos).
+  ql_minimo: 1
+  emprego_minimo: 10
+  # Ano-base do shift-share. "auto" = 10 anos antes do último ano disponível.
+  shift_share_inicio: "auto"
+
+mip:
+  # Matriz insumo-produto nacional do IBGE usada como base da regionalização.
+  # O arquivo é baixado na primeira execução e guardado em dados_externos/mip.
+  # Se a URL mudar, atualize aqui ou coloque o .xls manualmente na pasta.
+  url: "https://ftp.ibge.gov.br/Contas_Nacionais/Matriz_de_Insumo_Produto/2015/Matriz_de_Insumo_Produto_2015_Nivel_67.xls"
+  ano: 2015
+  # Parâmetro delta do FLQ (Flegg). Literatura brasileira costuma usar 0,2 a 0,3.
+  flq_delta: 0.3
+  # Ano da RAIS usado para regionalizar (o mais próximo do ano da MIP).
+  ano_emprego: 2015
+  # Setores com QL do emprego abaixo disso são marcados como "presença pequena
+  # em PE" e saem dos rankings (o FLQ superestima o encadeamento deles).
+  slq_minimo: 0.3
+
+comparacoes:
+  # Cortes usados em tabelas, destaques e gráficos: N anos antes do último ano
+  # disponível de cada fonte, mais um ano fixo de referência.
+  janelas: [10, 5, 2]
+  desde: 2023

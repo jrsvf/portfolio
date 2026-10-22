@@ -1,0 +1,41 @@
+---
+title: "Estudos"
+description: "Análises publicadas e notas técnicas."
+toc: false
+---
+
+Edite esta lista em `site/estudos.qmd`. Para anexar o PDF de um estudo, coloque o arquivo em `site/estudos/` e use o link `estudos/arquivo.pdf`.
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-6}
+### Impactos da tarifa de 50% dos EUA sobre as exportações de Pernambuco
+Estimativa de perdas em exportações e empregos, efeito das isenções do decreto americano de 30/07/2025 e perfil das empresas com potencial exportador. Metodologia baseada na FIEMG.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Movelaria em Pernambuco
+Evolução dos vínculos formais (2019 a 2024), polos especializados (Tacaimbó, João Alfredo, Caruaru) e estrutura de mercado (IHH).
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Acordo Mercosul-União Europeia: oportunidades para Pernambuco
+Identificação de setores com potencial exportador e plano de ações iniciais.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Estudos setoriais de cadeias agropecuárias
+Avicultura, apicultura, aquicultura (tilápia), leite, ovinocaprinocultura e abacaxi, com QL, PR e IHH (Suzigan, 2006), RAIS, SIDRA e ComexStat.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Construção civil: emprego e produtividade
+Série histórica do CAGED e produtividade da PAIC, comparando Pernambuco, Nordeste e Brasil.
+:::
+
+::: {.g-col-12 .g-col-md-6}
+### Avaliação de impacto de programas de fomento
+Desenho e estimação com PSM-DiD, TWFE com inferência por permutação e avaliação de controle sintético em nível de Região de Desenvolvimento.
+:::
+
+:::

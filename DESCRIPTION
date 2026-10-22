@@ -1,0 +1,35 @@
+Package: portfoliojrsvf
+Title: Portfólio de Economia Regional e Cadeias Produtivas de Pernambuco
+Version: 0.1.0
+Authors@R: person("José Roberto", "Verçosa", role = c("aut", "cre"))
+Description: Pipeline que consulta dados públicos (RAIS, Novo CAGED, IBGE,
+    ComexStat) e gera o site do portfólio e os painéis Shiny.
+License: MIT
+Encoding: UTF-8
+Imports:
+    bigrquery,
+    bslib,
+    dplyr,
+    DT,
+    geobr,
+    glue,
+    htmltools,
+    jsonlite,
+    knitr,
+    leaflet,
+    plotly,
+    purrr,
+    readr,
+    readxl,
+    rmarkdown,
+    rsconnect,
+    sf,
+    shiny,
+    stringr,
+    targets,
+    tibble,
+    tidyr,
+    yaml
+Suggests:
+    testthat,
+    visNetwork

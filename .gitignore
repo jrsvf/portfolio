@@ -1,0 +1,21 @@
+_targets/
+dados/
+dados_externos/
+site/_site/
+site/.quarto/
+site/dados/
+site/cadeias/*.qmd
+!site/cadeias/index.qmd
+shiny/*/dados/
+shiny/diag/dados_ambiente.RData
+*.json
+.Rhistory
+.RData
+.Rproj.user/
+rsconnect/
+*.log
+site/cadeias/*.rmarkdown
+site/*_files/
+site/cadeias/*_files/
+# site publicado (GitHub Pages, pasta docs/) precisa dos .json do Quarto
+!docs/**

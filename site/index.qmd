@@ -1,0 +1,64 @@
+---
+title: ""
+page-layout: full
+toc: false
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+carregar("cad_mun", "serie_uf", "comex_pe", "lacunas", "destaques", "fontes_datas")
+ult <- max(cad_mun$ano)
+```
+
+::: {.hero}
+# José Roberto Verçosa
+
+[Economista, mestre em Economia Regional (UFPE). Transformo dados públicos em leitura de território: onde estão as cadeias produtivas de Pernambuco, como evoluem, como se conectam ao resto da economia e o que os dados oficiais ainda não conseguem mostrar.]{.subtitulo}
+:::
+
+```{r}
+cartoes(list(
+  list(rotulo = "Cadeias produtivas acompanhadas", valor = nrow(cad$meta)),
+  list(rotulo = "Municípios analisados", valor = nrow(municipios)),
+  list(rotulo = "Cortes de comparação", valor = paste(CORTES_PADRAO$janelas, collapse = ", "),
+       nota = paste0("anos, e desde ", CORTES_PADRAO$desde)),
+  list(rotulo = "Lacunas de dados identificadas", valor = nrow(lacunas)),
+  list(rotulo = "Última atualização", valor = format(atualizado_em, "%d/%m/%Y"),
+       nota = paste0("RAIS ", sub(".* a (\\d{4}).*", "\\1", fontes_datas$cobertura[1]),
+                     " · CAGED ", sub(".* a (\\d{2}/\\d{4}).*", "\\1", fontes_datas$cobertura[2])))
+))
+```
+
+## O que você encontra aqui
+
+- **[Panorama de Pernambuco](panorama.qmd):** emprego formal, estrutura produtiva, especialização dos municípios e comércio exterior em séries longas.
+- **[Cadeias produtivas](cadeias/index.qmd):** uma página por cadeia, dividida em elos (insumos, produção, processamento, distribuição), com comparações em 10, 5 e 2 anos e desde 2023, mapas de especialização, comparação com Nordeste e Brasil, dinâmica recente, produção física, exportações e destinos.
+- **[Encadeamentos](encadeamentos.qmd):** estimativa de ligações para trás e para frente dos setores da economia pernambucana, a partir da matriz insumo-produto nacional regionalizada.
+- **[Lacunas de dados](lacunas.qmd):** onde as fontes públicas não alcançam e qual informação resolveria.
+
+Tudo é gerado por um pipeline em R que consulta as fontes oficiais todo mês e reconstrói o site sozinho. O código é aberto e reproduzível.
+
+## Cadeias em destaque
+
+```{r}
+#| results: asis
+for (i in seq_len(min(6, nrow(cad$meta)))) {
+  m <- cad$meta[i, ]
+  cat(sprintf("### [%s](cadeias/%s.qmd)\n\n", m$cadeia, m$cadeia_id))
+  d <- destaques[[m$cadeia_id]]
+  if (length(d) > 0) cat("- ", d[1], "\n", sep = "")
+  if (length(d) > 1) cat("- ", d[2], "\n", sep = "")
+  cat("\n")
+}
+```
+
+[Ver todas as cadeias →](cadeias/index.qmd)
+
+## Sobre mim
+
+Atuo na interseção entre dados, políticas públicas e desenvolvimento regional. Trabalho com avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, PR, IHH, shift-share), comércio exterior e painéis de decisão em R/Shiny e Power BI.
+
+Ferramentas: R, Python, SQL (BigQuery), Quarto, Shiny, Power BI.
+
+[LinkedIn](https://www.linkedin.com/in/jrsvf) · [GitHub](https://github.com/jrsvf) · [Lattes](https://lattes.cnpq.br/1066993955257243)

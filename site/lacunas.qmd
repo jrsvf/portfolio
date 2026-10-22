@@ -1,0 +1,56 @@
+---
+title: "Lacunas de dados"
+description: "Onde as fontes públicas não alcançam as cadeias produtivas de Pernambuco e que informação resolveria."
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+carregar("lacunas", "lacunas_estruturais")
+```
+
+Dados públicos já permitem enxergar muito, mas não tudo. Esta página reúne, de forma automática, os pontos em que os números oficiais **não fecham** (produção sem emprego, exportação sem base produtiva, elos invisíveis) e as **lacunas estruturais** do sistema estatístico. Cada item diz qual informação faltaria.
+
+```{r}
+cartoes(lapply(split(lacunas, lacunas$tipo), function(x) list(rotulo = x$tipo[1], valor = nrow(x))))
+```
+
+## Lacunas estruturais
+
+```{r}
+knitr::kable(lacunas_estruturais %>% rename(Lacuna = lacuna, `Consequência` = consequencia, `O que resolveria` = fonte_que_resolveria))
+```
+
+## Lacunas detectadas nos dados
+
+::: {.panel-tabset}
+
+```{r}
+#| results: asis
+for (tp in unique(lacunas$tipo)) {
+  cat("\n\n### ", tp, "\n\n", sep = "")
+  x <- lacunas %>% filter(tipo == tp)
+  cat("*O que faltaria:* ", x$falta[1], "\n\n", sep = "")
+  print(htmltools::tagList(tabela(x %>% transmute(Cadeia = coalesce(cadeia, "-"), Município = coalesce(municipio, "-"),
+                                                  Detalhe = detalhe))))
+}
+```
+
+:::
+
+## Defasagem das fontes
+
+```{r}
+knitr::kable(ultimos_anos %>% transmute(Fonte = fonte, `Último ano disponível` = as.integer(ultimo_ano)))
+```
+
+## Dados abertos
+
+Todas as bases usadas no site podem ser baixadas em CSV (separador `;`, decimal `,`):
+
+- [Emprego formal por cadeia e município](dados/emprego_cadeia_municipio.csv)
+- [Emprego formal por elo e município](dados/emprego_elo_municipio.csv)
+- [Saldo do Novo CAGED por cadeia](dados/caged_cadeia.csv)
+- [Comércio exterior por cadeia](dados/comex_cadeia.csv)
+- [Produção agropecuária (IBGE) por cadeia](dados/producao_ibge_cadeia.csv)
+- [Lacunas detectadas](dados/lacunas.csv)

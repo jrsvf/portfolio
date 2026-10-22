@@ -1,0 +1,32 @@
+/*-- scss:defaults --*/
+$primary: #1F4E79;
+$link-color: #1F4E79;
+$font-family-sans-serif: "Inter", "Segoe UI", system-ui, sans-serif;
+$body-color: #2C3E50;
+
+/*-- scss:rules --*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+h1, h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
+h2 { border-bottom: none; margin-top: 2.2rem; }
+
+.hero { padding: 2.5rem 0 1.5rem 0; }
+.hero h1 { font-size: 2.4rem; margin-bottom: .3rem; }
+.hero .subtitulo { font-size: 1.15rem; color: #5D6D7E; max-width: 720px; }
+
+.cartoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 1.2rem 0 1.6rem 0; }
+.cartao { background: #F5F8FB; border-radius: 10px; padding: 16px 18px; border-left: 4px solid #1F4E79; }
+.cartao-valor { font-size: 1.55rem; font-weight: 700; color: #1F4E79; line-height: 1.2; }
+.cartao-rotulo { font-size: .88rem; color: #5D6D7E; margin-top: 4px; }
+.cartao-nota { font-size: .78rem; color: #95A5A6; margin-top: 2px; }
+
+ul.destaques { list-style: none; padding-left: 0; }
+ul.destaques li { padding: 10px 14px; margin-bottom: 8px; background: #FDF6EE; border-left: 4px solid #D9822B; border-radius: 6px; }
+
+ul.lacunas li { margin-bottom: 6px; }
+
+.aviso { background: #FEF9E7; border-left: 4px solid #B7950B; padding: 12px 16px; border-radius: 6px; font-size: .92rem; }
+.fonte { font-size: .8rem; color: #7F8C8D; margin-top: -0.4rem; }
+
+.quarto-grid-item .card-title { font-weight: 700; color: #1F4E79; }
+.quarto-grid-item { border-radius: 10px; }

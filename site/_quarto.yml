@@ -1,0 +1,61 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "cadeias/*.qmd"
+    - "!_modelos/"
+    - "!estudos.qmd"
+    - "!paineis.qmd"
+  resources:
+    - "dados/*.csv"
+
+lang: pt-BR
+
+website:
+  title: "José Roberto Verçosa"
+  description: "Economia regional, cadeias produtivas e dados públicos de Pernambuco"
+  site-url: "https://jrsvf.github.io/portfolio"
+  favicon: imagens/favicon.svg
+  page-navigation: true
+  navbar:
+    background: "#1F4E79"
+    left:
+      - text: "Início"
+        href: index.qmd
+      - text: "Panorama"
+        href: panorama.qmd
+      - text: "Cadeias"
+        href: cadeias/index.qmd
+      - text: "Encadeamentos"
+        href: encadeamentos.qmd
+      - text: "Lacunas"
+        href: lacunas.qmd
+      - text: "Metodologia"
+        href: metodologia.qmd
+    right:
+      - icon: linkedin
+        href: https://www.linkedin.com/in/jrsvf
+      - icon: github
+        href: https://github.com/jrsvf
+  page-footer:
+    left: "José Roberto Verçosa · Economista"
+    right: "Dados públicos: RAIS, Novo CAGED, IBGE, ComexStat · via Base dos Dados"
+
+format:
+  html:
+    theme: [cosmo, estilo.scss]
+    toc: true
+    toc-title: "Nesta página"
+    code-fold: true
+    code-tools: false
+    echo: false
+    warning: false
+    message: false
+    fig-responsive: true
+    page-layout: full
+    grid:
+      body-width: 1000px
+
+execute:
+  freeze: false
