@@ -101,7 +101,7 @@ cadeias:
     sh4: ["0104", "0204", "4102", "4105", "4106"]
     sh4_auto: false
     sidra:
-      - {tabela: 3939, padrao: "Caprino|Ovino"}
+      - {tabela: 3939, padrao: "^Caprino|^Ovino"}
     nota: >
       Quase todo o abate de caprinos e ovinos é informal ou feito em
       matadouros públicos, que não aparecem como abate na RAIS.
@@ -363,6 +363,8 @@ cadeias:
         cnae: ["10139"]
     sh4: ["0103", "0203", "0209", "0210"]
     sh4_auto: false
+    sidra:
+      - {tabela: 3939, padrao: "^Suíno - total"}
     nota: >
       A classe 1013-9 (produtos de carne) também processa carne bovina e de
       aves.

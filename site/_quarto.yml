@@ -9,6 +9,8 @@ project:
     - "!paineis.qmd"
   resources:
     - "dados/*.csv"
+    - "dados/*.json"
+    - "dados/*.geojson"
 
 lang: pt-BR
 
@@ -27,6 +29,8 @@ website:
         href: panorama.qmd
       - text: "Cadeias"
         href: cadeias/index.qmd
+      - text: "Municípios"
+        href: municipios.qmd
       - text: "Encadeamentos"
         href: encadeamentos.qmd
       - text: "Lacunas"

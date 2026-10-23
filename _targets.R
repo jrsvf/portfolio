@@ -19,7 +19,10 @@ tar_option_set(
   error = "stop"
 )
 
-for (f in sort(list.files("R", pattern = "\\.R$", full.names = TRUE))) source(f)
+# só as funções do pipeline; scripts avulsos (análises internas, publicação) ficam de fora
+for (f in sort(list.files("R", pattern = "^[0-9]{2}_.*\\.R$", full.names = TRUE))) {
+  if (!grepl("impacto", f)) source(f)
+}
 
 # Cortes de tempo definidos em config/parametros.yml valem para todo o pipeline
 local({
@@ -64,6 +67,11 @@ list(
   tar_target(malha, obter_malha(uf_codigo)),
   tar_target(ipca, tryCatch(extrair_ipca(), error = function(e) { msg("IPCA indisponível: ", conditionMessage(e)); NULL })),
   tar_target(rd, ler_rd()),
+  tar_target(bq_pop,       { bq_esquema; extrair_pop_uf(projeto, uf) }),
+  tar_target(bq_sh4_nomes, { bq_esquema; extrair_sh4_nomes(projeto) }),
+  # nível de atividade: falha suave se a fonte estiver fora do ar
+  tar_target(macro_ibcr, tryCatch(obter_sgs(), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(macro_pim,  tryCatch(obter_pim(uf_codigo = uf_codigo), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
 
   # -------------------------------------------------------------- cadeias
   tar_target(cad_mun, { codigos_ok; agregar_cadeias(bq_rais_pe, cad$elos) }),
@@ -184,6 +192,7 @@ list(
                  destaques = destaques, ultimos_anos = ultimos_anos,
                  cmp_ne = cmp_ne, janelas_cad = janelas_cad, janelas_uf = janelas_uf,
                  fontes_datas = fontes_datas, ipca = ipca,
+                 macro_ibcr = macro_ibcr, macro_pim = macro_pim,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),
@@ -196,5 +205,12 @@ list(
     producao_ibge_cadeia     = sidra_cad,
     lacunas                  = lacunas
   )), format = "file"),
-  tar_target(paginas_cadeias, gerar_paginas_cadeias(cad$meta), format = "file")
+  tar_target(paginas_cadeias, gerar_paginas_cadeias(cad$meta), format = "file"),
+
+  # ------------------------------------------------- raio-X dos municípios
+  tar_target(raiox,
+             montar_raiox(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, bq_perfil_pe, bq_caged_pe,
+                          comex_anos_completos, bq_sh4_nomes, sidra_bruto, locais_cadeia, sidra_cad,
+                          comex_cad, cad$meta, krugman, ipca)),
+  tar_target(saida_raiox, exportar_raiox(raiox, malha), format = "file")
 )

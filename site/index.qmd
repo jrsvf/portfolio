@@ -32,7 +32,8 @@ cartoes(list(
 
 ## O que você encontra aqui
 
-- **[Panorama de Pernambuco](panorama.qmd):** emprego formal, estrutura produtiva, especialização dos municípios e comércio exterior em séries longas.
+- **[Panorama de Pernambuco](panorama.qmd):** nível de atividade (IBCR e produção industrial), emprego formal, estrutura produtiva, especialização dos municípios e comércio exterior.
+- **[Raio-X dos municípios](municipios.qmd):** para cada um dos 185 municípios, PIB por setor, produção agropecuária, emprego formal, cadeias presentes, saldo do CAGED e comércio exterior.
 - **[Cadeias produtivas](cadeias/index.qmd):** uma página por cadeia, dividida em elos (insumos, produção, processamento, distribuição), com comparações em 10, 5 e 2 anos e desde 2023, mapas de especialização, comparação com Nordeste e Brasil, dinâmica recente, produção física, exportações e destinos.
 - **[Encadeamentos](encadeamentos.qmd):** estimativa de ligações para trás e para frente dos setores da economia pernambucana, a partir da matriz insumo-produto nacional regionalizada.
 - **[Lacunas de dados](lacunas.qmd):** onde as fontes públicas não alcançam e qual informação resolveria.

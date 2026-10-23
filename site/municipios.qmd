@@ -1,0 +1,233 @@
+---
+title: "Raio-X dos municípios"
+description: "Produção, emprego, cadeias produtivas e comércio exterior de cada um dos 185 municípios de Pernambuco, com dados públicos."
+toc: false
+---
+
+```{ojs}
+//| echo: false
+dados = FileAttachment("dados/raiox_municipios.json").json()
+geo0 = FileAttachment("dados/malha_pe.geojson").json()
+// o d3 espera anéis no sentido horário; inverte os que vierem ao contrário
+geo = ({type: "FeatureCollection", features: geo0.features.map(f => {
+  if (d3.geoArea(f) <= 2 * Math.PI) return f;
+  const g = f.geometry;
+  const rev = poly => poly.map(r => r.slice().reverse());
+  const coords = g.type === "Polygon" ? rev(g.coordinates) : g.coordinates.map(rev);
+  return {...f, geometry: {...g, coordinates: coords}};
+})})
+nomes = dados.map(d => d.nome).sort((a, b) => a.localeCompare(b, "pt-BR"))
+inicial = {
+  const q = new URLSearchParams(window.location.search).get("m");
+  const alvo = q ? dados.find(d => d.id === q || d.nome.toLowerCase() === q.toLowerCase()) : null;
+  return alvo ? alvo.nome : "Recife";
+}
+viewof escolha = Inputs.select(nomes, {label: "Município", value: inicial})
+m = dados.find(d => d.nome === escolha)
+
+// formatação
+nf = (x, d = 0) => x == null || isNaN(x) ? "–" : x.toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d})
+pct = (x, d = 1) => x == null || isNaN(x) ? "–" : (x > 0 ? "+" : "") + (100 * x).toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d}) + "%"
+reais = x => x == null ? "–" : x >= 1e9 ? "R$ " + nf(x / 1e9, 2) + " bi" : x >= 1e6 ? "R$ " + nf(x / 1e6, 1) + " mi" : "R$ " + nf(x / 1e3, 0) + " mil"
+usd = x => x == null || x === 0 ? "–" : x >= 1e9 ? "US$ " + nf(x / 1e9, 2) + " bi" : x >= 1e6 ? "US$ " + nf(x / 1e6, 1) + " mi" : "US$ " + nf(x / 1e3, 0) + " mil"
+AZUL = "#1F4E79"; LAR = "#E07A1F"; CINZA = "#B8C4CF"
+cartao = (rotulo, valor, nota = "") => html`<div class="cartao"><div class="cartao-valor">${valor}</div><div class="cartao-rotulo">${rotulo}</div>${nota ? html`<div class="cartao-nota">${nota}</div>` : ""}</div>`
+```
+
+```{ojs}
+//| echo: false
+html`<div class="rx-topo">
+  <div>
+    <h2 class="rx-nome">${m.nome}</h2>
+    <p class="rx-sub">Região de Desenvolvimento ${m.rd ?? "–"} · ${nf(m.pop)} habitantes (${m.ano_pop})</p>
+    <p class="rx-sub">Link direto: <code>${location.origin + location.pathname}?m=${m.id}</code></p>
+  </div>
+  <div class="rx-mapa">${Plot.plot({
+    width: 440, height: 175, margin: 2,
+    projection: {type: "mercator", domain: geo, inset: 4},
+    marks: [
+      Plot.geo(geo.features, {fill: d => d.properties.id_municipio === m.id ? LAR : "#DCE6F0", stroke: "white", strokeWidth: 0.3})
+    ]})}</div>
+</div>`
+```
+
+```{ojs}
+//| echo: false
+html`<div class="cartoes">
+  ${cartao("PIB em " + m.pib.ano, reais(m.pib.valor), nf(100 * m.pib.part_estado, 2) + "% do PIB de PE")}
+  ${cartao("PIB per capita", "R$ " + nf(m.pib.pc), m.pib.rank_pc + "º de 185 · PE: R$ " + nf(m.pib.pc_estado))}
+  ${cartao("Empregos formais em " + m.emprego.ano, nf(m.emprego.total), pct(m.emprego.var.a10) + " em 10 anos")}
+  ${cartao("Remuneração média formal", "R$ " + nf(m.emprego.remuneracao), "Média de PE: R$ " + nf(m.emprego.rem_estado))}
+  ${cartao("Saldo de empregos em 12 meses", (m.caged.saldo_12m > 0 ? "+" : "") + nf(m.caged.saldo_12m), "Novo CAGED, até " + m.caged.ate)}
+  ${cartao("Exportações em " + m.comex.ano, usd((m.comex.serie.find(d => d.ano === m.comex.ano) ?? {})["Exportação"]), "ComexStat")}
+</div>`
+```
+
+## Produção
+
+```{ojs}
+//| echo: false
+va = [
+  {setor: "Agropecuária", v: m.pib.va.agro},
+  {setor: "Indústria", v: m.pib.va.ind},
+  {setor: "Serviços", v: m.pib.va.serv},
+  {setor: "Administração pública", v: m.pib.va.adm}
+]
+vatot = d3.sum(va, d => d.v)
+html`<p>Composição do valor adicionado de ${m.nome} em ${m.pib.ano_va} (o IBGE divulga a divisão por setor com defasagem). Corrigido pelo IPCA, o PIB até ${m.pib.ano} variou <b>${pct(m.pib.var_real.a10)}</b> em 10 anos, <b>${pct(m.pib.var_real.a5)}</b> em 5 anos e <b>${pct(m.pib.var_real.a2)}</b> em 2 anos.</p>`
+```
+
+::: {.panel-tabset}
+
+### Composição do PIB
+
+```{ojs}
+//| echo: false
+{
+  let acc = 0;
+  const seg = va.map(d => { const x1 = acc; acc += d.v / vatot; return {...d, x1, x2: acc, p: d.v / vatot}; });
+  return Plot.plot({
+    height: 110, marginLeft: 10, marginRight: 10, y: {axis: null}, x: {domain: [0, 1], label: "% do valor adicionado", tickFormat: d => nf(100 * d) + "%"},
+    color: {domain: va.map(d => d.setor), range: ["#7FA66B", "#1F4E79", "#6C8EB2", "#B8C4CF"], legend: true},
+    marks: [
+      Plot.barX(seg, {x1: "x1", x2: "x2", y: () => "PIB", fill: "setor", insetRight: 1, title: d => `${d.setor}: ${nf(100 * d.p, 1)}%`}),
+      Plot.text(seg, {x: d => (d.x1 + d.x2) / 2, y: () => "PIB", text: d => d.p > 0.07 ? nf(100 * d.p, 0) + "%" : "", fill: "white", fontWeight: "bold", fontSize: 13})
+    ]
+  });
+}
+```
+
+### PIB por setor no tempo
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  height: 300, marginLeft: 60, y: {label: "R$ milhões (correntes)", grid: true, tickFormat: d => nf(d / 1e6)}, x: {label: null, tickFormat: d => String(d)},
+  color: {domain: ["Agropecuária", "Indústria", "Serviços", "Administração pública"], range: ["#7FA66B", "#1F4E79", "#6C8EB2", "#B8C4CF"], legend: true},
+  marks: [
+    Plot.barY(m.pib.serie.flatMap(d => [
+      {ano: d.ano, setor: "Agropecuária", v: d.agro}, {ano: d.ano, setor: "Indústria", v: d.ind},
+      {ano: d.ano, setor: "Serviços", v: d.serv}, {ano: d.ano, setor: "Administração pública", v: d.adm}]),
+      {x: "ano", y: "v", fill: "setor", title: d => `${d.setor} ${d.ano}: ${reais(d.v)}`})
+  ]
+})
+```
+
+### Lavouras
+
+```{ojs}
+//| echo: false
+m.agro.lavouras.length === 0 ? html`<p>Sem lavouras registradas na PAM em ${m.agro.ano_pam}.</p>` :
+html`<p>Valor da produção agrícola em ${m.agro.ano_pam}: <b>${reais(1000 * m.agro.pam_total)}</b>. Principais lavouras:</p>
+${Plot.plot({
+  height: 40 + 34 * m.agro.lavouras.length, marginLeft: 190, marginRight: 90, y: {label: null}, x: {label: "R$ mil", grid: true, tickFormat: d => nf(d)},
+  marks: [
+    Plot.barX(m.agro.lavouras, {y: "produto", x: "valor_mil", fill: AZUL, sort: {y: "-x"}, title: d => `${d.produto}: ${reais(1000 * d.valor_mil)} · ${nf(d.qtd_t)} t`}),
+    Plot.text(m.agro.lavouras, {y: "produto", x: "valor_mil", text: d => reais(1000 * d.valor_mil), dx: 6, textAnchor: "start"})
+  ]})}`
+```
+
+### Pecuária e aquicultura
+
+```{ojs}
+//| echo: false
+html`<div class="rx-duas">
+<div><h4>Rebanhos em ${m.agro.ano_ppm} (cabeças)</h4>
+${m.agro.rebanhos.length ? Plot.plot({
+  height: 40 + 30 * m.agro.rebanhos.length, marginLeft: 110, y: {label: null}, x: {label: null, grid: true, tickFormat: d => nf(d / 1e3) + " mil"},
+  marks: [Plot.barX(m.agro.rebanhos, {y: "produto", x: "cabecas", fill: AZUL, sort: {y: "-x"}, title: d => `${d.produto}: ${nf(d.cabecas)}`})]
+}) : html`<p>Sem registro.</p>`}</div>
+<div><h4>Produção de origem animal e aquicultura (valor)</h4>
+<table class="rx-tab"><tbody>
+${m.agro.animal.map(d => html`<tr><td>${d.produto}</td><td>${reais(1000 * d.valor_mil)}</td></tr>`)}
+<tr><td>Aquicultura</td><td>${m.agro.aquicultura > 0 ? reais(1000 * m.agro.aquicultura) : "–"}</td></tr>
+</tbody></table></div></div>`
+```
+
+:::
+
+<p class="fonte">Fonte: IBGE (PIB dos Municípios, PAM e PPM), via Base dos Dados e SIDRA. O IBGE não publica o crescimento real do PIB por município; a correção pelo IPCA é uma aproximação. A produção industrial não é publicada por município: a indústria local aparece no valor adicionado e no emprego formal.</p>
+
+## Cadeias produtivas no município
+
+```{ojs}
+//| echo: false
+m.cadeias.length === 0 ? html`<p>Nenhuma das 21 cadeias acompanhadas tem emprego formal ou produção registrada aqui.</p>` :
+html`<p>As cadeias acompanhadas no portfólio com presença em ${m.nome}. QL acima de 1 indica que a cadeia pesa mais no emprego do município do que na média do estado.</p>
+<table class="rx-tab rx-cad"><thead><tr><th>Cadeia</th><th>Empregos formais</th><th>QL</th><th>Var. 10 anos</th><th>Valor da produção (IBGE)</th><th>Exportações</th></tr></thead><tbody>
+${m.cadeias.map(d => html`<tr class="${d.ql >= 1 ? "rx-esp" : ""}"><td>${d.cadeia}</td><td>${nf(d.emprego)}</td><td>${d.ql == null ? "–" : nf(d.ql, 2)}</td><td>${pct(d.var10, 0)}</td><td>${d.vp_mil ? reais(1000 * d.vp_mil) : "–"}</td><td>${usd(d.ex_usd)}</td></tr>`)}
+</tbody></table>`
+```
+
+<p class="fonte">Fonte: RAIS (emprego e QL), IBGE (valor da produção agropecuária das cadeias) e ComexStat. Em destaque, cadeias com QL ≥ 1.</p>
+
+## Emprego formal
+
+```{ojs}
+//| echo: false
+html`<p>${nf(m.emprego.total)} vínculos formais em ${m.emprego.ano} (${nf(m.emprego.por_mil, 0)} por mil habitantes). Variação de <b>${pct(m.emprego.var.a10)}</b> em 10 anos, <b>${pct(m.emprego.var.a5)}</b> em 5 anos e <b>${pct(m.emprego.var.a2)}</b> em 2 anos. Índice de especialização de Krugman: ${nf(m.emprego.krugman, 2)} (0 = estrutura igual à do estado).</p>`
+```
+
+::: {.panel-tabset}
+
+### Por grande setor
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  height: 40 + 26 * m.emprego.setores.length, marginLeft: 330, marginRight: 60, y: {label: null}, x: {label: "Vínculos", grid: true, tickFormat: d => nf(d)},
+  marks: [
+    Plot.barX(m.emprego.setores, {y: "setor", x: "emprego", fill: AZUL, sort: {y: "-x"}, title: d => `${d.setor}: ${nf(d.emprego)}`}),
+    Plot.text(m.emprego.setores, {y: "setor", x: "emprego", text: d => nf(d.emprego), dx: 6, textAnchor: "start"})
+  ]
+})
+```
+
+### Últimos 10 anos
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  height: 300, marginLeft: 60, y: {label: "Vínculos em 31/12", grid: true, zero: true, tickFormat: d => nf(d)}, x: {label: null, tickFormat: d => String(d)},
+  marks: [
+    Plot.lineY(m.emprego.serie, {x: "ano", y: "emprego", stroke: AZUL, strokeWidth: 3}),
+    Plot.dot(m.emprego.serie, {x: "ano", y: "emprego", fill: AZUL, r: 4, title: d => `${d.ano}: ${nf(d.emprego)}`})
+  ]
+})
+```
+
+### Dinâmica recente (CAGED)
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  height: 280, marginLeft: 50, y: {label: "Saldo mensal de empregos", grid: true, tickFormat: d => nf(d)}, x: {label: null, tickRotate: -45},
+  marks: [
+    Plot.ruleY([0]),
+    Plot.barY(m.caged.serie, {x: "data", y: "saldo", fill: d => d.saldo >= 0 ? AZUL : LAR, title: d => `${d.data}: ${nf(d.saldo)}`})
+  ]
+})
+```
+
+:::
+
+<p class="fonte">Fonte: RAIS e Novo CAGED (MTE), via Base dos Dados.</p>
+
+## Comércio exterior
+
+```{ojs}
+//| echo: false
+cx = m.comex.serie.flatMap(d => [{ano: d.ano, fluxo: "Exportação", v: d["Exportação"] ?? 0}, {ano: d.ano, fluxo: "Importação", v: d["Importação"] ?? 0}])
+d3.sum(cx, d => d.v) === 0 ? html`<p>Sem exportações ou importações registradas para empresas sediadas em ${m.nome}.</p>` :
+html`<div class="rx-duas"><div>${Plot.plot({
+  height: 280, marginLeft: 60, y: {label: "US$ milhões FOB", grid: true, tickFormat: d => nf(d / 1e6, 1)},
+  x: {axis: null, domain: ["Exportação", "Importação"]}, fx: {label: null, tickFormat: d => String(d).slice(2)},
+  color: {domain: ["Exportação", "Importação"], range: [AZUL, LAR], legend: true},
+  marks: [Plot.barY(cx, {fx: "ano", x: "fluxo", y: "v", fill: "fluxo", title: d => `${d.fluxo} ${d.ano}: ${usd(d.v)}`})]
+})}</div><div>
+<h4>Principais produtos exportados em ${m.comex.ano}</h4>
+${m.comex.top.length ? html`<table class="rx-tab"><tbody>${m.comex.top.map(d => html`<tr><td title="${d.produto}">${d.produto.length > 70 ? d.produto.slice(0, 68) + "…" : d.produto}</td><td style="white-space:nowrap">${usd(d.v)}</td></tr>`)}</tbody></table>` : html`<p>Sem exportações no ano.</p>`}
+</div></div>`
+```
+
+<p class="fonte">Fonte: ComexStat (MDIC), via Base dos Dados. O registro segue o domicílio fiscal da empresa, não o local de produção.</p>

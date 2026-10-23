@@ -200,11 +200,15 @@ if (nrow(sc) > 0) {
 ```{r}
 if (nrow(sc) > 0) {
   u <- max(sc$ano)
-  top <- sc %>% filter(ano == u, str_detect(variavel, regex("^Valor da produção", ignore_case = TRUE))) %>%
+  # valor da produção quando existe; senão (rebanhos), o efetivo em cabeças
+  tem_valor <- any(str_detect(sc$variavel, regex("^Valor da produção", ignore_case = TRUE)))
+  padrao_top <- if (tem_valor) "^Valor da produção" else "^Efetivo"
+  rot_top <- if (tem_valor) "(valor da produção, mil R$)" else "(efetivo do rebanho, cabeças)"
+  top <- sc %>% filter(ano == u, str_detect(variavel, regex(padrao_top, ignore_case = TRUE))) %>%
     group_by(id_municipio) %>% summarise(valor = sum(valor, na.rm = TRUE), .groups = "drop") %>%
     filter(valor > 0) %>% arrange(desc(valor)) %>% head(15) %>% mutate(municipio = nome_mun(id_municipio))
   if (nrow(top) > 0) htmltools::tagList(
-    htmltools::h4(paste("Maiores produtores em", u, "(valor da produção, mil R$)")),
+    htmltools::h4(paste("Maiores produtores em", u, rot_top)),
     grafico_barras_h(top, "municipio", "valor"),
     rodape_fonte(paste("IBGE, tabelas", paste(unique(sc$tabela), collapse = ", "))))
 }

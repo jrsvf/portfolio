@@ -19,3 +19,9 @@ site/*_files/
 site/cadeias/*_files/
 # site publicado (GitHub Pages, pasta docs/) precisa dos .json do Quarto
 !docs/**
+
+# saídas com dados internos da ADEPE (não publicar)
+saidas/
+# análise de impacto dos programas da ADEPE (uso interno, não publicar)
+R/09_impacto_programas.R
+config/impacto_*.csv

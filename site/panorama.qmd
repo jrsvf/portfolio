@@ -7,6 +7,8 @@ description: "Emprego formal, estrutura produtiva, especialização municipal e 
 #| include: false
 source("_setup.R")
 carregar("serie_uf", "rais_secao", "krugman", "pib_pop", "comex_pe", "locais_cadeia", "janelas_uf", "cmp_ne", "fontes_datas")
+macro_ibcr <- tryCatch(ler_base("macro_ibcr", ""), error = function(e) NULL)
+macro_pim  <- tryCatch(ler_base("macro_pim", ""), error = function(e) NULL)
 ult <- max(rais_secao$ano); ini <- max(min(rais_secao$ano), ult - max(CORTES_PADRAO$janelas))
 su <- serie_uf %>% arrange(ano) %>% filter(ano >= ini)
 rais_secao <- rais_secao %>% filter(ano >= ini)
@@ -24,6 +26,64 @@ cartoes(list(
        valor = fmt_usd(sum(comex_pe$valor_fob[comex_pe$ano == cx_ult & comex_pe$fluxo == "Exportação"])))
 ))
 ```
+
+## Nível de atividade
+
+```{r}
+tem_ibcr <- !is.null(macro_ibcr) && NROW(macro_ibcr) > 0
+tem_pim  <- !is.null(macro_pim) && NROW(macro_pim) > 0
+# índice mensal com ajuste sazonal, rebaseado na média do ano inicial do corte de 10 anos
+rebase <- function(d) {
+  a0 <- max(as.numeric(format(max(d$data), "%Y")) - 1 - max(CORTES_PADRAO$janelas), as.numeric(format(min(d$data), "%Y")))
+  d %>% filter(as.numeric(format(data, "%Y")) >= a0) %>% group_by(recorte) %>%
+    mutate(indice = 100 * valor / mean(valor[format(data, "%Y") == as.character(a0)])) %>% ungroup() %>%
+    mutate(recorte = factor(recorte, c("Pernambuco", "Nordeste", "Brasil")))
+}
+tab_cortes <- function(anual) {
+  v <- variacoes_janela(anual %>% transmute(ano, recorte, valor), "recorte")
+  v %>% mutate(c = paste0(sinal_pct(var_pct), " (", ano_ini, "-", ano_fim, ")")) %>%
+    select(recorte, rotulo, ordem, c) %>% arrange(ordem) %>%
+    pivot_wider(id_cols = recorte, names_from = rotulo, values_from = c) %>%
+    mutate(recorte = factor(recorte, c("Pernambuco", "Nordeste", "Brasil"))) %>% arrange(recorte) %>%
+    rename(` ` = recorte)
+}
+```
+
+O emprego formal mostra o mercado de trabalho; o nível de atividade mostra a produção. Os dois indicadores abaixo só existem por estado e região, e saem todo mês.
+
+::: {.panel-tabset}
+
+### Atividade econômica (IBCR)
+
+```{r}
+if (tem_ibcr) {
+  d <- rebase(macro_ibcr %>% filter(!is.na(valor)))
+  grafico_linhas(d, "data", "indice", "recorte", paste0("Índice (média de ", format(min(d$data), "%Y"), " = 100)"), formato = ",.1f")
+} else htmltools::p(class = "aviso", "Série do Banco Central indisponível nesta atualização.")
+```
+
+```{r}
+if (tem_ibcr) knitr::kable(tab_cortes(atividade_anual(macro_ibcr)), caption = "Variação da média anual do índice")
+```
+
+<p class="fonte">Fonte: Banco Central do Brasil, IBCR-PE, IBCR-NE e IBC-Br com ajuste sazonal (séries SGS 25418, 25389 e 24364). Só anos completos entram nas médias anuais.</p>
+
+### Produção industrial (PIM-PF)
+
+```{r}
+if (tem_pim) {
+  d <- rebase(macro_pim %>% filter(variavel == "com ajuste"))
+  grafico_linhas(d, "data", "indice", "recorte", paste0("Índice (média de ", format(min(d$data), "%Y"), " = 100)"), formato = ",.1f")
+} else htmltools::p(class = "aviso", "Série da PIM-PF indisponível nesta atualização.")
+```
+
+```{r}
+if (tem_pim) knitr::kable(tab_cortes(atividade_anual(macro_pim %>% filter(variavel == "sem ajuste"))), caption = "Variação da produção física média anual (indústria geral)")
+```
+
+<p class="fonte">Fonte: IBGE, Pesquisa Industrial Mensal - Produção Física Regional (tabela SIDRA 8888), indústria geral. Gráfico com ajuste sazonal; tabela com a série original.</p>
+
+:::
 
 ## Emprego formal
 

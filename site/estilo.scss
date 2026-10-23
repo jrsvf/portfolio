@@ -33,3 +33,18 @@ ul.lacunas li { margin-bottom: 6px; }
 
 // mapas sem camada de fundo: só os municípios sobre branco
 .leaflet-container { background: #ffffff; }
+
+// Raio-X dos municípios
+.rx-topo { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: .6rem; }
+.rx-nome { margin: 0; font-size: 2rem; color: #1F4E79; }
+.rx-sub { color: #5D6D7E; margin: .2rem 0; font-size: .92rem; }
+.rx-sub code { font-size: .78rem; }
+.rx-duas { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; }
+.rx-duas h4 { font-size: 1rem; color: #1F4E79; margin-top: .4rem; }
+.rx-tab { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.rx-tab td, .rx-tab th { padding: 6px 8px; border-bottom: 1px solid #E5EAF0; text-align: right; }
+.rx-tab td:first-child, .rx-tab th:first-child { text-align: left; }
+.rx-tab th { color: #5D6D7E; font-weight: 600; }
+.rx-cad tr.rx-esp td { background: #FDF6EE; }
+.rx-cad tr.rx-esp td:first-child { border-left: 4px solid #E07A1F; font-weight: 600; }
+form.oi-3a86ea, .observablehq form { max-width: 420px; }
