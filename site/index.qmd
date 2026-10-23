@@ -64,7 +64,7 @@ if (NROW(sidra_cad)) {
                               !grepl(" - (galinhas|matrizes|vacas)", produto, ignore.case = TRUE)) %>%
     group_by(cadeia_id) %>% filter(ano == max(ano)) %>%
     summarise(tot = sum(valor, na.rm = TRUE), txt = paste0(ifelse(tot >= 1e6, paste0(fmt_num(tot / 1e6, 1), " milhões"), paste0(fmt_num(tot / 1e3), " mil")),
-                                 ifelse(tot >= 1e6, " de cabeças (", " cabeças ("),", sub(", ([^,]*)$", " e \\1", paste(limpa(unique(produto)), collapse = ", ")), ", ", first(ano), ")"), .groups = "drop") %>%
+                                 ifelse(tot >= 1e6, " de cabeças (", " cabeças ("), sub(", ([^,]*)$", " e \\1", paste(limpa(unique(produto)), collapse = ", ")), ", ", first(ano), ")"), .groups = "drop") %>%
     select(-tot)
   prod_cad <- bind_rows(val %>% select(cadeia_id, txt), reb)
 }
