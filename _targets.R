@@ -72,6 +72,9 @@ list(
   # nível de atividade: falha suave se a fonte estiver fora do ar
   tar_target(macro_ibcr, tryCatch(obter_sgs(), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
   tar_target(macro_pim,  tryCatch(obter_pim(uf_codigo = uf_codigo), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(pim_setores, tryCatch(obter_pim_setores(uf_codigo = uf_codigo), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(pim_resumo, resumo_pim_setores(pim_setores)),
+  tar_target(pim_cadeias, ler_pim_cadeias(arq_cadeias)),
 
   # -------------------------------------------------------------- cadeias
   tar_target(cad_mun, { codigos_ok; agregar_cadeias(bq_rais_pe, cad$elos) }),
@@ -193,6 +196,7 @@ list(
                  cmp_ne = cmp_ne, janelas_cad = janelas_cad, janelas_uf = janelas_uf,
                  fontes_datas = fontes_datas, ipca = ipca,
                  macro_ibcr = macro_ibcr, macro_pim = macro_pim,
+                 pim_setores = pim_setores, pim_resumo = pim_resumo, pim_cadeias = pim_cadeias,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),

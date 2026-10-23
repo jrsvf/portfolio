@@ -66,6 +66,61 @@ obter_pim <- function(tabela = 8888, uf_codigo = 26) {
                                       grepl("Brasil", recorte) ~ "Brasil", TRUE ~ recorte))
 }
 
+# PIM-PF por atividade (seções e divisões da CNAE): Pernambuco, Nordeste e
+# Brasil, série sem ajuste sazonal. O IBGE só divulga para PE as atividades
+# com amostra suficiente; as demais vêm vazias ("-") e são descartadas.
+obter_pim_setores <- function(tabela = 8888, uf_codigo = 26) {
+  meta <- tryCatch(jsonlite::fromJSON(sprintf("https://servicodados.ibge.gov.br/api/v3/agregados/%s/metadados", tabela)),
+                   error = function(e) { msg("PIM-PF setores: metadados indisponíveis: ", conditionMessage(e)); NULL })
+  if (is.null(meta)) return(tibble())
+  v <- meta$variaveis
+  v_sem <- v$id[grepl("^PIMPF - N[úu]mero-[íi]ndice \\(", v$nome) & !grepl("ajuste", v$nome)][1]
+  if (is.na(v_sem)) v_sem <- v$id[grepl("[íi]ndice", v$nome) & !grepl("ajuste|Varia", v$nome)][1]
+  cl <- meta$classificacoes
+  i <- which(vapply(cl$categorias, function(k) any(grepl("Ind[úu]stria geral", k$nome)), logical(1)))[1]
+  if (is.na(v_sem) || is.na(i)) { msg("PIM-PF setores: variável ou classificação não encontrada"); return(tibble()) }
+  url <- sprintf("https://apisidra.ibge.gov.br/values/t/%s/n1/all/n2/2/n3/%s/v/%s/p/all/c%s/all",
+                 tabela, uf_codigo, v_sem, cl$id[i])
+  raw <- tryCatch(sidra_baixar(url), error = function(e) { msg("PIM-PF setores indisponível: ", conditionMessage(e)); NULL })
+  if (is.null(raw) || NROW(raw) < 2) return(tibble())
+  cab <- as.character(raw[1, ]); df <- raw[-1, , drop = FALSE]
+  col_mes <- names(raw)[which(cab == "Mês (Código)")[1]]
+  col_ter <- names(raw)[grepl("^D[0-9]N$", names(raw)) & grepl("Brasil|Região|Federação", cab)][1]
+  col_set <- names(raw)[grepl("^D[0-9]N$", names(raw)) & cab == cl$nome[i]][1]
+  tibble(recorte = df[[col_ter]], setor = df[[col_set]],
+         data = as.Date(paste0(substr(df[[col_mes]], 1, 4), "-", substr(df[[col_mes]], 5, 6), "-01")),
+         valor = suppressWarnings(as.numeric(df$V))) %>%
+    filter(!is.na(valor)) %>%
+    mutate(codigo = sub(" .*", "", setor), setor = sub("^[0-9.]+ ", "", setor),
+           recorte = dplyr::case_when(grepl("Pernambuco", recorte) ~ "Pernambuco",
+                                      grepl("Nordeste", recorte) ~ "Nordeste",
+                                      grepl("Brasil", recorte) ~ "Brasil", TRUE ~ recorte))
+}
+
+# Atividades da PIM-PF ligadas a cada cadeia (campo `pim` em config/cadeias.yml)
+ler_pim_cadeias <- function(arquivo = caminho("config", "cadeias.yml")) {
+  cfg <- yaml::read_yaml(arquivo)$cadeias
+  purrr::map_dfr(cfg, function(c) {
+    v <- as.character(unlist(c$pim))
+    if (!length(v)) return(tibble(cadeia_id = character(), codigo = character()))
+    tibble(cadeia_id = c$id, codigo = v)
+  })
+}
+
+# Variação da média anual (anos completos) em cada corte, por atividade e recorte
+resumo_pim_setores <- function(pim_set, janelas = CORTES_PADRAO$janelas) {
+  if (is.null(pim_set) || !NROW(pim_set)) return(tibble())
+  an <- pim_set %>% mutate(ano = as.numeric(format(data, "%Y"))) %>%
+    group_by(recorte, codigo, setor, ano) %>% filter(n() == 12) %>%
+    summarise(valor = mean(valor), .groups = "drop")
+  ult <- max(an$ano)
+  an %>% group_by(recorte, codigo, setor) %>%
+    reframe(ano_fim = ult, janela = janelas, var = vapply(janelas, function(j) {
+      a <- valor[ano == ult - j]; b <- valor[ano == ult]
+      if (length(a) && length(b) && a > 0) b / a - 1 else NA_real_
+    }, numeric(1)))
+}
+
 # Médias anuais (só anos completos) e variação nos cortes de 10, 5 e 2 anos
 atividade_anual <- function(serie) {
   if (is.null(serie) || !NROW(serie)) return(tibble())

@@ -15,6 +15,9 @@
 #        ligadas às CLASSES (5 dígitos) da cadeia pela correspondência
 #        NCM x CNAE do IBGE (config/sh4_cnae.csv). Para desligar, use
 #        sh4_auto: false na cadeia.
+# pim:   atividades da PIM-PF Regional (tabela SIDRA 8888) ligadas à cadeia,
+#        pelo código da CNAE usado pelo IBGE (ex.: "3.29" = veículos). Só as
+#        atividades que o IBGE divulga para PE aparecem no site.
 # sidra: produtos/rebanhos do IBGE. `tabela` é a tabela SIDRA e `padrao` é uma
 #        expressão regular aplicada ao NOME do produto (não ao código), para
 #        não depender de códigos de categoria que mudam entre tabelas.
@@ -177,6 +180,7 @@ cadeias:
 
   - id: sucroenergetico
     nome: Sucroenergético
+    pim: ["3.10"]
     macrossetor: Agropecuária e agroindústria
     descricao: >
       Cana-de-açúcar, açúcar e etanol na Zona da Mata. Setor histórico em
@@ -214,6 +218,7 @@ cadeias:
 
   - id: gesso
     nome: Gesso (Polo Gesseiro do Araripe)
+    pim: ["3.23"]
     macrossetor: Indústria
     descricao: >
       Mineração de gipsita, calcinação e pré-moldados de gesso no Sertão do
@@ -251,6 +256,7 @@ cadeias:
 
   - id: construcao_civil
     nome: Construção civil
+    pim: ["3.23"]
     macrossetor: Indústria
     descricao: >
       Materiais de construção, edificações, obras de infraestrutura e
@@ -270,6 +276,7 @@ cadeias:
 
   - id: automotivo
     nome: Automotivo
+    pim: ["3.29"]
     macrossetor: Indústria
     descricao: >
       Montadora e fornecedores de autopeças em Goiana e região, além do
@@ -285,6 +292,7 @@ cadeias:
 
   - id: petroquimica_plasticos
     nome: Petróleo, química e plásticos
+    pim: ["3.19", "3.20", "3.22"]
     macrossetor: Indústria
     descricao: >
       Refino, PTA, resina PET, fibras de poliéster e transformação de plásticos no complexo de Suape.
@@ -388,6 +396,7 @@ cadeias:
 
   - id: bebidas
     nome: Bebidas
+    pim: ["3.11"]
     macrossetor: Indústria
     descricao: >
       Aguardente, cervejas, refrigerantes, águas e vinhos. Pernambuco tem
@@ -406,6 +415,7 @@ cadeias:
 
   - id: higiene_limpeza
     nome: Higiene, limpeza e cosméticos
+    pim: ["3.20"]
     macrossetor: Indústria
     descricao: >
       Sabões, detergentes, produtos de limpeza e cosméticos, com fábricas

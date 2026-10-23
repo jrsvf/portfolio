@@ -9,6 +9,7 @@ source("_setup.R")
 carregar("serie_uf", "rais_secao", "krugman", "pib_pop", "comex_pe", "locais_cadeia", "janelas_uf", "cmp_ne", "fontes_datas")
 macro_ibcr <- tryCatch(ler_base("macro_ibcr", ""), error = function(e) NULL)
 macro_pim  <- tryCatch(ler_base("macro_pim", ""), error = function(e) NULL)
+pim_resumo <- tryCatch(ler_base("pim_resumo", ""), error = function(e) NULL)
 ult <- max(rais_secao$ano); ini <- max(min(rais_secao$ano), ult - max(CORTES_PADRAO$janelas))
 su <- serie_uf %>% arrange(ano) %>% filter(ano >= ini)
 rais_secao <- rais_secao %>% filter(ano >= ini)
@@ -82,6 +83,25 @@ if (tem_pim) knitr::kable(tab_cortes(atividade_anual(macro_pim %>% filter(variav
 ```
 
 <p class="fonte">Fonte: IBGE, Pesquisa Industrial Mensal - Produção Física Regional (tabela SIDRA 8888), indústria geral. Gráfico com ajuste sazonal; tabela com a série original.</p>
+
+### Indústria por atividade
+
+```{r}
+if (NROW(pim_resumo)) {
+  com_pe <- unique(pim_resumo$codigo[pim_resumo$recorte == "Pernambuco" & !is.na(pim_resumo$var)])
+  j <- sort(unique(pim_resumo$janela), decreasing = TRUE)
+  tb <- pim_resumo %>% filter(codigo %in% com_pe, !codigo %in% c("1", "3")) %>%
+    mutate(col = paste0(c(Pernambuco = "PE", Nordeste = "NE", Brasil = "BR")[recorte], " ", janela, " anos")) %>%
+    select(codigo, setor, col, var) %>% pivot_wider(names_from = col, values_from = var)
+  ordem <- c(paste0(c("PE", "NE", "BR"), " ", j[1], " anos"), paste0("PE ", j[-1], " anos"))
+  ordem <- intersect(ordem, names(tb))
+  tb <- tb %>% arrange(desc(.data[[ordem[1]]])) %>% select(Atividade = setor, all_of(ordem)) %>%
+    mutate(across(-Atividade, ~ ifelse(is.na(.x), "–", sinal_pct(.x))))
+  knitr::kable(tb, caption = paste0("Variação da produção física média anual por atividade (anos completos até ", max(pim_resumo$ano_fim), ")"))
+} else htmltools::p(class = "aviso", "Série da PIM-PF por atividade indisponível nesta atualização.")
+```
+
+<p class="fonte">Fonte: IBGE, PIM-PF Regional (tabela SIDRA 8888), série sem ajuste sazonal. Só aparecem as atividades que o IBGE divulga para Pernambuco; Nordeste e Brasil servem como termo de comparação.</p>
 
 :::
 
