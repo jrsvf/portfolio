@@ -17,13 +17,23 @@ geo = ({type: "FeatureCollection", features: geo0.features.map(f => {
   return {...f, geometry: {...g, coordinates: coords}};
 })})
 nomes = dados.map(d => d.nome).sort((a, b) => a.localeCompare(b, "pt-BR"))
+semAcento = t => (t ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
 inicial = {
-  const q = new URLSearchParams(window.location.search).get("m");
-  const alvo = q ? dados.find(d => d.id === q || d.nome.toLowerCase() === q.toLowerCase()) : null;
+  const q = semAcento(new URLSearchParams(window.location.search).get("m"));
+  const alvo = q ? (dados.find(d => d.id === q || semAcento(d.nome) === q) ?? dados.find(d => semAcento(d.nome).startsWith(q)) ?? dados.find(d => semAcento(d.nome).includes(q))) : null;
   return alvo ? alvo.nome : "Recife";
 }
-viewof escolha = Inputs.select(nomes, {label: "Município", value: inicial})
-m = dados.find(d => d.nome === escolha)
+viewof busca = Inputs.text({label: "Buscar município", placeholder: "Digite o nome (ex.: Caruaru)", datalist: nomes, value: inicial, submit: false, width: 420})
+achado = {
+  const q = semAcento(busca);
+  if (!q) return null;
+  return dados.find(d => semAcento(d.nome) === q) ?? dados.find(d => semAcento(d.nome).startsWith(q)) ?? dados.find(d => semAcento(d.nome).includes(q)) ?? null;
+}
+m = {
+  if (achado) { try { history.replaceState(null, "", "?m=" + achado.id); } catch (e) {} }
+  return achado ?? dados.find(d => d.nome === inicial);
+}
+aviso_busca = (achado || !semAcento(busca)) ? html`` : html`<p class="aviso">Nenhum município encontrado para “${busca}”. Mostrando ${m.nome}.</p>`
 
 // formatação
 nf = (x, d = 0) => x == null || isNaN(x) ? "–" : x.toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d})
@@ -152,14 +162,37 @@ ${m.agro.animal.map(d => html`<tr><td>${d.produto}</td><td>${reais(1000 * d.valo
 
 ```{ojs}
 //| echo: false
+det = m.cadeias_det ?? {}
+um = u => ({"Toneladas": "t", "Cabeças": "cabeças", "Mil litros": "mil litros", "Mil dúzias": "mil dúzias", "Quilogramas": "kg", "Milheiros": "milheiros"}[u] ?? u ?? "")
+cardCadeia = d => {
+  const x = det[d.cadeia_id] ?? {elos: [], producao: [], destinos: []};
+  const esp = d.ql >= 1;
+  return html`<div class="rx-cc ${esp ? "rx-cc-esp" : ""}">
+    <div class="rx-cc-topo">
+      <a class="rx-cc-nome" href="cadeias/${d.cadeia_id}.html">${d.cadeia}</a>
+      ${d.ql != null ? html`<span class="rx-ql" title="Quociente locacional: peso da cadeia no emprego do município dividido pelo peso no estado">QL ${nf(d.ql, 2)}</span>` : ""}
+    </div>
+    <div class="rx-cc-nums">
+      <div><b>${nf(d.emprego)}</b><span>empregos formais</span></div>
+      <div><b>${pct(d.var10, 0)}</b><span>em 10 anos</span></div>
+      ${d.vp_mil ? html`<div><b>${reais(1000 * d.vp_mil)}</b><span>valor da produção</span></div>` : ""}
+      ${d.ex_usd ? html`<div><b>${usd(d.ex_usd)}</b><span>exportado em ${m.comex.ano}</span></div>` : ""}
+    </div>
+    ${x.producao.length ? html`<div class="rx-cc-bloco"><h5>Produção (IBGE)</h5><table class="rx-tab"><tbody>
+      ${x.producao.slice(0, 6).map(p => html`<tr><td>${p.produto.replace("*", "")}</td><td>${p.qtd ? nf(p.qtd) + " " + um(p.unidade) : "–"}</td><td>${p.valor_mil ? reais(1000 * p.valor_mil) : ""}</td></tr>`)}
+    </tbody></table></div>` : ""}
+    ${x.elos.length ? html`<div class="rx-cc-bloco"><h5>Elos com emprego formal</h5><table class="rx-tab"><tbody>
+      ${x.elos.map(e => html`<tr><td>${e.elo}</td><td>${nf(e.emprego)}</td><td>QL ${nf(e.ql, 2)}</td></tr>`)}
+    </tbody></table></div>` : ""}
+    ${x.destinos.length ? html`<div class="rx-cc-bloco"><h5>Principais destinos</h5><p>${x.destinos.map(p => `${p.pais} (${usd(p.v)})`).join(" · ")}</p></div>` : ""}
+  </div>`;
+}
 m.cadeias.length === 0 ? html`<p>Nenhuma das 21 cadeias acompanhadas tem emprego formal ou produção registrada aqui.</p>` :
-html`<p>As cadeias acompanhadas no portfólio com presença em ${m.nome}. QL acima de 1 indica que a cadeia pesa mais no emprego do município do que na média do estado.</p>
-<table class="rx-tab rx-cad"><thead><tr><th>Cadeia</th><th>Empregos formais</th><th>QL</th><th>Var. 10 anos</th><th>Valor da produção (IBGE)</th><th>Exportações</th></tr></thead><tbody>
-${m.cadeias.map(d => html`<tr class="${d.ql >= 1 ? "rx-esp" : ""}"><td>${d.cadeia}</td><td>${nf(d.emprego)}</td><td>${d.ql == null ? "–" : nf(d.ql, 2)}</td><td>${pct(d.var10, 0)}</td><td>${d.vp_mil ? reais(1000 * d.vp_mil) : "–"}</td><td>${usd(d.ex_usd)}</td></tr>`)}
-</tbody></table>`
+html`<p>Cada cartão junta o que o município tem em cada cadeia acompanhada: emprego formal por elo, produção do IBGE e exportações. Em destaque, as cadeias em que ${m.nome} é especializado (QL ≥ 1). O nome leva à página da cadeia.</p>
+<div class="rx-ccs">${m.cadeias.map(cardCadeia)}</div>`
 ```
 
-<p class="fonte">Fonte: RAIS (emprego e QL), IBGE (valor da produção agropecuária das cadeias) e ComexStat. Em destaque, cadeias com QL ≥ 1.</p>
+<p class="fonte">Fonte: RAIS (emprego e QL), IBGE (PAM e PPM) e ComexStat, via Base dos Dados e SIDRA.</p>
 
 ## Emprego formal
 

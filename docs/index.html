@@ -46,7 +46,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7c4519292d47319fafe1fb75adf252e7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-82f686dae96c9303fa094797a13ff082.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -153,29 +153,245 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="josé-roberto-verçosa" class="level1 hero">
-<h1>José Roberto Verçosa</h1>
-<p><span class="subtitulo">Economista, mestre em Economia Regional (UFPE). Transformo dados públicos em leitura de território: onde estão as cadeias produtivas de Pernambuco, como evoluem, como se conectam ao resto da economia e o que os dados oficiais ainda não conseguem mostrar.</span></p>
+<section class="home-hero">
+  <svg class="home-tri" viewbox="0 0 600 400" preserveaspectratio="xMaxYMid slice" aria-hidden="true">
+    <polygon points="600,0 420,0 600,170" fill="#E07A1F" opacity=".9"></polygon>
+    <polygon points="420,0 600,170 470,210" fill="#2E6DA4" opacity=".55"></polygon>
+    <polygon points="600,170 470,210 600,330" fill="#E07A1F" opacity=".35"></polygon>
+    <polygon points="470,210 600,330 520,400" fill="#2E6DA4" opacity=".45"></polygon>
+    <polygon points="600,330 520,400 600,400" fill="#F2B279" opacity=".7"></polygon>
+    <polygon points="420,0 470,210 330,120" fill="#ffffff" opacity=".07"></polygon>
+    <polygon points="470,210 520,400 380,330" fill="#ffffff" opacity=".06"></polygon>
+    <polygon points="330,120 470,210 380,330" fill="#2E6DA4" opacity=".25"></polygon>
+  </svg>
+  <div class="home-hero-txt">
+    <p class="home-kicker">Pernambuco em dados públicos</p>
+    <h1>Onde está, como cresce e para onde vende a economia de Pernambuco</h1>
+    <p class="home-lead">Cadeias produtivas, emprego, produção e comércio exterior dos 185 municípios, montados a partir de fontes oficiais e atualizados por um pipeline aberto em R.</p>
+    <form class="home-busca" action="municipios.html" method="get" role="search">
+      <i class="bi bi-search"></i>
+      <input name="m" list="home-lista-mun" placeholder="Busque um município (ex.: Caruaru)" aria-label="Buscar município" autocomplete="off">
+      <button type="submit">Ver raio-X</button>
+    </form>
+    <div class="home-ctas">
+      <a class="home-btn home-btn-1" href="panorama.html">Panorama do estado</a>
+      <a class="home-btn home-btn-2" href="cadeias/index.html">As 21 cadeias</a>
+    </div>
+  </div>
 </section>
+<div class="cell">
+<div class="cell-output-display">
+<datalist id="home-lista-mun">
+<option value="Abreu e Lima"></option>
+<option value="Afogados da Ingazeira"></option>
+<option value="Afrânio"></option>
+<option value="Agrestina"></option>
+<option value="Água Preta"></option>
+<option value="Águas Belas"></option>
+<option value="Alagoinha"></option>
+<option value="Aliança"></option>
+<option value="Altinho"></option>
+<option value="Amaraji"></option>
+<option value="Angelim"></option>
+<option value="Araçoiaba"></option>
+<option value="Araripina"></option>
+<option value="Arcoverde"></option>
+<option value="Barra de Guabiraba"></option>
+<option value="Barreiros"></option>
+<option value="Belém de Maria"></option>
+<option value="Belém do São Francisco"></option>
+<option value="Belo Jardim"></option>
+<option value="Betânia"></option>
+<option value="Bezerros"></option>
+<option value="Bodocó"></option>
+<option value="Bom Conselho"></option>
+<option value="Bom Jardim"></option>
+<option value="Bonito"></option>
+<option value="Brejão"></option>
+<option value="Brejinho"></option>
+<option value="Brejo da Madre de Deus"></option>
+<option value="Buenos Aires"></option>
+<option value="Buíque"></option>
+<option value="Cabo de Santo Agostinho"></option>
+<option value="Cabrobó"></option>
+<option value="Cachoeirinha"></option>
+<option value="Caetés"></option>
+<option value="Calçado"></option>
+<option value="Calumbi"></option>
+<option value="Camaragibe"></option>
+<option value="Camocim de São Félix"></option>
+<option value="Camutanga"></option>
+<option value="Canhotinho"></option>
+<option value="Capoeiras"></option>
+<option value="Carnaíba"></option>
+<option value="Carnaubeira da Penha"></option>
+<option value="Carpina"></option>
+<option value="Caruaru"></option>
+<option value="Casinhas"></option>
+<option value="Catende"></option>
+<option value="Cedro"></option>
+<option value="Chã de Alegria"></option>
+<option value="Chã Grande"></option>
+<option value="Condado"></option>
+<option value="Correntes"></option>
+<option value="Cortês"></option>
+<option value="Cumaru"></option>
+<option value="Cupira"></option>
+<option value="Custódia"></option>
+<option value="Dormentes"></option>
+<option value="Escada"></option>
+<option value="Exu"></option>
+<option value="Feira Nova"></option>
+<option value="Fernando de Noronha"></option>
+<option value="Ferreiros"></option>
+<option value="Flores"></option>
+<option value="Floresta"></option>
+<option value="Frei Miguelinho"></option>
+<option value="Gameleira"></option>
+<option value="Garanhuns"></option>
+<option value="Glória do Goitá"></option>
+<option value="Goiana"></option>
+<option value="Granito"></option>
+<option value="Gravatá"></option>
+<option value="Iati"></option>
+<option value="Ibimirim"></option>
+<option value="Ibirajuba"></option>
+<option value="Igarassu"></option>
+<option value="Iguaraci"></option>
+<option value="Ilha de Itamaracá"></option>
+<option value="Inajá"></option>
+<option value="Ingazeira"></option>
+<option value="Ipojuca"></option>
+<option value="Ipubi"></option>
+<option value="Itacuruba"></option>
+<option value="Itaíba"></option>
+<option value="Itambé"></option>
+<option value="Itapetim"></option>
+<option value="Itapissuma"></option>
+<option value="Itaquitinga"></option>
+<option value="Jaboatão dos Guararapes"></option>
+<option value="Jaqueira"></option>
+<option value="Jataúba"></option>
+<option value="Jatobá"></option>
+<option value="João Alfredo"></option>
+<option value="Joaquim Nabuco"></option>
+<option value="Jucati"></option>
+<option value="Jupi"></option>
+<option value="Jurema"></option>
+<option value="Lagoa de Itaenga"></option>
+<option value="Lagoa do Carro"></option>
+<option value="Lagoa do Ouro"></option>
+<option value="Lagoa dos Gatos"></option>
+<option value="Lagoa Grande"></option>
+<option value="Lajedo"></option>
+<option value="Limoeiro"></option>
+<option value="Macaparana"></option>
+<option value="Machados"></option>
+<option value="Manari"></option>
+<option value="Maraial"></option>
+<option value="Mirandiba"></option>
+<option value="Moreilândia"></option>
+<option value="Moreno"></option>
+<option value="Nazaré da Mata"></option>
+<option value="Olinda"></option>
+<option value="Orobó"></option>
+<option value="Orocó"></option>
+<option value="Ouricuri"></option>
+<option value="Palmares"></option>
+<option value="Palmeirina"></option>
+<option value="Panelas"></option>
+<option value="Paranatama"></option>
+<option value="Parnamirim"></option>
+<option value="Passira"></option>
+<option value="Paudalho"></option>
+<option value="Paulista"></option>
+<option value="Pedra"></option>
+<option value="Pesqueira"></option>
+<option value="Petrolândia"></option>
+<option value="Petrolina"></option>
+<option value="Poção"></option>
+<option value="Pombos"></option>
+<option value="Primavera"></option>
+<option value="Quipapá"></option>
+<option value="Quixaba"></option>
+<option value="Recife"></option>
+<option value="Riacho das Almas"></option>
+<option value="Ribeirão"></option>
+<option value="Rio Formoso"></option>
+<option value="Sairé"></option>
+<option value="Salgadinho"></option>
+<option value="Salgueiro"></option>
+<option value="Saloá"></option>
+<option value="Sanharó"></option>
+<option value="Santa Cruz"></option>
+<option value="Santa Cruz da Baixa Verde"></option>
+<option value="Santa Cruz do Capibaribe"></option>
+<option value="Santa Filomena"></option>
+<option value="Santa Maria da Boa Vista"></option>
+<option value="Santa Maria do Cambucá"></option>
+<option value="Santa Terezinha"></option>
+<option value="São Benedito do Sul"></option>
+<option value="São Bento do Una"></option>
+<option value="São Caitano"></option>
+<option value="São João"></option>
+<option value="São Joaquim do Monte"></option>
+<option value="São José da Coroa Grande"></option>
+<option value="São José do Belmonte"></option>
+<option value="São José do Egito"></option>
+<option value="São Lourenço da Mata"></option>
+<option value="São Vicente Ferrer"></option>
+<option value="Serra Talhada"></option>
+<option value="Serrita"></option>
+<option value="Sertânia"></option>
+<option value="Sirinhaém"></option>
+<option value="Solidão"></option>
+<option value="Surubim"></option>
+<option value="Tabira"></option>
+<option value="Tacaimbó"></option>
+<option value="Tacaratu"></option>
+<option value="Tamandaré"></option>
+<option value="Taquaritinga do Norte"></option>
+<option value="Terezinha"></option>
+<option value="Terra Nova"></option>
+<option value="Timbaúba"></option>
+<option value="Toritama"></option>
+<option value="Tracunhaém"></option>
+<option value="Trindade"></option>
+<option value="Triunfo"></option>
+<option value="Tupanatinga"></option>
+<option value="Tuparetama"></option>
+<option value="Venturosa"></option>
+<option value="Verdejante"></option>
+<option value="Vertente do Lério"></option>
+<option value="Vertentes"></option>
+<option value="Vicência"></option>
+<option value="Vitória de Santo Antão"></option>
+<option value="Xexéu"></option>
+</datalist>
+</div>
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <div class="cartoes">
 <div class="cartao">
+<div class="cartao-valor">485.003</div>
+<div class="cartao-rotulo">Empregos formais nas cadeias em 2025</div>
+<div class="cartao-nota">RAIS, soma das 21 cadeias</div>
+</div>
+<div class="cartao">
+<div class="cartao-valor">+17,6%</div>
+<div class="cartao-rotulo">Atividade econômica de PE em 10 anos</div>
+<div class="cartao-nota">IBCR até 2025 · NE +7,0% · BR +11,3%</div>
+</div>
+<div class="cartao">
 <div class="cartao-valor">21</div>
 <div class="cartao-rotulo">Cadeias produtivas acompanhadas</div>
+<div class="cartao-nota">divididas em elos</div>
 </div>
 <div class="cartao">
 <div class="cartao-valor">185</div>
-<div class="cartao-rotulo">Municípios analisados</div>
-</div>
-<div class="cartao">
-<div class="cartao-valor">10, 5, 2</div>
-<div class="cartao-rotulo">Cortes de comparação</div>
-<div class="cartao-nota">anos, e desde 2023</div>
-</div>
-<div class="cartao">
-<div class="cartao-valor">89</div>
-<div class="cartao-rotulo">Lacunas de dados identificadas</div>
+<div class="cartao-rotulo">Municípios com raio-X</div>
+<div class="cartao-nota">produção, emprego e exportações</div>
 </div>
 <div class="cartao">
 <div class="cartao-valor">23/10/2026</div>
@@ -185,68 +401,363 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<section id="o-que-você-encontra-aqui" class="level2">
-<h2 class="anchored" data-anchor-id="o-que-você-encontra-aqui">O que você encontra aqui</h2>
-<ul>
-<li><strong><a href="./panorama.html">Panorama de Pernambuco</a>:</strong> nível de atividade (IBCR e produção industrial), emprego formal, estrutura produtiva, especialização dos municípios e comércio exterior.</li>
-<li><strong><a href="./municipios.html">Raio-X dos municípios</a>:</strong> para cada um dos 185 municípios, PIB por setor, produção agropecuária, emprego formal, cadeias presentes, saldo do CAGED e comércio exterior.</li>
-<li><strong><a href="./cadeias/index.html">Cadeias produtivas</a>:</strong> uma página por cadeia, dividida em elos (insumos, produção, processamento, distribuição), com comparações em 10, 5 e 2 anos e desde 2023, mapas de especialização, comparação com Nordeste e Brasil, dinâmica recente, produção física, exportações e destinos.</li>
-<li><strong><a href="./encadeamentos.html">Encadeamentos</a>:</strong> estimativa de ligações para trás e para frente dos setores da economia pernambucana, a partir da matriz insumo-produto nacional regionalizada.</li>
-<li><strong><a href="./lacunas.html">Lacunas de dados</a>:</strong> onde as fontes públicas não alcançam e qual informação resolveria.</li>
-</ul>
-<p>Tudo é gerado por um pipeline em R que consulta as fontes oficiais e reconstrói o site a cada atualização. O código é aberto e reproduzível.</p>
+<section id="o-que-os-dados-mostram" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-os-dados-mostram">O que os dados mostram</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="home-achados">
+<div class="home-achado">
+<div class="home-achado-ic">
+<i class="bi bi-trophy"></i>
+</div>
+<h4 class="anchored">Líder do Nordeste em 5 cadeias</h4>
+<p>Pernambuco tem o maior emprego formal do Nordeste em Automotivo; Fruticultura irrigada; Avicultura; Higiene, limpeza e cosméticos; Gesso (Polo Gesseiro do Araripe). Em outras 13 cadeias, fica em segundo.</p>
+<a href="panorama.html">Ver o panorama →</a>
+</div>
+<div class="home-achado">
+<div class="home-achado-ic">
+<i class="bi bi-graph-up-arrow"></i>
+</div>
+<h4 class="anchored">Avicultura +64% em 10 anos</h4>
+<p>Entre as cadeias com mais de 5 mil empregos, foi a que mais cresceu desde 2015, chegando a 17.051 vínculos formais em 2025.</p>
+<a href="cadeias/avicultura.html">Ver a cadeia →</a>
+</div>
+<div class="home-achado">
+<div class="home-achado-ic">
+<i class="bi bi-geo-alt"></i>
+</div>
+<h4 class="anchored">83% em três municípios</h4>
+<p>Fruticultura irrigada: Petrolina, Lagoa Grande, Custódia concentram a maior parte do emprego formal da cadeia. É a mais concentrada entre as grandes cadeias do interior.</p>
+<a href="cadeias/fruticultura.html">Ver o mapa →</a>
+</div>
+</div>
+</div>
+</div>
 </section>
-<section id="cadeias-em-destaque" class="level2">
-<h2 class="anchored" data-anchor-id="cadeias-em-destaque">Cadeias em destaque</h2>
-<section id="avicultura" class="level3">
-<h3 class="anchored" data-anchor-id="avicultura"><a href="./cadeias/avicultura.html">Avicultura</a></h3>
-<ul>
-<li>Emprego formal: 17.051 vínculos em 2025; +63,9% em 10 anos, +42,0% em 5 anos, +13,0% em 2 anos (desde 2023).</li>
-<li>40,6% do emprego formal está em três municípios: São Bento do Una, Belo Jardim, Paudalho.</li>
-</ul>
+<section id="explore" class="level2">
+<h2 class="anchored" data-anchor-id="explore">Explore</h2>
+<div class="home-secoes">
+  <a class="home-secao" href="panorama.html"><i class="bi bi-speedometer2"></i><h4 class="anchored">Panorama</h4><p>Nível de atividade (IBCR e indústria), emprego formal, estrutura produtiva e comércio exterior do estado.</p></a>
+  <a class="home-secao" href="municipios.html"><i class="bi bi-pin-map"></i><h4 class="anchored">Raio-X dos municípios</h4><p>PIB por setor, lavouras e rebanhos, emprego, CAGED, cadeias presentes e exportações de cada município.</p></a>
+  <a class="home-secao" href="cadeias/index.html"><i class="bi bi-diagram-3"></i><h4 class="anchored">Cadeias produtivas</h4><p>Uma página por cadeia, com elos, mapas de especialização, comparação com o Nordeste e o Brasil e destinos das exportações.</p></a>
+  <a class="home-secao" href="encadeamentos.html"><i class="bi bi-bezier2"></i><h4 class="anchored">Encadeamentos</h4><p>Ligações para trás e para frente dos setores, a partir da matriz insumo-produto regionalizada.</p></a>
+  <a class="home-secao" href="lacunas.html"><i class="bi bi-search"></i><h4 class="anchored">Lacunas de dados</h4><p>Onde as fontes públicas não alcançam e que informação resolveria.</p></a>
+  <a class="home-secao" href="metodologia.html"><i class="bi bi-gear"></i><h4 class="anchored">Metodologia</h4><p>Fontes, classificação das cadeias em elos, indicadores (QL, participação, concentração) e o pipeline.</p></a>
+</div>
 </section>
-<section id="bovinocultura-de-leite-e-corte" class="level3">
-<h3 class="anchored" data-anchor-id="bovinocultura-de-leite-e-corte"><a href="./cadeias/bovinocultura.html">Bovinocultura de leite e corte</a></h3>
-<ul>
-<li>Emprego formal: 13.228 vínculos em 2025; +34,4% em 10 anos, +36,8% em 5 anos, +7,0% em 2 anos (desde 2023).</li>
-<li>30,9% do emprego formal está em três municípios: Recife, Jaboatão dos Guararapes, Canhotinho.</li>
-</ul>
-</section>
-<section id="ovinocaprinocultura" class="level3">
-<h3 class="anchored" data-anchor-id="ovinocaprinocultura"><a href="./cadeias/ovinocaprinocultura.html">Ovinocaprinocultura</a></h3>
-<ul>
-<li>Emprego formal: 111 vínculos em 2025; -51,7% em 10 anos, -3,5% em 5 anos, -13,3% em 2 anos (desde 2023).</li>
-<li>49,5% do emprego formal está em três municípios: Dormentes, Bezerros, Petrolina.</li>
-</ul>
-</section>
-<section id="apicultura" class="level3">
-<h3 class="anchored" data-anchor-id="apicultura"><a href="./cadeias/apicultura.html">Apicultura</a></h3>
-<ul>
-<li>Emprego formal: 2.051 vínculos em 2025; -29,7% em 10 anos, +2,3% em 5 anos, -0,1% em 2 anos (desde 2023).</li>
-<li>37,2% do emprego formal está em três municípios: Belo Jardim, Paulista, Cabo de Santo Agostinho.</li>
-</ul>
-</section>
-<section id="aquicultura-e-pesca" class="level3">
-<h3 class="anchored" data-anchor-id="aquicultura-e-pesca"><a href="./cadeias/aquicultura.html">Aquicultura e pesca</a></h3>
-<ul>
-<li>Emprego formal: 5.445 vínculos em 2025; +59,9% em 10 anos, +40,2% em 5 anos, +9,1% em 2 anos (desde 2023).</li>
-<li>36,0% do emprego formal está em três municípios: Recife, Carpina, Jaboatão dos Guararapes.</li>
-</ul>
-</section>
-<section id="fruticultura-irrigada" class="level3">
-<h3 class="anchored" data-anchor-id="fruticultura-irrigada"><a href="./cadeias/fruticultura.html">Fruticultura irrigada</a></h3>
-<ul>
-<li>Emprego formal: 35.038 vínculos em 2025; +52,4% em 10 anos, +31,7% em 5 anos, +4,7% em 2 anos (desde 2023).</li>
-<li>82,7% do emprego formal está em três municípios: Petrolina, Lagoa Grande, Custódia.</li>
-</ul>
-<p><a href="./cadeias/index.html">Ver todas as cadeias →</a></p>
-</section>
+<section id="as-21-cadeias-em-números" class="level2">
+<h2 class="anchored" data-anchor-id="as-21-cadeias-em-números">As 21 cadeias em números</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="home-cads">
+<a class="home-cad" href="cadeias/construcao_civil.html">
+<div class="home-cad-nome">Construção civil</div>
+<div class="home-cad-num">
+99.860
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++6%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/turismo.html">
+<div class="home-cad-nome">Turismo</div>
+<div class="home-cad-num">
+66.745
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++12%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/sucroenergetico.html">
+<div class="home-cad-nome">Sucroenergético</div>
+<div class="home-cad-num">
+48.119
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-9%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/logistica.html">
+<div class="home-cad-nome">Logística</div>
+<div class="home-cad-num">
+44.548
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++35%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/textil_confeccoes.html">
+<div class="home-cad-nome">Têxtil e confecções</div>
+<div class="home-cad-num">
+42.098
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-8%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/automotivo.html">
+<div class="home-cad-nome">Automotivo</div>
+<div class="home-cad-num">
+41.266
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++43%
+ em 10 anos
+</span>
+<span class="home-pos-ne home-pos-1">1º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/fruticultura.html">
+<div class="home-cad-nome">Fruticultura irrigada</div>
+<div class="home-cad-num">
+35.038
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++52%
+ em 10 anos
+</span>
+<span class="home-pos-ne home-pos-1">1º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/avicultura.html">
+<div class="home-cad-nome">Avicultura</div>
+<div class="home-cad-num">
+17.051
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++64%
+ em 10 anos
+</span>
+<span class="home-pos-ne home-pos-1">1º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/ti_software.html">
+<div class="home-cad-nome">Tecnologia da informação</div>
+<div class="home-cad-num">
+16.505
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++58%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/bebidas.html">
+<div class="home-cad-nome">Bebidas</div>
+<div class="home-cad-num">
+13.653
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-9%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/moveleiro.html">
+<div class="home-cad-nome">Moveleiro</div>
+<div class="home-cad-num">
+13.229
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-3%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">3º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/bovinocultura.html">
+<div class="home-cad-nome">Bovinocultura de leite e corte</div>
+<div class="home-cad-num">
+13.228
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++34%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/petroquimica_plasticos.html">
+<div class="home-cad-nome">Petróleo, química e plásticos</div>
+<div class="home-cad-num">
+12.746
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++33%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/higiene_limpeza.html">
+<div class="home-cad-nome">Higiene, limpeza e cosméticos</div>
+<div class="home-cad-num">
+5.859
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++17%
+ em 10 anos
+</span>
+<span class="home-pos-ne home-pos-1">1º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/aquicultura.html">
+<div class="home-cad-nome">Aquicultura e pesca</div>
+<div class="home-cad-num">
+5.445
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++60%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/gesso.html">
+<div class="home-cad-nome">Gesso (Polo Gesseiro do Araripe)</div>
+<div class="home-cad-num">
+3.130
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-35%
+ em 10 anos
+</span>
+<span class="home-pos-ne home-pos-1">1º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/suinocultura.html">
+<div class="home-cad-nome">Suinocultura</div>
+<div class="home-cad-num">
+2.653
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++55%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/apicultura.html">
+<div class="home-cad-nome">Apicultura</div>
+<div class="home-cad-num">
+2.051
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-30%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/audiovisual.html">
+<div class="home-cad-nome">Audiovisual</div>
+<div class="home-cad-num">
+1.546
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-7%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">3º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/mandiocultura.html">
+<div class="home-cad-nome">Mandiocultura</div>
+<div class="home-cad-num">
+122
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++30%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">4º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/ovinocaprinocultura.html">
+<div class="home-cad-nome">Ovinocaprinocultura</div>
+<div class="home-cad-num">
+111
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-52%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+</div>
+</div>
+</div>
+<p class="fonte">
+Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Elaboração própria. Posição no Nordeste pelo emprego formal da cadeia em 2025.
+</p>
 </section>
 <section id="sobre-mim" class="level2">
 <h2 class="anchored" data-anchor-id="sobre-mim">Sobre mim</h2>
-<p>Atuo na interseção entre dados, políticas públicas e desenvolvimento regional. Trabalho com avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, PR, IHH, shift-share), comércio exterior e painéis de decisão em R/Shiny e Power BI.</p>
+<div class="home-sobre">
+<p><strong>José Roberto Verçosa</strong>, economista, mestre em Economia Regional (UFPE). Atuo na interseção entre dados, políticas públicas e desenvolvimento regional: avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, PR, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.</p>
 <p>Ferramentas: R, Python, SQL (BigQuery), Quarto, Shiny, Power BI.</p>
 <p><a href="https://www.linkedin.com/in/jrsvf">LinkedIn</a> · <a href="https://github.com/jrsvf">GitHub</a> · <a href="https://lattes.cnpq.br/1066993955257243">Lattes</a></p>
+</div>
 
 
 </section>

@@ -7,59 +7,155 @@ toc: false
 ```{r}
 #| include: false
 source("_setup.R")
-carregar("cad_mun", "serie_uf", "comex_pe", "lacunas", "destaques", "fontes_datas")
-ult <- max(cad_mun$ano)
+carregar("cad_mun", "cmp_ne", "fontes_datas", "lacunas")
+macro_ibcr <- tryCatch(ler_base("macro_ibcr", ""), error = function(e) NULL)
+library(htmltools)
+ult <- max(cad_mun$ano); a10 <- ult - 10
+nomes_cad <- setNames(cad$meta$cadeia, cad$meta$cadeia_id)
+
+# emprego por cadeia no último ano e há 10 anos
+por_cad <- cad_mun %>% filter(ano %in% c(a10, ult)) %>%
+  group_by(cadeia_id, ano) %>% summarise(emp = sum(emprego, na.rm = TRUE), .groups = "drop") %>%
+  tidyr::pivot_wider(names_from = ano, values_from = emp, names_prefix = "a") %>%
+  transmute(cadeia_id, emp = .data[[paste0("a", ult)]], var10 = emp / .data[[paste0("a", a10)]] - 1) %>%
+  left_join(cmp_ne$resumo %>% select(cadeia_id, posicao, part_ne), by = "cadeia_id") %>%
+  mutate(cadeia = nomes_cad[cadeia_id]) %>% arrange(desc(emp))
+
+# concentração: participação dos três maiores municípios
+top3 <- cad_mun %>% filter(ano == ult) %>% group_by(cadeia_id, id_municipio) %>%
+  summarise(emp = sum(emprego, na.rm = TRUE), .groups = "drop") %>% group_by(cadeia_id) %>%
+  arrange(desc(emp), .by_group = TRUE) %>%
+  summarise(part3 = sum(head(emp, 3)) / sum(emp), lideres = paste(nome_mun(head(id_municipio, 3)), collapse = ", "),
+            total = sum(emp), .groups = "drop")
+
+lider <- por_cad %>% filter(posicao == 1)
+grande <- por_cad %>% filter(emp >= 5000)
+cresce <- grande %>% slice_max(var10, n = 1)
+# a cadeia mais concentrada fora da capital (concentração no Recife é esperada)
+conc <- top3 %>% filter(total >= 5000, !grepl("^Recife", lideres)) %>% slice_max(part3, n = 1)
+pct <- function(x, d = 0) paste0(ifelse(x > 0, "+", ""), fmt_num(100 * x, d), "%")
+
+ibcr10 <- NULL
+if (!is.null(macro_ibcr) && NROW(macro_ibcr)) {
+  aa <- atividade_anual(macro_ibcr); ua <- max(aa$ano)
+  v <- aa %>% filter(ano %in% c(ua - 10, ua)) %>% group_by(recorte) %>% arrange(ano) %>%
+    summarise(v = last(valor) / first(valor) - 1, n = n(), .groups = "drop") %>% filter(n == 2)
+  achar <- function(p) v$v[grepl(p, v$recorte, ignore.case = TRUE)][1]
+  ibcr10 <- list(pe = achar("pernambuco|^pe"), ne = achar("nordeste|^ne"), br = achar("brasil|^br"), ano = ua)
+  if (is.na(ibcr10$pe)) ibcr10 <- NULL
+}
+emp_total <- sum(cad_mun$emprego[cad_mun$ano == ult], na.rm = TRUE)
 ```
 
-::: {.hero}
-# José Roberto Verçosa
-
-[Economista, mestre em Economia Regional (UFPE). Transformo dados públicos em leitura de território: onde estão as cadeias produtivas de Pernambuco, como evoluem, como se conectam ao resto da economia e o que os dados oficiais ainda não conseguem mostrar.]{.subtitulo}
-:::
+```{=html}
+<section class="home-hero">
+  <svg class="home-tri" viewBox="0 0 600 400" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+    <polygon points="600,0 420,0 600,170" fill="#E07A1F" opacity=".9"/>
+    <polygon points="420,0 600,170 470,210" fill="#2E6DA4" opacity=".55"/>
+    <polygon points="600,170 470,210 600,330" fill="#E07A1F" opacity=".35"/>
+    <polygon points="470,210 600,330 520,400" fill="#2E6DA4" opacity=".45"/>
+    <polygon points="600,330 520,400 600,400" fill="#F2B279" opacity=".7"/>
+    <polygon points="420,0 470,210 330,120" fill="#ffffff" opacity=".07"/>
+    <polygon points="470,210 520,400 380,330" fill="#ffffff" opacity=".06"/>
+    <polygon points="330,120 470,210 380,330" fill="#2E6DA4" opacity=".25"/>
+  </svg>
+  <div class="home-hero-txt">
+    <p class="home-kicker">Pernambuco em dados públicos</p>
+    <h1>Onde está, como cresce e para onde vende a economia de Pernambuco</h1>
+    <p class="home-lead">Cadeias produtivas, emprego, produção e comércio exterior dos 185 municípios, montados a partir de fontes oficiais e atualizados por um pipeline aberto em R.</p>
+    <form class="home-busca" action="municipios.html" method="get" role="search">
+      <i class="bi bi-search"></i>
+      <input name="m" list="home-lista-mun" placeholder="Busque um município (ex.: Caruaru)" aria-label="Buscar município" autocomplete="off">
+      <button type="submit">Ver raio-X</button>
+    </form>
+    <div class="home-ctas">
+      <a class="home-btn home-btn-1" href="panorama.html">Panorama do estado</a>
+      <a class="home-btn home-btn-2" href="cadeias/index.html">As 21 cadeias</a>
+    </div>
+  </div>
+</section>
+```
 
 ```{r}
+#| echo: false
+tags$datalist(id = "home-lista-mun", lapply(sort(municipios$municipio), function(n) tags$option(value = n)))
+```
+
+```{r}
+#| echo: false
 cartoes(list(
-  list(rotulo = "Cadeias produtivas acompanhadas", valor = nrow(cad$meta)),
-  list(rotulo = "Municípios analisados", valor = nrow(municipios)),
-  list(rotulo = "Cortes de comparação", valor = paste(CORTES_PADRAO$janelas, collapse = ", "),
-       nota = paste0("anos, e desde ", CORTES_PADRAO$desde)),
-  list(rotulo = "Lacunas de dados identificadas", valor = nrow(lacunas)),
+  list(rotulo = paste("Empregos formais nas cadeias em", ult), valor = fmt_num(emp_total),
+       nota = "RAIS, soma das 21 cadeias"),
+  if (!is.null(ibcr10)) list(rotulo = "Atividade econômica de PE em 10 anos", valor = pct(ibcr10$pe, 1),
+       nota = paste0("IBCR até ", ibcr10$ano, " · NE ", pct(ibcr10$ne, 1), " · BR ", pct(ibcr10$br, 1))),
+  list(rotulo = "Cadeias produtivas acompanhadas", valor = nrow(cad$meta), nota = "divididas em elos"),
+  list(rotulo = "Municípios com raio-X", valor = nrow(municipios), nota = "produção, emprego e exportações"),
   list(rotulo = "Última atualização", valor = format(atualizado_em, "%d/%m/%Y"),
        nota = paste0("RAIS ", sub(".* a (\\d{4}).*", "\\1", fontes_datas$cobertura[1]),
                      " · CAGED ", sub(".* a (\\d{2}/\\d{4}).*", "\\1", fontes_datas$cobertura[2])))
-))
+) |> Filter(f = Negate(is.null)))
 ```
 
-## O que você encontra aqui
-
-- **[Panorama de Pernambuco](panorama.qmd):** nível de atividade (IBCR e produção industrial), emprego formal, estrutura produtiva, especialização dos municípios e comércio exterior.
-- **[Raio-X dos municípios](municipios.qmd):** para cada um dos 185 municípios, PIB por setor, produção agropecuária, emprego formal, cadeias presentes, saldo do CAGED e comércio exterior.
-- **[Cadeias produtivas](cadeias/index.qmd):** uma página por cadeia, dividida em elos (insumos, produção, processamento, distribuição), com comparações em 10, 5 e 2 anos e desde 2023, mapas de especialização, comparação com Nordeste e Brasil, dinâmica recente, produção física, exportações e destinos.
-- **[Encadeamentos](encadeamentos.qmd):** estimativa de ligações para trás e para frente dos setores da economia pernambucana, a partir da matriz insumo-produto nacional regionalizada.
-- **[Lacunas de dados](lacunas.qmd):** onde as fontes públicas não alcançam e qual informação resolveria.
-
-Tudo é gerado por um pipeline em R que consulta as fontes oficiais e reconstrói o site a cada atualização. O código é aberto e reproduzível.
-
-## Cadeias em destaque
+## O que os dados mostram
 
 ```{r}
-#| results: asis
-for (i in seq_len(min(6, nrow(cad$meta)))) {
-  m <- cad$meta[i, ]
-  cat(sprintf("### [%s](cadeias/%s.qmd)\n\n", m$cadeia, m$cadeia_id))
-  d <- destaques[[m$cadeia_id]]
-  if (length(d) > 0) cat("- ", d[1], "\n", sep = "")
-  if (length(d) > 1) cat("- ", d[2], "\n", sep = "")
-  cat("\n")
-}
+#| echo: false
+achado <- function(icone, titulo, texto, link, rotulo) div(class = "home-achado",
+  div(class = "home-achado-ic", tags$i(class = paste("bi", icone))),
+  h4(titulo), p(texto), a(href = link, paste(rotulo, "→")))
+div(class = "home-achados",
+  achado("bi-trophy", paste("Líder do Nordeste em", nrow(lider), "cadeias"),
+         paste0("Pernambuco tem o maior emprego formal do Nordeste em ", paste(lider$cadeia, collapse = "; "),
+                ". Em outras ", sum(por_cad$posicao == 2, na.rm = TRUE), " cadeias, fica em segundo."),
+         "panorama.html", "Ver o panorama"),
+  achado("bi-graph-up-arrow", paste(cresce$cadeia, pct(cresce$var10), "em 10 anos"),
+         paste0("Entre as cadeias com mais de 5 mil empregos, foi a que mais cresceu desde ", a10, ", chegando a ",
+                fmt_num(cresce$emp), " vínculos formais em ", ult, "."),
+         paste0("cadeias/", cresce$cadeia_id, ".html"), "Ver a cadeia"),
+  achado("bi-geo-alt", paste0(fmt_num(100 * conc$part3, 0), "% em três municípios"),
+         paste0(nomes_cad[conc$cadeia_id], ": ", conc$lideres, " concentram a maior parte do emprego formal da cadeia. ",
+                "É a mais concentrada entre as grandes cadeias do interior."),
+         paste0("cadeias/", conc$cadeia_id, ".html"), "Ver o mapa")
+)
 ```
 
-[Ver todas as cadeias →](cadeias/index.qmd)
+## Explore
+
+```{=html}
+<div class="home-secoes">
+  <a class="home-secao" href="panorama.html"><i class="bi bi-speedometer2"></i><h4>Panorama</h4><p>Nível de atividade (IBCR e indústria), emprego formal, estrutura produtiva e comércio exterior do estado.</p></a>
+  <a class="home-secao" href="municipios.html"><i class="bi bi-pin-map"></i><h4>Raio-X dos municípios</h4><p>PIB por setor, lavouras e rebanhos, emprego, CAGED, cadeias presentes e exportações de cada município.</p></a>
+  <a class="home-secao" href="cadeias/index.html"><i class="bi bi-diagram-3"></i><h4>Cadeias produtivas</h4><p>Uma página por cadeia, com elos, mapas de especialização, comparação com o Nordeste e o Brasil e destinos das exportações.</p></a>
+  <a class="home-secao" href="encadeamentos.html"><i class="bi bi-bezier2"></i><h4>Encadeamentos</h4><p>Ligações para trás e para frente dos setores, a partir da matriz insumo-produto regionalizada.</p></a>
+  <a class="home-secao" href="lacunas.html"><i class="bi bi-search"></i><h4>Lacunas de dados</h4><p>Onde as fontes públicas não alcançam e que informação resolveria.</p></a>
+  <a class="home-secao" href="metodologia.html"><i class="bi bi-gear"></i><h4>Metodologia</h4><p>Fontes, classificação das cadeias em elos, indicadores (QL, participação, concentração) e o pipeline.</p></a>
+</div>
+```
+
+## As 21 cadeias em números
+
+```{r}
+#| echo: false
+div(class = "home-cads",
+  lapply(seq_len(nrow(por_cad)), function(i) {
+    r <- por_cad[i, ]
+    a(class = "home-cad", href = paste0("cadeias/", r$cadeia_id, ".html"),
+      div(class = "home-cad-nome", r$cadeia),
+      div(class = "home-cad-num", fmt_num(r$emp), span(" empregos")),
+      div(class = "home-cad-rodape",
+        span(class = if (isTRUE(r$var10 >= 0)) "home-pos" else "home-neg", pct(r$var10), " em 10 anos"),
+        if (!is.na(r$posicao)) span(class = paste("home-pos-ne", if (r$posicao == 1) "home-pos-1"), paste0(r$posicao, "º no NE"))))
+  }))
+```
+
+<p class="fonte">Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Elaboração própria. Posição no Nordeste pelo emprego formal da cadeia em `r ult`.</p>
 
 ## Sobre mim
 
-Atuo na interseção entre dados, políticas públicas e desenvolvimento regional. Trabalho com avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, PR, IHH, shift-share), comércio exterior e painéis de decisão em R/Shiny e Power BI.
+::: {.home-sobre}
+**José Roberto Verçosa**, economista, mestre em Economia Regional (UFPE). Atuo na interseção entre dados, políticas públicas e desenvolvimento regional: avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, PR, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.
 
 Ferramentas: R, Python, SQL (BigQuery), Quarto, Shiny, Power BI.
 
 [LinkedIn](https://www.linkedin.com/in/jrsvf) · [GitHub](https://github.com/jrsvf) · [Lattes](https://lattes.cnpq.br/1066993955257243)
+:::

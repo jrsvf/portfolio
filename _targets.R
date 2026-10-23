@@ -211,6 +211,6 @@ list(
   tar_target(raiox,
              montar_raiox(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, bq_perfil_pe, bq_caged_pe,
                           comex_anos_completos, bq_sh4_nomes, sidra_bruto, locais_cadeia, sidra_cad,
-                          comex_cad, cad$meta, krugman, ipca)),
+                          comex_cad, cad$meta, krugman, ipca, locais_elo)),
   tar_target(saida_raiox, exportar_raiox(raiox, malha), format = "file")
 )

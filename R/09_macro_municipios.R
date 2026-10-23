@@ -121,7 +121,8 @@ var_corte <- function(df, ult, janelas = CORTES_PADRAO$janelas) {
 }
 
 montar_raiox <- function(municipios, rd, pib_pop, pop, rais_secao, perfil_pe, caged_pe, comex, sh4_nomes,
-                         sidra_bruto, locais_cadeia, sidra_cad, comex_cad, cad_meta, krugman, ipca) {
+                         sidra_bruto, locais_cadeia, sidra_cad, comex_cad, cad_meta, krugman, ipca,
+                         locais_elo = NULL) {
   r2 <- function(x, d = 2) round(x, d)
   ult_rais <- max(rais_secao$ano)
   ult_pib <- max(pib_pop$ano[!is.na(pib_pop$pib)])
@@ -201,8 +202,26 @@ montar_raiox <- function(municipios, rd, pib_pop, pop, rais_secao, perfil_pe, ca
       mutate(cadeia = unname(nm_cad[atividade])) %>% filter(!is.na(cadeia)) %>%
       filter(coalesce(emprego, 0) > 0 | coalesce(vp, 0) > 0 | coalesce(ex, 0) > 0) %>%
       arrange(desc(coalesce(emprego, 0)), desc(coalesce(vp, 0))) %>%
-      transmute(cadeia, emprego = coalesce(emprego, 0), ql = r2(ql), var10 = ifelse(!is.na(e0) & e0 > 0, r2(emprego / e0 - 1, 4), NA),
+      transmute(cadeia_id = atividade, cadeia, emprego = coalesce(emprego, 0), ql = r2(ql), var10 = ifelse(!is.na(e0) & e0 > 0, r2(emprego / e0 - 1, 4), NA),
                 vp_mil = vp, ex_usd = ex)
+    # detalhe de cada cadeia: elos (emprego), produção física do IBGE e destinos das exportações
+    elo_m <- if (!is.null(locais_elo)) locais_elo %>% filter(id_municipio == id, ano == ult_rais, emprego > 0) else tibble()
+    cx_m <- comex_cad %>% filter(id_municipio == id, ano == ult_comex, fluxo == "Exportação")
+    detalhe <- lapply(tab_cad$cadeia_id, function(cid) {
+      pr <- sc %>% filter(cadeia_id == cid)
+      fis <- pr %>% filter(variavel != "Valor da produção", !grepl("^Área", variavel)) %>%
+        group_by(produto) %>% slice(1) %>% ungroup() %>% select(produto, qtd = valor, unidade, ano)
+      val <- pr %>% filter(variavel == "Valor da produção") %>% select(produto, valor_mil = valor)
+      prod <- full_join(fis, val, by = "produto") %>% arrange(desc(coalesce(valor_mil, 0)), desc(coalesce(qtd, 0))) %>%
+        filter(coalesce(qtd, 0) > 0 | coalesce(valor_mil, 0) > 0)
+      list(
+        elos = if (nrow(elo_m)) elo_m %>% filter(cadeia_id == cid) %>% arrange(desc(emprego)) %>% transmute(elo, emprego, ql = r2(ql)) else tibble(),
+        producao = prod,
+        destinos = cx_m %>% filter(cadeia_id == cid) %>% group_by(pais) %>% summarise(v = sum(valor_fob), .groups = "drop") %>%
+          arrange(desc(v)) %>% head(3)
+      )
+    })
+    names(detalhe) <- tab_cad$cadeia_id
     lav <- pam %>% filter(id_municipio == id, valor > 0) %>% left_join(pam_qtd, by = c("id_municipio", "produto")) %>%
       arrange(desc(valor)) %>% head(8) %>% transmute(produto, valor_mil = valor, qtd_t = qtd)
     k <- krugman %>% filter(id_municipio == id, ano == ult_rais) %>% pull(krugman)
@@ -237,7 +256,8 @@ montar_raiox <- function(municipios, rd, pib_pop, pop, rais_secao, perfil_pe, ca
                   rebanhos = reb %>% filter(id_municipio == id, valor > 0) %>% transmute(produto = sub(" - total", "", produto), cabecas = valor),
                   animal = ani %>% filter(id_municipio == id, valor > 0) %>% transmute(produto, valor_mil = valor),
                   aquicultura = sum(aqu$valor[aqu$id_municipio == id])),
-      cadeias = tab_cad
+      cadeias = tab_cad,
+      cadeias_det = detalhe
     )
   })
   names(out) <- municipios$id_municipio
