@@ -25,10 +25,10 @@ cx   <- cx %>% filter(ano >= max(c(ano, 0)) - max(CORTES_PADRAO$janelas))
 sc   <- sidra_cad %>% filter(cadeia_id == CADEIA)
 sc   <- sc %>% filter(ano >= max(c(ano, 0)) - max(CORTES_PADRAO$janelas))
 cg   <- caged_cad %>% filter(cadeia_id == CADEIA)
-# PIM-PF: atividades industriais ligadas à cadeia (campo pim em cadeias.yml)
-pim_c <- tryCatch(ler_base("pim_cadeias", ""), error = function(e) NULL)
-pim_s <- tryCatch(ler_base("pim_setores", ""), error = function(e) NULL)
-ps <- if (!is.null(pim_c) && NROW(pim_s)) pim_s %>% filter(codigo %in% pim_c$codigo[pim_c$cadeia_id == CADEIA]) else tibble()
+# Pesquisas conjunturais do IBGE (PIM-PF, PMC, PMS) ligadas à cadeia (campos pim, pmc e pms em cadeias.yml)
+conj_c <- tryCatch(ler_base("conj_cadeias", ""), error = function(e) NULL)
+conj_s <- tryCatch(ler_base("conj_setores", ""), error = function(e) NULL)
+ps <- if (NROW(conj_c) && NROW(conj_s)) conj_s %>% filter(codigo %in% conj_c$codigo[conj_c$cadeia_id == CADEIA]) else tibble()
 ps <- ps %>% filter(codigo %in% ps$codigo[ps$recorte == "Pernambuco"])
 tem_pim_cad <- nrow(ps) > 0
 ```
@@ -200,7 +200,7 @@ if (nrow(sc) > 0) {
     htmltools::h4(paste0(var_principal, " (", vp$unidade[vp$variavel == var_principal][1], ")")),
     grafico_linhas(serie_p, "ano", "valor", "produto", NULL)
   )
-} else if (!tem_pim_cad) htmltools::p("Esta cadeia não tem produto acompanhado pelas pesquisas agropecuárias nem atividade divulgada para Pernambuco na produção industrial do IBGE.")
+} else htmltools::p("Esta cadeia não tem produto acompanhado pelas pesquisas agropecuárias do IBGE.")
 ```
 
 ```{r}
@@ -220,28 +220,32 @@ if (nrow(sc) > 0) {
 }
 ```
 
+## Indústria, comércio e serviços (IBGE)
+
 ```{r}
 if (tem_pim_cad) {
-  an <- ps %>% mutate(ano = as.numeric(format(data, "%Y"))) %>% group_by(recorte, codigo, setor, ano) %>%
+  an <- ps %>% mutate(ano = as.numeric(format(data, "%Y"))) %>% group_by(pesquisa, recorte, codigo, setor, ano) %>%
     filter(n() == 12) %>% summarise(valor = mean(valor), .groups = "drop")
   a_fim <- max(an$ano)
+  nome_p <- c(PIM = "Produção industrial (PIM-PF)", PMC = "Volume de vendas (PMC)", PMS = "Volume de serviços (PMS)")
+  ordem <- c("Pernambuco", "Nordeste", "Bahia", "Ceará", "Brasil")
   blocos <- lapply(unique(ps$codigo), function(k) {
     # início: 10 anos atrás ou o primeiro ano completo de PE, o que vier depois
     a0 <- max(min(an$ano[an$codigo == k & an$recorte == "Pernambuco"]), a_fim - max(CORTES_PADRAO$janelas))
     x <- an %>% filter(codigo == k, ano >= a0) %>% group_by(recorte) %>%
-      filter(any(ano == a0)) %>% mutate(indice = 100 * valor / valor[ano == a0]) %>% ungroup() %>%
-      mutate(recorte = factor(recorte, c("Pernambuco", "Nordeste", "Brasil")))
+      filter(any(ano == a0)) %>% mutate(indice = 100 * valor / valor[ano == a0]) %>% ungroup()
     if (!nrow(x)) return(NULL)
+    x <- x %>% mutate(recorte = factor(recorte, intersect(ordem, unique(recorte))))
     v <- x %>% filter(ano == a_fim) %>% arrange(recorte)
     txt <- paste0(v$recorte, " ", sinal_pct(v$indice / 100 - 1), collapse = " · ")
     htmltools::tagList(
-      htmltools::h4(paste0("Produção industrial: ", x$setor[1])),
-      htmltools::p(paste0("Variação da produção física de ", a0, " a ", a_fim, ": ", txt, ".")),
+      htmltools::h4(paste0(nome_p[x$pesquisa[1]], ": ", x$setor[1])),
+      htmltools::p(paste0("Variação de ", a0, " a ", a_fim, " (média anual): ", txt, ".")),
       grafico_linhas(x, "ano", "indice", "recorte", paste0("Índice (", a0, " = 100)"), formato = ",.1f"))
   })
   htmltools::tagList(blocos,
-    rodape_fonte("IBGE, Pesquisa Industrial Mensal - Produção Física Regional (tabela SIDRA 8888), média anual da série sem ajuste sazonal. A atividade industrial é mais ampla que a cadeia e serve como termo de comparação"))
-}
+    rodape_fonte("IBGE, PIM-PF Regional (tabela 8888), PMC (8881 e 8883) e PMS (8693 e 8694), índices de volume sem ajuste sazonal, média dos anos completos. As atividades das pesquisas são mais amplas que a cadeia e servem como termo de comparação. PMC e PMS não têm recorte Nordeste: a comparação é com a Bahia, o Ceará e o Brasil (quando divulgado)"))
+} else htmltools::p("O IBGE não divulga para Pernambuco uma atividade da indústria, do comércio ou dos serviços que corresponda a esta cadeia.")
 ```
 
 ## Comércio exterior

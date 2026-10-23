@@ -18,6 +18,9 @@
 # pim:   atividades da PIM-PF Regional (tabela SIDRA 8888) ligadas à cadeia,
 #        pelo código da CNAE usado pelo IBGE (ex.: "3.29" = veículos). Só as
 #        atividades que o IBGE divulga para PE aparecem no site.
+# pmc/pms: atividades da Pesquisa Mensal de Comércio (tabela 8883) e de
+#        Serviços (tabela 8693) ligadas à cadeia, pelo código da categoria no
+#        SIDRA. "t8694" na PMS = atividades turísticas (tabela 8694).
 # sidra: produtos/rebanhos do IBGE. `tabela` é a tabela SIDRA e `padrao` é uma
 #        expressão regular aplicada ao NOME do produto (não ao código), para
 #        não depender de códigos de categoria que mudam entre tabelas.
@@ -198,6 +201,7 @@ cadeias:
 
   - id: textil_confeccoes
     nome: Têxtil e confecções
+    pmc: [90673]
     macrossetor: Indústria
     descricao: >
       Polo de Confecções do Agreste (Caruaru, Toritama, Santa Cruz do
@@ -241,6 +245,7 @@ cadeias:
 
   - id: moveleiro
     nome: Moveleiro
+    pmc: [31555]
     macrossetor: Indústria
     descricao: >
       Fabricação de móveis e colchões, com polos em Tacaimbó, João Alfredo e
@@ -257,6 +262,7 @@ cadeias:
   - id: construcao_civil
     nome: Construção civil
     pim: ["3.23"]
+    pmc: [2762]
     macrossetor: Indústria
     descricao: >
       Materiais de construção, edificações, obras de infraestrutura e
@@ -277,6 +283,7 @@ cadeias:
   - id: automotivo
     nome: Automotivo
     pim: ["3.29"]
+    pmc: [103159]
     macrossetor: Indústria
     descricao: >
       Montadora e fornecedores de autopeças em Goiana e região, além do
@@ -293,6 +300,7 @@ cadeias:
   - id: petroquimica_plasticos
     nome: Petróleo, química e plásticos
     pim: ["3.19", "3.20", "3.22"]
+    pmc: [90671]
     macrossetor: Indústria
     descricao: >
       Refino, PTA, resina PET, fibras de poliéster e transformação de plásticos no complexo de Suape.
@@ -307,6 +315,7 @@ cadeias:
 
   - id: ti_software
     nome: Tecnologia da informação
+    pms: [106874]
     macrossetor: Serviços
     descricao: >
       Desenvolvimento de software e serviços de TI, com núcleo no Porto
@@ -323,6 +332,7 @@ cadeias:
 
   - id: audiovisual
     nome: Audiovisual
+    pms: [106874]
     macrossetor: Serviços
     descricao: >
       Produção, pós-produção, distribuição e exibição de conteúdo
@@ -341,6 +351,7 @@ cadeias:
 
   - id: logistica
     nome: Logística
+    pms: [106876]
     macrossetor: Serviços
     descricao: >
       Transporte rodoviário de cargas, armazenagem, operação portuária e
@@ -397,6 +408,7 @@ cadeias:
   - id: bebidas
     nome: Bebidas
     pim: ["3.11"]
+    pmc: [56741]
     macrossetor: Indústria
     descricao: >
       Aguardente, cervejas, refrigerantes, águas e vinhos. Pernambuco tem
@@ -416,6 +428,7 @@ cadeias:
   - id: higiene_limpeza
     nome: Higiene, limpeza e cosméticos
     pim: ["3.20"]
+    pmc: [103155]
     macrossetor: Indústria
     descricao: >
       Sabões, detergentes, produtos de limpeza e cosméticos, com fábricas
@@ -430,6 +443,7 @@ cadeias:
 
   - id: turismo
     nome: Turismo
+    pms: ["t8694"]
     macrossetor: Serviços
     descricao: >
       Hospedagem, alimentação fora do lar, agências e operadoras. Concentrado

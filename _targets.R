@@ -75,6 +75,16 @@ list(
   tar_target(pim_setores, tryCatch(obter_pim_setores(uf_codigo = uf_codigo), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
   tar_target(pim_resumo, resumo_pim_setores(pim_setores)),
   tar_target(pim_cadeias, ler_pim_cadeias(arq_cadeias)),
+  # PMC e PMS: totais (com e sem ajuste) e por atividade (sem ajuste)
+  tar_target(macro_pmc, tryCatch(obter_conjuntura(8880, "PMC"), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(macro_pms, tryCatch(obter_conjuntura(5906, "PMS"), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(pmc_ativ, tryCatch(obter_conjuntura(8883, "PMC", atividades = TRUE, com_ajuste = FALSE), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(pmc_ampl, tryCatch(obter_conjuntura(8881, "PMC", com_ajuste = FALSE), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(pms_ativ, tryCatch(obter_conjuntura(8693, "PMS", atividades = TRUE, com_ajuste = FALSE), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(pms_tur, tryCatch(obter_conjuntura(8694, "PMS", com_ajuste = FALSE), error = function(e) tibble::tibble()), cue = tar_cue(mode = "always")),
+  tar_target(conj_setores, juntar_conjuntura(pim_setores, pmc_ativ, pmc_ampl, pms_ativ, pms_tur)),
+  tar_target(conj_resumo, resumo_pim_setores(conj_setores)),
+  tar_target(conj_cadeias, ler_conj_cadeias(arq_cadeias)),
 
   # -------------------------------------------------------------- cadeias
   tar_target(cad_mun, { codigos_ok; agregar_cadeias(bq_rais_pe, cad$elos) }),
@@ -197,6 +207,8 @@ list(
                  fontes_datas = fontes_datas, ipca = ipca,
                  macro_ibcr = macro_ibcr, macro_pim = macro_pim,
                  pim_setores = pim_setores, pim_resumo = pim_resumo, pim_cadeias = pim_cadeias,
+                 macro_pmc = macro_pmc, macro_pms = macro_pms, conj_setores = conj_setores,
+                 conj_resumo = conj_resumo, conj_cadeias = conj_cadeias,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),

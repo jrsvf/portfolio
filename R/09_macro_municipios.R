@@ -97,6 +97,63 @@ obter_pim_setores <- function(tabela = 8888, uf_codigo = 26) {
                                       grepl("Brasil", recorte) ~ "Brasil", TRUE ~ recorte))
 }
 
+# PMC e PMS (IBGE): índice de volume, Pernambuco, outros estados e Brasil.
+# As duas pesquisas não têm recorte Nordeste; a comparação é com o Brasil e
+# com os vizinhos maiores (Bahia e Ceará). `atividades = TRUE` traz todas as
+# categorias da classificação de atividades da tabela.
+obter_conjuntura <- function(tabela, pesquisa, ufs = c(26, 29, 23), atividades = FALSE, com_ajuste = TRUE) {
+  meta <- tryCatch(jsonlite::fromJSON(sprintf("https://servicodados.ibge.gov.br/api/v3/agregados/%s/metadados", tabela)),
+                   error = function(e) { msg(pesquisa, " ", tabela, ": metadados indisponíveis: ", conditionMessage(e)); NULL })
+  if (is.null(meta)) return(tibble())
+  v <- meta$variaveis
+  v_sem <- v$id[grepl("N[úu]mero-[íi]ndice \\(", v$nome) & !grepl("ajuste", v$nome)][1]
+  v_com <- v$id[grepl("N[úu]mero-[íi]ndice com ajuste sazonal", v$nome)][1]
+  vars <- if (com_ajuste) na.omit(c(v_sem, v_com)) else v_sem
+  cl <- meta$classificacoes
+  i_tipo <- which(grepl("^Tipos de [íi]ndice", cl$nome))[1]
+  if (is.na(v_sem) || is.na(i_tipo)) { msg(pesquisa, " ", tabela, ": variável ou tipo de índice não encontrado"); return(tibble()) }
+  cats <- cl$categorias[[i_tipo]]
+  vol <- cats$id[grepl("volume", cats$nome, ignore.case = TRUE)][1]
+  filtros <- sprintf("/c%s/%s", cl$id[i_tipo], vol)
+  i_at <- if (atividades) setdiff(seq_len(NROW(cl)), i_tipo)[1] else NA
+  if (!is.na(i_at)) filtros <- paste0(filtros, sprintf("/c%s/all", cl$id[i_at]))
+  niveis <- unlist(meta$nivelTerritorial$Administrativo)
+  terr <- paste0(if ("N1" %in% niveis) "/n1/all" else "", "/n3/", paste(ufs, collapse = ","))
+  url <- sprintf("https://apisidra.ibge.gov.br/values/t/%s%s/v/%s/p/all%s", tabela, terr, paste(vars, collapse = ","), filtros)
+  raw <- tryCatch(sidra_baixar(url), error = function(e) { msg(pesquisa, " ", tabela, " indisponível: ", conditionMessage(e)); NULL })
+  if (is.null(raw) || NROW(raw) < 2) return(tibble())
+  cab <- as.character(raw[1, ]); df <- raw[-1, , drop = FALSE]
+  col_mes <- names(raw)[which(cab == "Mês (Código)")[1]]
+  col_var <- names(raw)[which(cab == "Variável (Código)")[1]]
+  col_ter <- names(raw)[grepl("^D[0-9]N$", names(raw)) & grepl("Brasil|Federação", cab)][1]
+  if (!is.na(i_at)) {
+    col_at  <- names(raw)[grepl("^D[0-9]N$", names(raw)) & cab == cl$nome[i_at]][1]
+    col_atc <- names(raw)[which(cab == paste0(cl$nome[i_at], " (Código)"))[1]]
+  }
+  rotulo_total <- c(PMC = "Comércio varejista", PMS = "Serviços")[pesquisa]
+  if (grepl("tur[íi]stic", meta$nome, ignore.case = TRUE)) rotulo_total <- "Atividades turísticas"
+  if (grepl("ampliado", meta$nome, ignore.case = TRUE)) rotulo_total <- "Comércio varejista ampliado"
+  tibble(pesquisa = pesquisa, recorte = df[[col_ter]],
+         variavel = ifelse(df[[col_var]] == as.character(v_com) & !is.na(v_com), "com ajuste", "sem ajuste"),
+         codigo = if (!is.na(i_at)) paste0(pesquisa, ":", df[[col_atc]]) else paste0(pesquisa, ":t", tabela),
+         setor = if (!is.na(i_at)) df[[col_at]] else unname(rotulo_total),
+         data = as.Date(paste0(substr(df[[col_mes]], 1, 4), "-", substr(df[[col_mes]], 5, 6), "-01")),
+         valor = suppressWarnings(as.numeric(df$V))) %>%
+    filter(!is.na(valor)) %>%
+    mutate(setor = sub("^[0-9]+\\. ", "", setor), setor = ifelse(setor == "Total", unname(rotulo_total), setor),
+           recorte = ifelse(grepl("^Brasil", recorte), "Brasil", recorte))
+}
+
+# Séries por atividade das três pesquisas, no mesmo formato
+# (pesquisa, recorte, codigo, setor, data, valor), só a série sem ajuste
+juntar_conjuntura <- function(pim_setores, ...) {
+  outras <- list(...)
+  bind_rows(
+    if (NROW(pim_setores)) pim_setores %>% mutate(pesquisa = "PIM", codigo = paste0("PIM:", codigo)),
+    lapply(outras, function(x) if (NROW(x)) x %>% filter(variavel == "sem ajuste") %>% select(-variavel))
+  )
+}
+
 # Atividades da PIM-PF ligadas a cada cadeia (campo `pim` em config/cadeias.yml)
 ler_pim_cadeias <- function(arquivo = caminho("config", "cadeias.yml")) {
   cfg <- yaml::read_yaml(arquivo)$cadeias
@@ -107,14 +164,27 @@ ler_pim_cadeias <- function(arquivo = caminho("config", "cadeias.yml")) {
   })
 }
 
+# Atividades das três pesquisas conjunturais ligadas a cada cadeia
+# (campos pim, pmc e pms em config/cadeias.yml), no formato "PESQUISA:código"
+ler_conj_cadeias <- function(arquivo = caminho("config", "cadeias.yml")) {
+  cfg <- yaml::read_yaml(arquivo)$cadeias
+  purrr::map_dfr(cfg, function(c) {
+    purrr::map_dfr(c("pim", "pmc", "pms"), function(k) {
+      v <- as.character(unlist(c[[k]]))
+      if (!length(v)) return(tibble(cadeia_id = character(), codigo = character()))
+      tibble(cadeia_id = c$id, codigo = paste0(toupper(k), ":", v))
+    })
+  })
+}
+
 # Variação da média anual (anos completos) em cada corte, por atividade e recorte
 resumo_pim_setores <- function(pim_set, janelas = CORTES_PADRAO$janelas) {
   if (is.null(pim_set) || !NROW(pim_set)) return(tibble())
   an <- pim_set %>% mutate(ano = as.numeric(format(data, "%Y"))) %>%
-    group_by(recorte, codigo, setor, ano) %>% filter(n() == 12) %>%
+    group_by(across(any_of(c("pesquisa", "recorte", "codigo", "setor"))), ano) %>% filter(n() == 12) %>%
     summarise(valor = mean(valor), .groups = "drop")
   ult <- max(an$ano)
-  an %>% group_by(recorte, codigo, setor) %>%
+  an %>% group_by(across(any_of(c("pesquisa", "recorte", "codigo", "setor")))) %>%
     reframe(ano_fim = ult, janela = janelas, var = vapply(janelas, function(j) {
       a <- valor[ano == ult - j]; b <- valor[ano == ult]
       if (length(a) && length(b) && a > 0) b / a - 1 else NA_real_

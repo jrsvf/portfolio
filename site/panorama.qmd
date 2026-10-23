@@ -10,6 +10,9 @@ carregar("serie_uf", "rais_secao", "krugman", "pib_pop", "comex_pe", "locais_cad
 macro_ibcr <- tryCatch(ler_base("macro_ibcr", ""), error = function(e) NULL)
 macro_pim  <- tryCatch(ler_base("macro_pim", ""), error = function(e) NULL)
 pim_resumo <- tryCatch(ler_base("pim_resumo", ""), error = function(e) NULL)
+macro_pmc  <- tryCatch(ler_base("macro_pmc", ""), error = function(e) NULL)
+macro_pms  <- tryCatch(ler_base("macro_pms", ""), error = function(e) NULL)
+conj_resumo <- tryCatch(ler_base("conj_resumo", ""), error = function(e) NULL)
 ult <- max(rais_secao$ano); ini <- max(min(rais_secao$ano), ult - max(CORTES_PADRAO$janelas))
 su <- serie_uf %>% arrange(ano) %>% filter(ano >= ini)
 rais_secao <- rais_secao %>% filter(ano >= ini)
@@ -33,24 +36,42 @@ cartoes(list(
 ```{r}
 tem_ibcr <- !is.null(macro_ibcr) && NROW(macro_ibcr) > 0
 tem_pim  <- !is.null(macro_pim) && NROW(macro_pim) > 0
+tem_pmc  <- !is.null(macro_pmc) && NROW(macro_pmc) > 0
+tem_pms  <- !is.null(macro_pms) && NROW(macro_pms) > 0
+ORDEM_REC <- c("Pernambuco", "Nordeste", "Bahia", "Ceará", "Brasil")
+ord_rec <- function(x) factor(x, intersect(ORDEM_REC, unique(x)))
 # índice mensal com ajuste sazonal, rebaseado na média do ano inicial do corte de 10 anos
 rebase <- function(d) {
   a0 <- max(as.numeric(format(max(d$data), "%Y")) - 1 - max(CORTES_PADRAO$janelas), as.numeric(format(min(d$data), "%Y")))
   d %>% filter(as.numeric(format(data, "%Y")) >= a0) %>% group_by(recorte) %>%
     mutate(indice = 100 * valor / mean(valor[format(data, "%Y") == as.character(a0)])) %>% ungroup() %>%
-    mutate(recorte = factor(recorte, c("Pernambuco", "Nordeste", "Brasil")))
+    mutate(recorte = ord_rec(recorte))
 }
 tab_cortes <- function(anual) {
   v <- variacoes_janela(anual %>% transmute(ano, recorte, valor), "recorte")
   v %>% mutate(c = paste0(sinal_pct(var_pct), " (", ano_ini, "-", ano_fim, ")")) %>%
     select(recorte, rotulo, ordem, c) %>% arrange(ordem) %>%
     pivot_wider(id_cols = recorte, names_from = rotulo, values_from = c) %>%
-    mutate(recorte = factor(recorte, c("Pernambuco", "Nordeste", "Brasil"))) %>% arrange(recorte) %>%
+    mutate(recorte = ord_rec(recorte)) %>% arrange(recorte) %>%
     rename(` ` = recorte)
+}
+# tabela por atividade: PE e comparações na maior janela, PE nas demais
+SIGLA <- c(Pernambuco = "PE", Nordeste = "NE", Bahia = "BA", "Ceará" = "CE", Brasil = "BR")
+tab_ativ <- function(res, pesq, sem = character()) {
+  r <- res %>% filter(pesquisa == pesq, !codigo %in% sem)
+  com_pe <- unique(r$codigo[r$recorte == "Pernambuco" & !is.na(r$var)])
+  j <- sort(unique(r$janela), decreasing = TRUE)
+  tb <- r %>% filter(codigo %in% com_pe) %>%
+    mutate(col = paste0(SIGLA[recorte], " ", janela, " anos")) %>%
+    select(codigo, setor, col, var) %>% pivot_wider(names_from = col, values_from = var)
+  ordem <- c(paste0(SIGLA[intersect(ORDEM_REC, unique(r$recorte))], " ", j[1], " anos"), paste0("PE ", j[-1], " anos"))
+  ordem <- intersect(ordem, names(tb))
+  tb %>% arrange(desc(.data[[ordem[1]]])) %>% select(Atividade = setor, all_of(ordem)) %>%
+    mutate(across(-Atividade, ~ ifelse(is.na(.x), "–", sinal_pct(.x))))
 }
 ```
 
-O emprego formal mostra o mercado de trabalho; o nível de atividade mostra a produção. Os dois indicadores abaixo só existem por estado e região, e saem todo mês.
+O emprego formal mostra o mercado de trabalho; o nível de atividade mostra a produção. Os indicadores abaixo saem todo mês. A PIM-PF, a PMC e a PMS são as pesquisas conjunturais do IBGE para indústria, comércio e serviços; PMC e PMS não têm recorte Nordeste, então a comparação é com o Brasil e com a Bahia e o Ceará.
 
 ::: {.panel-tabset}
 
@@ -102,6 +123,44 @@ if (NROW(pim_resumo)) {
 ```
 
 <p class="fonte">Fonte: IBGE, PIM-PF Regional (tabela SIDRA 8888), série sem ajuste sazonal. Só aparecem as atividades que o IBGE divulga para Pernambuco; Nordeste e Brasil servem como termo de comparação.</p>
+
+### Comércio (PMC)
+
+```{r}
+if (tem_pmc) {
+  d <- rebase(macro_pmc %>% filter(variavel == "com ajuste"))
+  grafico_linhas(d, "data", "indice", "recorte", paste0("Volume de vendas do varejo (média de ", format(min(d$data), "%Y"), " = 100)"), formato = ",.1f")
+} else htmltools::p(class = "aviso", "Série da PMC indisponível nesta atualização.")
+```
+
+```{r}
+if (tem_pmc) knitr::kable(tab_cortes(atividade_anual(macro_pmc %>% filter(variavel == "sem ajuste"))), caption = "Variação do volume médio anual de vendas do comércio varejista")
+```
+
+```{r}
+if (NROW(conj_resumo) && any(conj_resumo$pesquisa == "PMC")) knitr::kable(tab_ativ(conj_resumo, "PMC"), caption = paste0("Volume de vendas por atividade do varejo ampliado (anos completos até ", max(conj_resumo$ano_fim), ")"))
+```
+
+<p class="fonte">Fonte: IBGE, Pesquisa Mensal de Comércio (tabelas SIDRA 8880, 8881 e 8883), índice de volume. Gráfico com ajuste sazonal; tabelas com a série original.</p>
+
+### Serviços (PMS)
+
+```{r}
+if (tem_pms) {
+  d <- rebase(macro_pms %>% filter(variavel == "com ajuste"))
+  grafico_linhas(d, "data", "indice", "recorte", paste0("Volume de serviços (média de ", format(min(d$data), "%Y"), " = 100)"), formato = ",.1f")
+} else htmltools::p(class = "aviso", "Série da PMS indisponível nesta atualização.")
+```
+
+```{r}
+if (tem_pms) knitr::kable(tab_cortes(atividade_anual(macro_pms %>% filter(variavel == "sem ajuste"))), caption = "Variação do volume médio anual de serviços")
+```
+
+```{r}
+if (NROW(conj_resumo) && any(conj_resumo$pesquisa == "PMS")) knitr::kable(tab_ativ(conj_resumo, "PMS"), caption = paste0("Volume de serviços por atividade (anos completos até ", max(conj_resumo$ano_fim), ")"))
+```
+
+<p class="fonte">Fonte: IBGE, Pesquisa Mensal de Serviços (tabelas SIDRA 5906, 8693 e 8694), índice de volume. Por atividade, o IBGE só divulga os estados, sem o total do Brasil; as atividades turísticas têm Brasil.</p>
 
 :::
 

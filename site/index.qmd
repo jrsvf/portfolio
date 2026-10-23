@@ -49,6 +49,11 @@ var10_macro <- function(serie) {
 macro_pim <- tryCatch(ler_base("macro_pim", ""), error = function(e) NULL)
 ibcr10 <- var10_macro(macro_ibcr)
 pim10 <- if (!is.null(macro_pim) && NROW(macro_pim)) var10_macro(macro_pim %>% filter(variavel == "sem ajuste")) else NULL
+macro_pmc <- tryCatch(ler_base("macro_pmc", ""), error = function(e) NULL)
+macro_pms <- tryCatch(ler_base("macro_pms", ""), error = function(e) NULL)
+pmc10 <- if (NROW(macro_pmc)) var10_macro(macro_pmc %>% filter(variavel == "sem ajuste")) else NULL
+pms10 <- if (NROW(macro_pms)) var10_macro(macro_pms %>% filter(variavel == "sem ajuste")) else NULL
+nota_cmp <- function(r, fonte) paste0(fonte, " até ", r$ano, if (!is.na(r$ne)) paste0(" · NE ", pct(r$ne, 1)), if (!is.na(r$br)) paste0(" · BR ", pct(r$br, 1)))
 
 # produção do IBGE (agropecuária) por cadeia: valor no último ano; rebanhos em cabeças
 sidra_cad <- tryCatch(ler_base("sidra_cad", ""), error = function(e) NULL)
@@ -69,23 +74,31 @@ if (NROW(sidra_cad)) {
   prod_cad <- bind_rows(val %>% select(cadeia_id, txt), reb)
 }
 
-# atividade industrial da PIM-PF ligada à cadeia (10 anos, PE e NE)
-pim_resumo  <- tryCatch(ler_base("pim_resumo", ""), error = function(e) NULL)
-pim_cadeias <- tryCatch(ler_base("pim_cadeias", ""), error = function(e) NULL)
-PIM_CURTO <- c("3.10" = "alimentos", "3.11" = "bebidas", "3.19" = "derivados de petróleo", "3.20" = "químicos",
-               "3.22" = "borracha e plástico", "3.23" = "minerais não metálicos", "3.29" = "veículos")
-pim_cad <- tibble(cadeia_id = character(), pim_txt = character())
-if (NROW(pim_resumo) && NROW(pim_cadeias)) {
-  # maior janela com dado para PE (algumas atividades só entram na amostra de PE depois)
-  pe_j <- pim_resumo %>% filter(recorte == "Pernambuco", !is.na(var)) %>% group_by(codigo) %>%
-    slice_max(janela, n = 1) %>% ungroup() %>% select(codigo, janela, setor, pe = var)
-  ne_j <- pim_resumo %>% filter(recorte == "Nordeste") %>% select(codigo, janela, ne = var)
-  pim_cad <- pim_cadeias %>% inner_join(pe_j, by = "codigo") %>% left_join(ne_j, by = c("codigo", "janela")) %>%
-    group_by(cadeia_id) %>% slice_max(janela, n = 1, with_ties = FALSE) %>% ungroup() %>%
-    transmute(cadeia_id, pim_txt = paste0("Indústria de ", coalesce(PIM_CURTO[codigo], tolower(setor)), " (PIM): ",
-                                          pct(pe), " em ", janela, " anos", ifelse(is.na(ne), "", paste0(" · NE ", pct(ne)))))
+# pesquisas conjunturais do IBGE ligadas à cadeia (PIM, PMC, PMS): maior janela
+# com dado para PE, comparada ao Nordeste (PIM) ou ao Brasil (PMC e PMS)
+conj_resumo  <- tryCatch(ler_base("conj_resumo", ""), error = function(e) NULL)
+conj_cadeias <- tryCatch(ler_base("conj_cadeias", ""), error = function(e) NULL)
+CURTO <- c("PIM:3.10" = "Indústria de alimentos", "PIM:3.11" = "Indústria de bebidas", "PIM:3.19" = "Indústria de derivados de petróleo",
+           "PIM:3.20" = "Indústria química", "PIM:3.22" = "Indústria de borracha e plástico",
+           "PIM:3.23" = "Indústria de minerais não metálicos", "PIM:3.29" = "Indústria de veículos",
+           "PMC:103159" = "Vendas de veículos e peças", "PMC:2762" = "Vendas de material de construção", "PMC:31555" = "Vendas de móveis",
+           "PMC:90673" = "Vendas de tecidos, vestuário e calçados", "PMC:103155" = "Vendas de farmácia e cosméticos",
+           "PMC:56741" = "Atacado de alimentos e bebidas", "PMC:90671" = "Vendas de combustíveis",
+           "PMS:t8694" = "Atividades turísticas", "PMS:106876" = "Serviços de transporte", "PMS:106874" = "Serviços de informação e comunicação")
+conj_cad <- tibble(cadeia_id = character(), pesquisa = character(), txt_c = character())
+if (NROW(conj_resumo) && NROW(conj_cadeias)) {
+  pe_j <- conj_resumo %>% filter(recorte == "Pernambuco", !is.na(var)) %>% group_by(codigo) %>%
+    slice_max(janela, n = 1) %>% ungroup() %>% select(pesquisa, codigo, janela, setor, pe = var)
+  cmp <- conj_resumo %>% filter(recorte %in% c("Nordeste", "Brasil"), !is.na(var)) %>%
+    mutate(o = match(recorte, c("Nordeste", "Brasil"))) %>% group_by(codigo, janela) %>% slice_min(o, n = 1) %>% ungroup() %>%
+    transmute(codigo, janela, sig = c(Nordeste = "NE", Brasil = "BR")[recorte], cmp = var)
+  conj_cad <- conj_cadeias %>% inner_join(pe_j, by = "codigo") %>% left_join(cmp, by = c("codigo", "janela")) %>%
+    group_by(cadeia_id, pesquisa) %>% slice_max(janela, n = 1, with_ties = FALSE) %>% ungroup() %>%
+    transmute(cadeia_id, pesquisa, txt_c = paste0(coalesce(CURTO[codigo], setor), " (", pesquisa, "): ", pct(pe), " em ", janela, " anos",
+                                                   ifelse(is.na(cmp), "", paste0(" · ", sig, " ", pct(cmp)))))
 }
-por_cad <- por_cad %>% left_join(prod_cad, by = "cadeia_id") %>% left_join(pim_cad, by = "cadeia_id")
+conj_txt <- conj_cad %>% group_by(cadeia_id) %>% summarise(conj = list(setNames(txt_c, pesquisa)), .groups = "drop")
+por_cad <- por_cad %>% left_join(prod_cad, by = "cadeia_id") %>% left_join(conj_txt, by = "cadeia_id")
 emp_total <- sum(cad_mun$emprego[cad_mun$ano == ult], na.rm = TRUE)
 ```
 
@@ -130,10 +143,9 @@ cartoes(list(
        nota = "RAIS, soma das 21 cadeias"),
   if (!is.null(ibcr10)) list(rotulo = "Atividade econômica de PE em 10 anos", valor = pct(ibcr10$pe, 1),
        nota = paste0("IBCR até ", ibcr10$ano, " · NE ", pct(ibcr10$ne, 1), " · BR ", pct(ibcr10$br, 1))),
-  if (!is.null(pim10)) list(rotulo = "Produção industrial de PE em 10 anos", valor = pct(pim10$pe, 1),
-       nota = paste0("PIM-PF até ", pim10$ano, " · NE ", pct(pim10$ne, 1), " · BR ", pct(pim10$br, 1))),
-  list(rotulo = "Cadeias produtivas acompanhadas", valor = nrow(cad$meta), nota = "divididas em elos"),
-  list(rotulo = "Municípios com raio-X", valor = nrow(municipios), nota = "produção, emprego e exportações"),
+  if (!is.null(pim10)) list(rotulo = "Produção industrial de PE em 10 anos", valor = pct(pim10$pe, 1), nota = nota_cmp(pim10, "PIM-PF")),
+  if (!is.null(pmc10)) list(rotulo = "Vendas do varejo de PE em 10 anos", valor = pct(pmc10$pe, 1), nota = nota_cmp(pmc10, "PMC")),
+  if (!is.null(pms10)) list(rotulo = "Volume de serviços de PE em 10 anos", valor = pct(pms10$pe, 1), nota = nota_cmp(pms10, "PMS")),
   list(rotulo = "Última atualização", valor = format(atualizado_em, "%d/%m/%Y"),
        nota = paste0("RAIS ", sub(".* a (\\d{4}).*", "\\1", fontes_datas$cobertura[1]),
                      " · CAGED ", sub(".* a (\\d{2}/\\d{4}).*", "\\1", fontes_datas$cobertura[2])))
@@ -190,11 +202,12 @@ div(class = "home-cads",
         span(class = if (isTRUE(r$var10 >= 0)) "home-pos" else "home-neg", pct(r$var10), " em 10 anos"),
         if (!is.na(r$posicao)) span(class = paste("home-pos-ne", if (r$posicao == 1) "home-pos-1"), paste0(r$posicao, "º no NE"))),
       if (!is.na(r$txt)) div(class = "home-cad-extra", tags$i(class = "bi bi-basket"), r$txt),
-      if (!is.na(r$pim_txt)) div(class = "home-cad-extra", tags$i(class = "bi bi-gear"), r$pim_txt))
+      lapply(names(r$conj[[1]]), function(k) div(class = "home-cad-extra",
+        tags$i(class = paste("bi", c(PIM = "bi-gear", PMC = "bi-cart", PMS = "bi-briefcase")[k])), r$conj[[1]][[k]])))
   }))
 ```
 
-<p class="fonte">Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Elaboração própria. Posição no Nordeste pelo emprego formal da cadeia em `r ult`. Produção: IBGE (PAM, PPM e aquicultura). Indústria: PIM-PF Regional, atividade industrial mais ampla que a cadeia, usada como termo de comparação.</p>
+<p class="fonte">Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Elaboração própria. Posição no Nordeste pelo emprego formal da cadeia em `r ult`. Produção: IBGE (PAM, PPM e aquicultura). Indústria, comércio e serviços: PIM-PF, PMC e PMS do IBGE, atividades mais amplas que a cadeia, usadas como termo de comparação (a indústria com o Nordeste; comércio e serviços com o Brasil, porque as duas pesquisas não têm recorte regional).</p>
 
 ## Sobre mim
 
