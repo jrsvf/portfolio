@@ -209,7 +209,8 @@ list(
     producao_ibge_cadeia     = sidra_cad,
     lacunas                  = lacunas
   )), format = "file"),
-  tar_target(paginas_cadeias, gerar_paginas_cadeias(cad$meta), format = "file"),
+  tar_target(arq_modelo_cadeia, "site/_modelos/cadeia.qmd", format = "file"),
+  tar_target(paginas_cadeias, gerar_paginas_cadeias(cad$meta, modelo = arq_modelo_cadeia), format = "file"),
 
   # ------------------------------------------------- raio-X dos municípios
   tar_target(raiox,
