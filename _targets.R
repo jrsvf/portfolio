@@ -181,7 +181,9 @@ list(
   tar_target(janelas_uf,
              variacoes_janela(tot_uf %>% filter(sigla_uf %in% UFS_NORDESTE) %>% transmute(ano, sigla_uf, valor = emprego_total),
                               "sigla_uf", janelas, desde)),
-  tar_target(fontes_datas, fontes_e_datas(bq_rais_pe, bq_caged_pe, comex_anos_completos, bq_pib_pop, sidra_bruto, ipca, par_mip$ano)),
+  tar_target(fontes_datas, bind_rows(
+    fontes_e_datas(bq_rais_pe, bq_caged_pe, comex_anos_completos, bq_pib_pop, sidra_bruto, ipca, par_mip$ano),
+    fontes_extras(empresas, cursos_cad, educacao, icms, credito_rural, bq_escoamento, macro_ibcr, macro_pim, macro_pmc, macro_pms))),
 
   # ---------------------------------------------------------- panorama estadual
   tar_target(rais_secao,
@@ -221,7 +223,7 @@ list(
                              perfil_estado = perfil_estado,
                              ql_minimo = par_ind$ql_minimo,
                              emprego_minimo = par_ind$emprego_minimo) %>%
-                        map2(cad$meta$cadeia_id, ~ c(.x, destaques_nordeste(.y, cmp_ne))),
+                        map2(cad$meta$cadeia_id, ~ c(.x, destaques_extras(.y, escoamento_cad, cursos_cad), destaques_nordeste(.y, cmp_ne))),
                       cad$meta$cadeia_id)),
 
   # ---------------------------------------------------------------- saídas

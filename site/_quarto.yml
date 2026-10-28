@@ -47,7 +47,7 @@ website:
         href: https://github.com/jrsvf
   page-footer:
     left: "José Roberto Verçosa · Economista"
-    right: "Dados públicos: RAIS, Novo CAGED, IBGE, ComexStat · via Base dos Dados"
+    right: "Dados públicos: RAIS, CAGED, CNPJ, INEP, SICONFI, ComexStat, IBGE e Banco Central · via Base dos Dados, SIDRA e SGS"
 
 format:
   html:

@@ -96,3 +96,51 @@ escoamento_cadeia <- function(esc, sh4_map, nomes_urf) {
     group_by(cadeia_id) %>% mutate(part = valor_fob / sum(valor_fob)) %>% arrange(desc(valor_fob), .by_group = TRUE) %>% ungroup()
   list(via = via, urf = urf)
 }
+
+# ---------------------------------------------------------------------------
+# 3. Fontes novas (para a tabela de fontes) e destaques extras por cadeia
+# ---------------------------------------------------------------------------
+faixa_anos <- function(x, mensal = FALSE) {
+  if (is.null(x) || !NROW(x)) return("-")
+  if ("ano" %in% names(x)) a <- suppressWarnings(as.numeric(x$ano))
+  else if ("data" %in% names(x)) a <- as.numeric(format(as.Date(x$data), "%Y"))
+  else return("-")
+  a <- a[!is.na(a)]; if (!length(a)) return("-")
+  if (mensal && "data" %in% names(x)) return(paste0(format(min(as.Date(x$data)), "%m/%Y"), " a ", format(max(as.Date(x$data)), "%m/%Y")))
+  if (min(a) == max(a)) as.character(max(a)) else sprintf("%d a %d", min(a), max(a))
+}
+
+fontes_extras <- function(empresas, cursos, educacao, icms, credito, escoamento_bruto, macro_ibcr, macro_pim, macro_pmc, macro_pms) {
+  ff <- function(expr) tryCatch(expr, error = function(e) "-")
+  tibble::tribble(
+    ~fonte, ~orgao, ~cobertura, ~onde,
+    "Cadastro Nacional da Pessoa Jurídica", "Receita Federal", ff(paste("posição de", format(empresas$data_base, "%m/%Y"))), "Base dos Dados / BigQuery",
+    "Censo da Educação Superior", "INEP", ff(faixa_anos(educacao$cursos)), "Base dos Dados / BigQuery",
+    "Censo Escolar (educação profissional)", "INEP", ff(faixa_anos(educacao$tecnico)), "Base dos Dados / BigQuery",
+    "Finanças municipais e estaduais (ICMS)", "Tesouro Nacional, SICONFI", ff(faixa_anos(icms$mun)), "Base dos Dados / BigQuery",
+    "Crédito rural e PRONAF (SICOR)", "Banco Central", ff(faixa_anos(credito)), "Base dos Dados / BigQuery",
+    "Censo Agropecuário (agricultura familiar)", "IBGE", "2017", "API SIDRA, tabelas 6753 e 6898",
+    "ComexStat por NCM, via e URF (escoamento)", "MDIC", ff(faixa_anos(escoamento_bruto)), "Base dos Dados / BigQuery",
+    "IBC-R Pernambuco", "Banco Central", ff(faixa_anos(macro_ibcr, TRUE)), "API SGS",
+    "PIM-PF, PMC e PMS Regionais", "IBGE", ff(faixa_anos(bind_rows(macro_pim, macro_pmc, macro_pms) %>% select(any_of(c("data", "ano"))), TRUE)), "API SIDRA"
+  ) %>% filter(cobertura != "-") %>% mutate(consultado_em = format(Sys.Date(), "%d/%m/%Y"))
+}
+
+URF_PE <- "recife|suape|petrolina|pernambuco|ipojuca|caruaru|guararapes"
+
+destaques_extras <- function(id, escoamento, cursos) {
+  out <- character()
+  ev <- if (NROW(escoamento$urf)) escoamento$urf %>% filter(cadeia_id == id, valor_fob > 0) else tibble()
+  if (nrow(ev) > 0 && sum(ev$valor_fob) > 1e5) {
+    fora <- sum(ev$valor_fob[!grepl(URF_PE, ev$nome, ignore.case = TRUE)]) / sum(ev$valor_fob)
+    out <- c(out, sprintf("Escoamento: %s do valor exportado da produção pernambucana da cadeia em %d foi despachado fora do estado; o principal ponto de saída foi %s (%s).",
+                          fmt_pct(fora, 0), ev$ano[1], ev$nome[1], fmt_pct(ev$part[1], 0)))
+  }
+  cc <- if (NROW(cursos)) cursos %>% filter(cadeia_id == id) else tibble()
+  if (nrow(cc) > 0 && sum(cc$matriculas, na.rm = TRUE) > 0) {
+    pm <- cc %>% group_by(municipio) %>% summarise(m = sum(matriculas, na.rm = TRUE), .groups = "drop") %>% arrange(desc(m))
+    out <- c(out, sprintf("Formação: %s matrículas em cursos superiores presenciais ligados à cadeia em %d, em %d municípios; %s concentra %s.",
+                          fmt_num(sum(pm$m)), cc$ano[1], nrow(pm), pm$municipio[1], fmt_pct(pm$m[1] / sum(pm$m), 0)))
+  }
+  out
+}

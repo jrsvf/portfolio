@@ -28,7 +28,11 @@ executar_local <- function() {
   options(gargle_oauth_email = if (nzchar(Sys.getenv("GARGLE_EMAIL"))) Sys.getenv("GARGLE_EMAIL") else TRUE)
 
   passo("1/3 pipeline (targets)")
-  targets::tar_make(reporter = "summary")
+  alvos <- strsplit(Sys.getenv("PORTFOLIO_ALVOS"), ",")[[1]]
+  if (length(alvos)) {
+    # só os alvos pedidos, sem reconferir os de cima (útil quando uma API externa está fora do ar)
+    targets::tar_make(names = tidyselect::any_of(alvos), shortcut = TRUE, reporter = "timestamp")
+  } else targets::tar_make(reporter = "timestamp")
 
   passo("2/3 renderização fora do OneDrive")
   base <- file.path(Sys.getenv("LOCALAPPDATA", tempdir()), "portfolio_render")
