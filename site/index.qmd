@@ -2,12 +2,15 @@
 title: ""
 page-layout: full
 toc: false
+include-in-header:
+  text: |
+    <style>body{background:#F3EEE6;} .quarto-title-block{display:none;}</style>
 ---
 
 ```{r}
 #| include: false
 source("_setup.R")
-carregar("cad_mun", "cmp_ne", "fontes_datas", "lacunas")
+carregar("cad_mun", "cmp_ne", "fontes_datas", "lacunas", "rd", "rais_secao", "pib_pop")
 macro_ibcr <- tryCatch(ler_base("macro_ibcr", ""), error = function(e) NULL)
 library(htmltools)
 ult <- max(cad_mun$ano); a10 <- ult - 10
@@ -100,34 +103,75 @@ if (NROW(conj_resumo) && NROW(conj_cadeias)) {
 conj_txt <- conj_cad %>% group_by(cadeia_id) %>% summarise(conj = list(setNames(txt_c, pesquisa)), .groups = "drop")
 por_cad <- por_cad %>% left_join(prod_cad, by = "cadeia_id") %>% left_join(conj_txt, by = "cadeia_id")
 emp_total <- sum(cad_mun$emprego[cad_mun$ano == ult], na.rm = TRUE)
+
+# cadeias x nichos
+grp <- setNames(cad$meta$grupo, cad$meta$cadeia_id)
+por_cad <- por_cad %>% mutate(grupo = coalesce(grp[cadeia_id], "cadeia"))
+cads <- por_cad %>% filter(grupo == "cadeia"); nichos <- por_cad %>% filter(grupo == "nicho")
+n_cad <- nrow(cads)
+lider <- cads %>% filter(posicao == 1)
+cresce <- cads %>% filter(emp >= 5000) %>% slice_max(var10, n = 1)
+conc <- top3 %>% filter(cadeia_id %in% cads$cadeia_id, total >= 5000, !grepl("^Recife", lideres)) %>% slice_max(part3, n = 1)
+emp_total <- sum(cad_mun$emprego[cad_mun$ano == ult & cad_mun$cadeia_id %in% cads$cadeia_id], na.rm = TRUE)
+
+# Regiões de Desenvolvimento: emprego, população e a cadeia mais especializada
+emp_mun <- rais_secao %>% filter(ano == ult) %>% group_by(id_municipio) %>% summarise(e = sum(emprego), .groups = "drop")
+pop_u <- pib_pop %>% filter(!is.na(populacao)) %>% filter(ano == max(ano))
+rd_res <- rd %>% left_join(emp_mun, by = "id_municipio") %>% left_join(pop_u %>% select(id_municipio, populacao), by = "id_municipio") %>%
+  group_by(rd) %>% summarise(municipios = n(), emprego = sum(e, na.rm = TRUE), pop = sum(populacao, na.rm = TRUE), .groups = "drop")
+ql_rd <- cad_mun %>% filter(ano == ult, cadeia_id %in% cads$cadeia_id) %>% left_join(rd, by = "id_municipio") %>%
+  group_by(rd, cadeia_id) %>% summarise(e = sum(emprego), .groups = "drop") %>%
+  left_join(rd_res %>% select(rd, emprego), by = "rd") %>%
+  group_by(cadeia_id) %>% mutate(ql = (e / emprego) / (sum(e) / sum(rd_res$emprego))) %>% ungroup() %>%
+  filter(e >= 200) %>% group_by(rd) %>% slice_max(ql, n = 1) %>% ungroup() %>% mutate(cadeia = nomes_cad[cadeia_id])
+rd_res <- rd_res %>% left_join(ql_rd %>% select(rd, cadeia, ql), by = "rd") %>% arrange(desc(emprego))
+
+# corte do ano corrente
+corte <- tryCatch(ler_base("corte_atual", ""), error = function(e) NULL)
+MESES <- c("jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez")
+```
+
+```{r}
+#| echo: false
+# abertura: a palavra "Pernambuco" sobre a série do IBCR-PE, com as guias do gráfico
+# no lugar das linhas de altura de uma fonte (teto, base 100, mínimo)
+guia <- function(y, txt) div(class = "guia", style = sprintf("top:%.1f%%", y), span(txt))
+hero_linha <- NULL; guias <- list(guia(38, "QL = 1 · MÉDIA DO ESTADO"))
+if (NROW(macro_ibcr)) {
+  s <- macro_ibcr %>% filter(grepl("pernambuco|^pe", recorte, ignore.case = TRUE), !is.na(valor), data >= as.Date("2015-01-01")) %>% arrange(data)
+  if (nrow(s) > 24) {
+    s$v <- 100 * s$valor / mean(s$valor[format(s$data, "%Y") == "2015"])
+    vmax <- max(s$v); vmin <- min(s$v); y_base <- 62; y_top <- 20
+    esc <- function(v) y_base - (v - 100) / (vmax - 100) * (y_base - y_top)
+    x <- seq(0, 1000, length.out = nrow(s))
+    pts <- paste(sprintf("%.1f,%.2f", x, esc(s$v)), collapse = " ")
+    hero_linha <- HTML(sprintf('<svg class="hero-serie" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="%s" fill="none" stroke="#E07A1F" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>', pts))
+    mes <- function(d) paste0(c("jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez")[as.numeric(format(d, "%m"))], "/", format(d, "%Y"))
+    guias <- list(guia(y_top, paste0("TETO · ", fmt_num(vmax, 1), " EM ", toupper(mes(s$data[which.max(s$v)])))),
+                  guia(y_base, "BASE · 2015 = 100"),
+                  guia(esc(vmin), paste0("PISO · ", fmt_num(vmin, 1), " EM ", toupper(mes(s$data[which.min(s$v)])))))
+  }
+}
+tags$section(class = "ato ato-hero",
+  div(class = "hero-canto hero-tl", "PERNAMBUCO"),
+  div(class = "hero-canto hero-tr", "185 MUNICÍPIOS · 12 REGIÕES"),
+  div(class = "hero-guias", `aria-hidden` = "true", guias),
+  hero_linha,
+  div(class = "hero-palavra", "Pernambuco"),
+  div(class = "hero-canto hero-bl", "ATIVIDADE ECONÔMICA · IBCR-PE COM AJUSTE SAZONAL"),
+  div(class = "hero-canto hero-br", "DADOS PÚBLICOS 2006 · 2026"))
 ```
 
 ```{=html}
-<section class="home-hero">
-  <svg class="home-tri" viewBox="0 0 600 400" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
-    <polygon points="600,0 420,0 600,170" fill="#E07A1F" opacity=".9"/>
-    <polygon points="420,0 600,170 470,210" fill="#2E6DA4" opacity=".55"/>
-    <polygon points="600,170 470,210 600,330" fill="#E07A1F" opacity=".35"/>
-    <polygon points="470,210 600,330 520,400" fill="#2E6DA4" opacity=".45"/>
-    <polygon points="600,330 520,400 600,400" fill="#F2B279" opacity=".7"/>
-    <polygon points="420,0 470,210 330,120" fill="#ffffff" opacity=".07"/>
-    <polygon points="470,210 520,400 380,330" fill="#ffffff" opacity=".06"/>
-    <polygon points="330,120 470,210 380,330" fill="#2E6DA4" opacity=".25"/>
-  </svg>
-  <div class="home-hero-txt">
-    <p class="home-kicker">Pernambuco em dados públicos</p>
-    <h1>Onde está, como cresce e para onde vende a economia de Pernambuco</h1>
-    <p class="home-lead">Cadeias produtivas, emprego, produção e comércio exterior dos 185 municípios, montados a partir de fontes oficiais e atualizados por um pipeline aberto em R.</p>
-    <form class="home-busca" action="municipios.html" method="get" role="search">
-      <i class="bi bi-search"></i>
-      <input name="m" list="home-lista-mun" placeholder="Busque um município (ex.: Caruaru)" aria-label="Buscar município" autocomplete="off">
-      <button type="submit">Ver raio-X</button>
-    </form>
-    <div class="home-ctas">
-      <a class="home-btn home-btn-1" href="panorama.html">Panorama do estado</a>
-      <a class="home-btn home-btn-2" href="cadeias/index.html">As 21 cadeias</a>
-    </div>
-  </div>
+<section class="ato ato-abertura">
+  <p class="rotulo">( EM CARTAZ )</p>
+  <h1 class="ab-nome">José Roberto Verçosa</h1>
+  <p class="ab-tag">Economista que transforma dados públicos em leitura de território.</p>
+  <form class="home-busca" action="municipios.html" method="get" role="search">
+    <i class="bi bi-search"></i>
+    <input name="m" list="home-lista-mun" placeholder="Busque um município (ex.: Caruaru)" aria-label="Buscar município" autocomplete="off">
+    <button type="submit">Ver raio-X</button>
+  </form>
 </section>
 ```
 
@@ -138,83 +182,133 @@ tags$datalist(id = "home-lista-mun", lapply(sort(municipios$municipio), function
 
 ```{r}
 #| echo: false
-cartoes(list(
-  list(rotulo = paste("Empregos formais nas cadeias em", ult), valor = fmt_num(emp_total),
-       nota = "RAIS, soma das 21 cadeias"),
-  if (!is.null(ibcr10)) list(rotulo = "Atividade econômica de PE em 10 anos", valor = pct(ibcr10$pe, 1),
-       nota = paste0("IBCR até ", ibcr10$ano, " · NE ", pct(ibcr10$ne, 1), " · BR ", pct(ibcr10$br, 1))),
-  if (!is.null(pim10)) list(rotulo = "Produção industrial de PE em 10 anos", valor = pct(pim10$pe, 1), nota = nota_cmp(pim10, "PIM-PF")),
-  if (!is.null(pmc10)) list(rotulo = "Vendas do varejo de PE em 10 anos", valor = pct(pmc10$pe, 1), nota = nota_cmp(pmc10, "PMC")),
-  if (!is.null(pms10)) list(rotulo = "Volume de serviços de PE em 10 anos", valor = pct(pms10$pe, 1), nota = nota_cmp(pms10, "PMS")),
-  list(rotulo = "Última atualização", valor = format(atualizado_em, "%d/%m/%Y"),
-       nota = paste0("RAIS ", sub(".* a (\\d{4}).*", "\\1", fontes_datas$cobertura[1]),
-                     " · CAGED ", sub(".* a (\\d{2}/\\d{4}).*", "\\1", fontes_datas$cobertura[2])))
-) |> Filter(f = Negate(is.null)))
+# palavra sublinhada que mostra um número ao passar o mouse
+dica <- function(txt, href, num, leg) tags$a(class = "dica", href = href, txt,
+  tags$span(class = "dica-card", tags$b(num), tags$span(leg)))
+emp_pe <- sum(emp_mun$e)
+div(class = "ato ato-texto",
+  p(class = "rotulo", "( PRÓLOGO )"),
+  p(class = "prosa", "Sou economista, mestre em Economia Regional pela UFPE. Trabalho com dados públicos para entender onde a economia de Pernambuco está, como ela cresce e o que ainda falta medir. Cada página aqui é montada a partir das fontes oficiais, por um código aberto que qualquer pessoa pode rodar de novo."),
+  p(class = "rotulo", "( O PROGRAMA )"),
+  p(class = "prosa",
+    "Começo pelo ", dica("nível de atividade", "panorama.html",
+      if (!is.null(ibcr10)) pct(ibcr10$pe, 1) else "", if (!is.null(ibcr10)) paste("IBCR de PE em 10 anos, até", ibcr10$ano) else ""),
+    ", desmonto as ", dica(paste(n_cad, "cadeias produtivas"), "cadeias/index.html", fmt_num(emp_total), paste("empregos formais nas cadeias em", ult)),
+    " em elos, comparo os ", dica("185 municípios", "municipios.html", fmt_num(emp_pe), paste("empregos formais no estado em", ult)),
+    " e as ", dica("12 Regiões de Desenvolvimento", "regioes.html", rd_res$rd[1], paste("é a região com mais emprego:", fmt_num(rd_res$emprego[1]))),
+    ", sigo as ", dica("empresas que abrem e fecham", "panorama.html#empresas", "CNPJ", "Receita Federal, por município e setor"),
+    ", a ", dica("qualificação", "panorama.html#qualificacao-e-educacao", "RAIS + INEP", "escolaridade, ocupações e ensino superior"),
+    " de quem trabalha e o ", dica("ICMS", "panorama.html#icms", "SICONFI", "cota-parte de cada município"), " que circula."),
+  p(class = "dica-aviso", "PASSE O MOUSE NAS PALAVRAS SUBLINHADAS"))
 ```
 
-## O que os dados mostram
+```{r}
+#| echo: false
+cartao_corte <- NULL
+if (!is.null(corte) && NROW(corte$indicadores)) {
+  pe <- corte$indicadores %>% filter(recorte == "Pernambuco")
+  cmp <- corte$indicadores %>% filter(recorte %in% c("Nordeste", "Brasil")) %>% group_by(indicador) %>%
+    arrange(match(recorte, c("Nordeste", "Brasil"))) %>% slice(1) %>% ungroup()
+  itens <- lapply(seq_len(nrow(pe)), function(i) {
+    c_i <- cmp %>% filter(indicador == pe$indicador[i])
+    list(rotulo = paste0(pe$indicador[i], ", jan a ", MESES[pe$ate_mes[i]], "/", corte$ano), valor = pct(pe$var[i], 1),
+         nota = paste0("contra o mesmo período de ", corte$ano - 1, if (nrow(c_i)) paste0(" · ", c(Nordeste = "NE", Brasil = "BR")[c_i$recorte], " ", pct(c_i$var, 1))))
+  })
+  if (!is.null(corte$caged)) itens <- c(itens, list(list(rotulo = paste0("Saldo de empregos formais, jan a ", MESES[corte$caged$ate_mes], "/", corte$ano),
+    valor = paste0(ifelse(corte$caged$saldo > 0, "+", ""), fmt_num(corte$caged$saldo)), nota = paste0("Novo CAGED · ", corte$ano - 1, ": ", fmt_num(corte$caged$anterior)))))
+  cartao_corte <- cartoes(itens)
+}
+div(class = "ato",
+  p(class = "rotulo", "( ATO I · O PANORAMA )"),
+  h2(class = "ato-titulo", "O estado inteiro, em séries longas e no ano que está correndo."),
+  cartoes(list(
+    if (!is.null(ibcr10)) list(rotulo = "Atividade econômica em 10 anos", valor = pct(ibcr10$pe, 1), nota = nota_cmp(ibcr10, "IBCR")),
+    if (!is.null(pim10)) list(rotulo = "Produção industrial em 10 anos", valor = pct(pim10$pe, 1), nota = nota_cmp(pim10, "PIM-PF")),
+    if (!is.null(pmc10)) list(rotulo = "Vendas do varejo em 10 anos", valor = pct(pmc10$pe, 1), nota = nota_cmp(pmc10, "PMC")),
+    if (!is.null(pms10)) list(rotulo = "Volume de serviços em 10 anos", valor = pct(pms10$pe, 1), nota = nota_cmp(pms10, "PMS"))
+  ) |> Filter(f = Negate(is.null))),
+  if (!is.null(cartao_corte)) tagList(p(class = "rotulo rotulo-sub", paste("EM", corte$ano, "ATÉ AGORA")), cartao_corte),
+  a(class = "ato-link", href = "panorama.html", "Ver o panorama →"))
+```
 
 ```{r}
 #| echo: false
 achado <- function(icone, titulo, texto, link, rotulo) div(class = "home-achado",
   div(class = "home-achado-ic", tags$i(class = paste("bi", icone))),
   h4(titulo), p(texto), a(href = link, paste(rotulo, "→")))
-div(class = "home-achados",
-  achado("bi-trophy", paste("Líder do Nordeste em", nrow(lider), "cadeias"),
-         paste0("Pernambuco tem o maior emprego formal do Nordeste em ", paste(lider$cadeia, collapse = "; "),
-                ". Em outras ", sum(por_cad$posicao == 2, na.rm = TRUE), " cadeias, fica em segundo."),
-         "panorama.html", "Ver o panorama"),
-  achado("bi-graph-up-arrow", paste(cresce$cadeia, pct(cresce$var10), "em 10 anos"),
-         paste0("Entre as cadeias com mais de 5 mil empregos, foi a que mais cresceu desde ", a10, ", chegando a ",
-                fmt_num(cresce$emp), " vínculos formais em ", ult, "."),
-         paste0("cadeias/", cresce$cadeia_id, ".html"), "Ver a cadeia"),
-  achado("bi-geo-alt", paste0(fmt_num(100 * conc$part3, 0), "% em três municípios"),
-         paste0(nomes_cad[conc$cadeia_id], ": ", conc$lideres, " concentram a maior parte do emprego formal da cadeia. ",
-                "É a mais concentrada entre as grandes cadeias do interior."),
-         paste0("cadeias/", conc$cadeia_id, ".html"), "Ver o mapa")
-)
+card_cad <- function(r) a(class = "home-cad", href = paste0("cadeias/", r$cadeia_id, ".html"),
+  div(class = "home-cad-nome", r$cadeia),
+  div(class = "home-cad-num", fmt_num(r$emp), span(" empregos")),
+  div(class = "home-cad-rodape",
+    span(class = if (isTRUE(r$var10 >= 0)) "home-pos" else "home-neg", pct(r$var10), " em 10 anos"),
+    if (!is.na(r$posicao)) span(class = paste("home-pos-ne", if (r$posicao == 1) "home-pos-1"), paste0(r$posicao, "º no NE"))),
+  if (!is.na(r$txt)) div(class = "home-cad-extra", tags$i(class = "bi bi-basket"), r$txt),
+  lapply(names(r$conj[[1]]), function(k) div(class = "home-cad-extra",
+    tags$i(class = paste("bi", c(PIM = "bi-gear", PMC = "bi-cart", PMS = "bi-briefcase")[k])), r$conj[[1]][[k]])))
+div(class = "ato",
+  p(class = "rotulo", "( ATO II · AS CADEIAS )"),
+  h2(class = "ato-titulo", paste0(n_cad, " cadeias produtivas, divididas em elos, e ", nrow(nichos), " nichos que atravessam setores.")),
+  div(class = "home-achados",
+    achado("bi-trophy", paste("Líder do Nordeste em", nrow(lider), "cadeias"),
+           paste0("Pernambuco tem o maior emprego formal do Nordeste em ", paste(lider$cadeia, collapse = "; "),
+                  ". Em outras ", sum(cads$posicao == 2, na.rm = TRUE), " cadeias, fica em segundo."), "panorama.html", "Ver o panorama"),
+    achado("bi-graph-up-arrow", paste(cresce$cadeia, pct(cresce$var10), "em 10 anos"),
+           paste0("Entre as cadeias com mais de 5 mil empregos, foi a que mais cresceu desde ", a10, ", chegando a ",
+                  fmt_num(cresce$emp), " vínculos formais em ", ult, "."), paste0("cadeias/", cresce$cadeia_id, ".html"), "Ver a cadeia"),
+    achado("bi-geo-alt", paste0(fmt_num(100 * conc$part3, 0), "% em três municípios"),
+           paste0(nomes_cad[conc$cadeia_id], ": ", conc$lideres, " concentram a maior parte do emprego formal da cadeia."),
+           paste0("cadeias/", conc$cadeia_id, ".html"), "Ver o mapa")),
+  div(class = "home-cads", lapply(seq_len(nrow(cads)), function(i) card_cad(cads[i, ]))),
+  if (nrow(nichos)) tagList(p(class = "rotulo rotulo-sub", "NICHOS TRANSVERSAIS"),
+    div(class = "home-cads home-nichos", lapply(seq_len(nrow(nichos)), function(i) card_cad(nichos[i, ])),
+        a(class = "home-cad", href = "agricultura-familiar.html", div(class = "home-cad-nome", "Agricultura familiar"),
+          div(class = "home-cad-extra", tags$i(class = "bi bi-basket"), "Censo Agropecuário 2017 e crédito do PRONAF por município")))),
+  p(class = "fonte", "Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Posição no Nordeste pelo emprego formal da cadeia em ", ult,
+    ". PIM-PF, PMC e PMS são atividades mais amplas que a cadeia, usadas como termo de comparação."),
+  a(class = "ato-link", href = "cadeias/index.html", "Ver todas as cadeias e nichos →"))
 ```
-
-## Explore
-
-```{=html}
-<div class="home-secoes">
-  <a class="home-secao" href="panorama.html"><i class="bi bi-speedometer2"></i><h4>Panorama</h4><p>Nível de atividade (IBCR e indústria), emprego formal, estrutura produtiva e comércio exterior do estado.</p></a>
-  <a class="home-secao" href="municipios.html"><i class="bi bi-pin-map"></i><h4>Raio-X dos municípios</h4><p>PIB por setor, lavouras e rebanhos, emprego, CAGED, cadeias presentes e exportações de cada município.</p></a>
-  <a class="home-secao" href="cadeias/index.html"><i class="bi bi-diagram-3"></i><h4>Cadeias produtivas</h4><p>Uma página por cadeia, com elos, mapas de especialização, comparação com o Nordeste e o Brasil e destinos das exportações.</p></a>
-  <a class="home-secao" href="encadeamentos.html"><i class="bi bi-bezier2"></i><h4>Encadeamentos</h4><p>Ligações para trás e para frente dos setores, a partir da matriz insumo-produto regionalizada.</p></a>
-  <a class="home-secao" href="lacunas.html"><i class="bi bi-search"></i><h4>Lacunas de dados</h4><p>Onde as fontes públicas não alcançam e que informação resolveria.</p></a>
-  <a class="home-secao" href="metodologia.html"><i class="bi bi-gear"></i><h4>Metodologia</h4><p>Fontes, classificação das cadeias em elos, indicadores (QL, participação, concentração) e o pipeline.</p></a>
-</div>
-```
-
-## As 21 cadeias em números
 
 ```{r}
 #| echo: false
-div(class = "home-cads",
-  lapply(seq_len(nrow(por_cad)), function(i) {
-    r <- por_cad[i, ]
-    a(class = "home-cad", href = paste0("cadeias/", r$cadeia_id, ".html"),
-      div(class = "home-cad-nome", r$cadeia),
-      div(class = "home-cad-num", fmt_num(r$emp), span(" empregos")),
-      div(class = "home-cad-rodape",
-        span(class = if (isTRUE(r$var10 >= 0)) "home-pos" else "home-neg", pct(r$var10), " em 10 anos"),
-        if (!is.na(r$posicao)) span(class = paste("home-pos-ne", if (r$posicao == 1) "home-pos-1"), paste0(r$posicao, "º no NE"))),
-      if (!is.na(r$txt)) div(class = "home-cad-extra", tags$i(class = "bi bi-basket"), r$txt),
-      lapply(names(r$conj[[1]]), function(k) div(class = "home-cad-extra",
-        tags$i(class = paste("bi", c(PIM = "bi-gear", PMC = "bi-cart", PMS = "bi-briefcase")[k])), r$conj[[1]][[k]])))
-  }))
+div(class = "ato",
+  p(class = "rotulo", "( ATO III · O TERRITÓRIO )"),
+  h2(class = "ato-titulo", "Doze regiões, 185 municípios. Cada um com seu raio-X."),
+  div(class = "rd-grid", lapply(seq_len(nrow(rd_res)), function(i) {
+    r <- rd_res[i, ]
+    a(class = "rd-card", href = paste0("regioes.html?r=", utils::URLencode(r$rd, reserved = TRUE)),
+      div(class = "rd-nome", r$rd),
+      div(class = "rd-num", fmt_num(r$emprego), span(" empregos formais")),
+      div(class = "rd-meta", paste0(r$municipios, " municípios · ", fmt_num(r$pop / 1000), " mil habitantes")),
+      if (!is.na(r$cadeia)) div(class = "rd-cad", "Mais especializada em ", tags$b(r$cadeia), paste0(" (QL ", fmt_num(r$ql, 1), ")")))
+  })),
+  a(class = "ato-link", href = "regioes.html", "Ver as regiões →"), " ", a(class = "ato-link", href = "municipios.html", "Ver os municípios →"))
 ```
 
-<p class="fonte">Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Elaboração própria. Posição no Nordeste pelo emprego formal da cadeia em `r ult`. Produção: IBGE (PAM, PPM e aquicultura). Indústria, comércio e serviços: PIM-PF, PMC e PMS do IBGE, atividades mais amplas que a cadeia, usadas como termo de comparação (a indústria com o Nordeste; comércio e serviços com o Brasil, porque as duas pesquisas não têm recorte regional).</p>
+```{=html}
+<section class="ato">
+  <p class="rotulo">( ATO IV · OS ENCADEAMENTOS )</p>
+  <h2 class="ato-titulo">Quem compra de quem: as ligações para trás e para frente de cada setor.</h2>
+  <p class="prosa">A matriz insumo-produto nacional, regionalizada para Pernambuco, mostra quais setores puxam o resto da economia quando crescem e quais dependem de insumos de fora do estado.</p>
+  <a class="ato-link" href="encadeamentos.html">Ver os encadeamentos →</a>
+</section>
 
-## Sobre mim
+<section class="ato">
+  <p class="rotulo">( BASTIDORES · O MÉTODO )</p>
+  <h2 class="ato-titulo">O mesmo caminho para cada número do site.</h2>
+  <div class="passos">
+    <div class="passo"><span>01</span><h4>Coletar</h4><p>Consultas à Base dos Dados (RAIS, CAGED, CNPJ, ComexStat, INEP, SICONFI), ao SIDRA do IBGE e ao Banco Central.</p></div>
+    <div class="passo"><span>02</span><h4>Classificar</h4><p>Cada cadeia é dividida em elos por códigos CNAE, conferidos contra o diretório oficial.</p></div>
+    <div class="passo"><span>03</span><h4>Medir</h4><p>Quociente locacional, participação, concentração, shift-share e variações em 10, 5 e 2 anos.</p></div>
+    <div class="passo"><span>04</span><h4>Comparar</h4><p>Pernambuco frente ao Nordeste e ao Brasil, e cada município frente à sua região.</p></div>
+    <div class="passo"><span>05</span><h4>Publicar</h4><p>Um pipeline em R (targets e Quarto) refaz tudo a partir das fontes. O código é aberto.</p></div>
+  </div>
+  <a class="ato-link" href="metodologia.html">Ver a metodologia →</a> <a class="ato-link" href="lacunas.html">O que os dados não mostram →</a>
+</section>
 
-::: {.home-sobre}
-**José Roberto Verçosa**, economista, mestre em Economia Regional (UFPE). Atuo na interseção entre dados, políticas públicas e desenvolvimento regional: avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, PR, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.
-
-Ferramentas: R, Python, SQL (BigQuery), Quarto, Shiny, Power BI.
-
-[LinkedIn](https://www.linkedin.com/in/jrsvf) · [GitHub](https://github.com/jrsvf) · [Lattes](https://lattes.cnpq.br/1066993955257243)
-:::
+<section class="ato ato-cortina">
+  <p class="rotulo">( CORTINA )</p>
+  <h2 class="cortina-titulo">Vamos conversar sobre<br>o seu território.</h2>
+  <p class="prosa">Avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.</p>
+  <p class="cortina-links"><a href="https://www.linkedin.com/in/jrsvf">LinkedIn ↗</a> <a href="https://github.com/jrsvf">GitHub ↗</a> <a href="https://lattes.cnpq.br/1066993955257243">Lattes ↗</a></p>
+</section>
+```

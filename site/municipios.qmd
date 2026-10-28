@@ -41,6 +41,12 @@ pct = (x, d = 1) => x == null || isNaN(x) ? "–" : (x > 0 ? "+" : "") + (100 * 
 reais = x => x == null ? "–" : x >= 1e9 ? "R$ " + nf(x / 1e9, 2) + " bi" : x >= 1e6 ? "R$ " + nf(x / 1e6, 1) + " mi" : "R$ " + nf(x / 1e3, 0) + " mil"
 usd = x => x == null || x === 0 ? "–" : x >= 1e9 ? "US$ " + nf(x / 1e9, 2) + " bi" : x >= 1e6 ? "US$ " + nf(x / 1e6, 1) + " mi" : "US$ " + nf(x / 1e3, 0) + " mil"
 AZUL = "#1F4E79"; LAR = "#E07A1F"; CINZA = "#B8C4CF"
+terr = FileAttachment("dados/territorio_municipios.json").json()
+regs = FileAttachment("dados/regioes.json").json()
+import {blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra, listaMaiores} from "./territorio.js"
+t = terr.find(d => d.id === m.id) ?? {}
+nichos = new Set(regs.flatMap(r => (r.cadeias ?? []).filter(c => c.grupo === "nicho").map(c => c.cadeia_id)))
+rdDe = regs.find(r => r.municipios.some(x => x.id === m.id))
 cartao = (rotulo, valor, nota = "") => html`<div class="cartao"><div class="cartao-valor">${valor}</div><div class="cartao-rotulo">${rotulo}</div>${nota ? html`<div class="cartao-nota">${nota}</div>` : ""}</div>`
 ```
 
@@ -49,7 +55,7 @@ cartao = (rotulo, valor, nota = "") => html`<div class="cartao"><div class="cart
 html`<div class="rx-topo">
   <div>
     <h2 class="rx-nome">${m.nome}</h2>
-    <p class="rx-sub">Região de Desenvolvimento ${m.rd ?? "–"} · ${nf(m.pop)} habitantes (${m.ano_pop})</p>
+    <p class="rx-sub">Região de Desenvolvimento <a href="regioes.html?r=${encodeURIComponent(m.rd ?? "")}">${m.rd ?? "–"}</a> · ${nf(m.pop)} habitantes (${m.ano_pop})</p>
     <p class="rx-sub">Link direto: <code>${location.origin + location.pathname}?m=${m.id}</code></p>
   </div>
   <div class="rx-mapa">${Plot.plot({
@@ -169,7 +175,7 @@ cardCadeia = d => {
   const esp = d.ql >= 1;
   return html`<div class="rx-cc ${esp ? "rx-cc-esp" : ""}">
     <div class="rx-cc-topo">
-      <a class="rx-cc-nome" href="cadeias/${d.cadeia_id}.html">${d.cadeia}</a>
+      <a class="rx-cc-nome" href="cadeias/${d.cadeia_id}.html">${d.cadeia}${nichos.has(d.cadeia_id) ? html` <span class="rx-nicho">nicho</span>` : ""}</a>
       ${d.ql != null ? html`<span class="rx-ql" title="Quociente locacional: peso da cadeia no emprego do município dividido pelo peso no estado">QL ${nf(d.ql, 2)}</span>` : ""}
     </div>
     <div class="rx-cc-nums">
@@ -184,12 +190,13 @@ cardCadeia = d => {
     ${x.elos.length ? html`<div class="rx-cc-bloco"><h5>Elos com emprego formal</h5><table class="rx-tab"><tbody>
       ${x.elos.map(e => html`<tr><td>${e.elo}</td><td>${nf(e.emprego)}</td><td>QL ${nf(e.ql, 2)}</td></tr>`)}
     </tbody></table></div>` : ""}
+    ${listaMaiores((t.maiores ?? {})[d.cadeia_id], {html})}
     ${x.destinos.length ? html`<div class="rx-cc-bloco"><h5>Principais destinos</h5><p>${x.destinos.map(p => `${p.pais} (${usd(p.v)})`).join(" · ")}</p></div>` : ""}
   </div>`;
 }
 m.cadeias.length === 0 ? html`<p>Nenhuma das 21 cadeias acompanhadas tem emprego formal ou produção registrada aqui.</p>` :
-html`<p>Cada cartão junta o que o município tem em cada cadeia acompanhada: emprego formal por elo, produção do IBGE e exportações. Em destaque, as cadeias em que ${m.nome} é especializado (QL ≥ 1). O nome leva à página da cadeia.</p>
-<div class="rx-ccs">${m.cadeias.map(cardCadeia)}</div>`
+html`<p>Cada cartão junta o que o município tem em cada cadeia e nicho acompanhados: emprego formal por elo, produção do IBGE, exportações e as maiores empresas ativas. Os cartões vão do maior para o menor quociente locacional; em destaque, as cadeias em que ${m.nome} é especializado (QL ≥ 1). O nome leva à página da cadeia.</p>
+<div class="rx-ccs">${m.cadeias.slice().sort((a, b) => (b.ql ?? -1) - (a.ql ?? -1)).map(cardCadeia)}</div>`
 ```
 
 <p class="fonte">Fonte: RAIS (emprego e QL), IBGE (PAM e PPM) e ComexStat, via Base dos Dados e SIDRA.</p>
@@ -264,3 +271,61 @@ ${m.comex.top.length ? html`<table class="rx-tab"><tbody>${m.comex.top.map(d => 
 ```
 
 <p class="fonte">Fonte: ComexStat (MDIC), via Base dos Dados. O registro segue o domicílio fiscal da empresa, não o local de produção.</p>
+
+## Empresas
+
+```{ojs}
+//| echo: false
+blocoEmpresas(t.empresas, {Plot, html})
+```
+
+<p class="fonte">Fonte: Cadastro Nacional da Pessoa Jurídica (Receita Federal), via Base dos Dados. Estabelecimentos pela atividade principal e pelo município do endereço. Baixas pela data da situação cadastral. As listas de empresas nas cadeias excluem MEI e empresário individual.</p>
+
+## Qualificação e educação
+
+::: {.panel-tabset}
+
+### Quem trabalha
+
+```{ojs}
+//| echo: false
+blocoQualif(t.qualificacao, {Plot, html})
+```
+
+### Ensino superior e técnico
+
+```{ojs}
+//| echo: false
+blocoEducacao(t.educacao, {Plot, html})
+```
+
+:::
+
+<p class="fonte">Fonte: RAIS (escolaridade e ocupação dos vínculos ativos em 31/12), Censo da Educação Superior e Censo Escolar (INEP), via Base dos Dados. Ensino superior: só cursos presenciais, no município de oferta.</p>
+
+## ICMS
+
+```{ojs}
+//| echo: false
+blocoIcms(t.icms, {Plot, html})
+```
+
+<p class="fonte">Fonte: SICONFI (Tesouro Nacional), via Base dos Dados. Cota-parte do ICMS que o estado repassa ao município (25% da arrecadação, distribuída pelo índice de participação). Valores nominais.</p>
+
+## Agricultura familiar e crédito rural
+
+```{ojs}
+//| echo: false
+blocoAgro(t.agro, {Plot, html})
+```
+
+<p class="fonte">Fonte: Censo Agropecuário 2017 (IBGE, tabelas 6753 e 6898), pela Lei 11.326; crédito do PRONAF pela Matriz de Dados do Crédito Rural (Banco Central, SICOR), via Base dos Dados.</p>
+
+## Infraestrutura
+
+```{ojs}
+//| echo: false
+blocoInfra(t.infra, {html})
+```
+
+<p class="fonte">Lista curada de portos, aeroportos, polos e ferrovias (config/infraestrutura.csv). Localização aproximada.</p>

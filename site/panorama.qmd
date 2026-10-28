@@ -1,6 +1,6 @@
 ---
 title: "Panorama de Pernambuco"
-description: "Emprego formal, estrutura produtiva, especialização municipal e comércio exterior em séries longas."
+description: "Nível de atividade, emprego, setores, empresas, qualificação, ICMS, especialização municipal e comércio exterior de Pernambuco, em séries longas e no ano corrente."
 ---
 
 ```{r}
@@ -13,6 +13,10 @@ pim_resumo <- tryCatch(ler_base("pim_resumo", ""), error = function(e) NULL)
 macro_pmc  <- tryCatch(ler_base("macro_pmc", ""), error = function(e) NULL)
 macro_pms  <- tryCatch(ler_base("macro_pms", ""), error = function(e) NULL)
 conj_resumo <- tryCatch(ler_base("conj_resumo", ""), error = function(e) NULL)
+opcional <- function(n) tryCatch(ler_base(n, ""), error = function(e) NULL)
+corte <- opcional("corte_atual"); empresas <- opcional("empresas"); qualificacao <- opcional("qualificacao")
+educacao <- opcional("educacao"); icms <- opcional("icms"); infraestrutura <- opcional("infraestrutura"); rd <- opcional("rd")
+MESES <- c("janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro")
 ult <- max(rais_secao$ano); ini <- max(min(rais_secao$ano), ult - max(CORTES_PADRAO$janelas))
 su <- serie_uf %>% arrange(ano) %>% filter(ano >= ini)
 rais_secao <- rais_secao %>% filter(ano >= ini)
@@ -30,6 +34,49 @@ cartoes(list(
        valor = fmt_usd(sum(comex_pe$valor_fob[comex_pe$ano == cx_ult & comex_pe$fluxo == "Exportação"])))
 ))
 ```
+
+## Pernambuco em `r if (!is.null(corte)) corte$ano else format(Sys.Date(), "%Y")`
+
+```{r}
+if (is.null(corte) || !NROW(corte$indicadores)) {
+  htmltools::p(class = "aviso", "Os dados do ano corrente ainda não foram calculados nesta atualização.")
+} else {
+  sig <- c(Pernambuco = "PE", Nordeste = "NE", Bahia = "BA", "Ceará" = "CE", Brasil = "BR")
+  t <- corte$indicadores %>% mutate(v = paste0(sinal_pct(var), "")) %>%
+    mutate(rec = sig[recorte]) %>% select(indicador, ate_mes, rec, v) %>%
+    pivot_wider(names_from = rec, values_from = v, values_fill = "–") %>%
+    mutate(Período = paste0("jan a ", substr(MESES[ate_mes], 1, 3), "/", corte$ano, " contra jan a ", substr(MESES[ate_mes], 1, 3), "/", corte$ano - 1)) %>%
+    select(Indicador = indicador, Período, any_of(c("PE", "NE", "BA", "CE", "BR")))
+  htmltools::tagList(
+    htmltools::p(paste0("O que já saiu de ", corte$ano, ", comparado com os mesmos meses de ", corte$ano - 1,
+                        ". As pesquisas saem com um a dois meses de defasagem; o CAGED da Base dos Dados pode ter atraso maior.")),
+    if (!is.null(corte$caged)) cartoes(list(
+      list(rotulo = paste0("Saldo de empregos formais, jan a ", substr(MESES[corte$caged$ate_mes], 1, 3), "/", corte$ano),
+           valor = paste0(ifelse(corte$caged$saldo > 0, "+", ""), fmt_num(corte$caged$saldo)),
+           nota = paste0("Mesmo período de ", corte$ano - 1, ": ", fmt_num(corte$caged$anterior))),
+      list(rotulo = "Admissões", valor = fmt_num(corte$caged$admissoes), nota = paste("Desligamentos:", fmt_num(corte$caged$desligamentos))),
+      if (!is.null(corte$comex)) list(rotulo = paste0("Exportações, jan a ", substr(MESES[corte$comex$ate_mes], 1, 3), "/", corte$ano),
+           valor = fmt_usd(sum(corte$comex$total$v[corte$comex$total$fluxo == "Exportação" & corte$comex$total$ano == corte$ano])),
+           nota = paste0(sinal_pct(sum(corte$comex$total$v[corte$comex$total$fluxo == "Exportação" & corte$comex$total$ano == corte$ano]) /
+                                   sum(corte$comex$total$v[corte$comex$total$fluxo == "Exportação" & corte$comex$total$ano == corte$ano - 1]) - 1),
+                         " contra o mesmo período de ", corte$ano - 1))
+    ) |> Filter(f = Negate(is.null))),
+    htmltools::HTML(knitr::kable(t, format = "html", table.attr = 'class="table"')))
+}
+```
+
+```{r}
+if (!is.null(corte$caged)) {
+  htmltools::div(class = "rx-duas",
+    htmltools::div(htmltools::h4("Saldo do CAGED por setor no ano"),
+      grafico_barras_h(corte$caged$secoes %>% filter(!is.na(descricao_secao)) %>% mutate(setor = stringr::str_to_sentence(descricao_secao)) %>%
+                         slice_max(abs(saldo), n = 10), "setor", "saldo", "Saldo de empregos")),
+    htmltools::div(htmltools::h4("Municípios com maior saldo no ano"),
+      grafico_barras_h(corte$caged$municipios %>% slice_max(saldo, n = 10), "municipio", "saldo", "Saldo de empregos")))
+}
+```
+
+<p class="fonte">Fontes: Banco Central (IBCR), IBGE (PIM-PF, PMC e PMS), Novo CAGED (MTE) e ComexStat, via Base dos Dados e SIDRA. Média do índice nos meses disponíveis do ano contra os mesmos meses do ano anterior, série sem ajuste sazonal.</p>
 
 ## Nível de atividade
 
@@ -307,7 +354,8 @@ tabela(k %>% transmute(Município = municipio, `Índice de Krugman` = round(krug
 ### Cadeia dominante
 
 ```{r}
-dom <- locais_cadeia %>% filter(ano == ult, emprego >= par$indicadores$emprego_minimo) %>%
+dom <- locais_cadeia %>% filter(ano == ult, emprego >= par$indicadores$emprego_minimo,
+                               atividade %in% cad$meta$cadeia_id[cad$meta$grupo == "cadeia"]) %>%
   group_by(id_municipio) %>% slice_max(ql, n = 1, with_ties = FALSE) %>% ungroup() %>%
   left_join(cad$meta %>% select(cadeia_id, cadeia), by = c("atividade" = "cadeia_id"))
 m <- malha %>% left_join(dom, by = "id_municipio")
@@ -320,6 +368,208 @@ leaflet(m) %>%
 ```
 
 :::
+
+## Setores: agregar e desagregar {#setores}
+
+Escolha o nível da classificação (do grande setor à classe CNAE) e o recorte. A tabela mostra o emprego formal e a variação em 10 e 5 anos; clique em um nome para abrir o nível de baixo.
+
+```{ojs}
+//| echo: false
+setb = FileAttachment("dados/setores.json").json()
+NIVEIS = [["grande", null, "Grande setor"], ["secao", "descricao_secao", "Seção"], ["divisao", "descricao_divisao", "Divisão"],
+          ["grupo", "descricao_grupo", "Grupo"], ["classe", "descricao_classe", "Classe"]]
+recortes = ["Pernambuco", ...Array.from(new Set(setb.dados.map(d => d.rd))).filter(d => d !== "Pernambuco").sort()]
+viewof nivelSet = Inputs.radio(new Map(NIVEIS.map(n => [n[2], n[0]])), {label: "Nível", value: "secao"})
+viewof recSet = Inputs.select(recortes, {label: "Recorte", value: "Pernambuco"})
+mutable filtroSet = null
+dicSet = new Map(setb.dicionario.map(d => [d.classe, d]))
+tabSet = {
+  const [a0, a5, a1] = setb.anos;
+  const nv = NIVEIS.find(n => n[0] === nivelSet);
+  const pai = filtroSet;
+  const agg = new Map();
+  for (const d of setb.dados) {
+    if (d.rd !== recSet) continue;
+    const c = dicSet.get(d.classe); if (!c) continue;
+    if (pai && c[pai.nivel] !== pai.codigo) continue;
+    const chave = c[nivelSet];
+    const nome = nv[1] ? c[nv[1]] : chave;
+    if (!agg.has(chave)) agg.set(chave, {codigo: chave, nome, e0: 0, e5: 0, e1: 0, estab: 0});
+    const o = agg.get(chave);
+    if (d.ano === a0) o.e0 += d.emprego; if (d.ano === a5) o.e5 += d.emprego;
+    if (d.ano === a1) { o.e1 += d.emprego; o.estab += d.estab; }
+  }
+  const tot = d3.sum(agg.values(), d => d.e1);
+  return Array.from(agg.values()).map(o => ({...o, part: o.e1 / tot, v10: o.e0 > 0 ? o.e1 / o.e0 - 1 : null, v5: o.e5 > 0 ? o.e1 / o.e5 - 1 : null}))
+    .sort((a, b) => b.e1 - a.e1);
+}
+nfS = (x, d = 0) => x == null || isNaN(x) ? "–" : x.toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d})
+pS = x => x == null || !isFinite(x) ? "–" : (x > 0 ? "+" : "") + (100 * x).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + "%"
+{
+  const prox = {grande: "secao", secao: "divisao", divisao: "grupo", grupo: "classe"}[nivelSet];
+  const nomeNivel = NIVEIS.find(n => n[0] === nivelSet)[2];
+  const el = html`<div>
+    ${filtroSet ? html`<p class="aviso">Mostrando só o que está dentro de <b>${filtroSet.nome}</b>. <a href="#setores" class="set-limpar">Ver tudo</a></p>` : ""}
+    <table class="rx-tab"><thead><tr><th>${nomeNivel}</th><th>Empregos ${setb.anos[2]}</th><th>% do recorte</th><th>Em 10 anos</th><th>Em 5 anos</th><th>Estab.</th></tr></thead>
+    <tbody>${tabSet.slice(0, 60).map(d => html`<tr>
+      <td>${prox ? html`<a href="#setores" class="set-abrir" data-cod="${d.codigo}" data-nome="${d.nome}">${d.nome}</a>` : d.nome}</td>
+      <td>${nfS(d.e1)}</td><td>${nfS(100 * d.part, 1)}%</td><td>${pS(d.v10)}</td><td>${pS(d.v5)}</td><td>${nfS(d.estab)}</td></tr>`)}</tbody></table>
+    ${tabSet.length > 60 ? html`<p class="fonte">Mostrando as 60 maiores de ${tabSet.length}.</p>` : ""}</div>`;
+  el.querySelectorAll("a.set-abrir").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault();
+    mutable filtroSet = {nivel: nivelSet, codigo: a.dataset.cod, nome: a.dataset.nome};
+    viewof nivelSet.value = prox;
+    viewof nivelSet.dispatchEvent(new Event("input", {bubbles: true}));
+  }));
+  const l = el.querySelector("a.set-limpar");
+  if (l) l.addEventListener("click", e => { e.preventDefault(); mutable filtroSet = null; });
+  return el;
+}
+```
+
+<p class="fonte">Fonte: RAIS (vínculos ativos em 31/12 por estabelecimento), via Base dos Dados. Grandes setores: agropecuária (seção A), indústria (B a E), construção (F), comércio (G) e serviços (demais seções).</p>
+
+## Empresas {#empresas}
+
+```{r}
+if (is.null(empresas) || !NROW(empresas$fluxo)) {
+  htmltools::p(class = "aviso", "O cadastro de empresas não foi carregado nesta atualização.")
+} else {
+  ub <- as.numeric(format(empresas$data_base, "%Y")); mb <- as.numeric(format(empresas$data_base, "%m"))
+  f <- empresas$fluxo %>% filter(ano < ub | mb >= 7)
+  ser <- f %>% group_by(ano) %>% summarise(`Aberturas (sem MEI)` = sum(aberturas[!mei]), `Aberturas de MEI` = sum(aberturas[mei]),
+                                           Baixas = sum(baixas), .groups = "drop") %>% pivot_longer(-ano, names_to = "tipo", values_to = "v")
+  ua <- max(f$ano)
+  por_rd <- f %>% filter(ano == ua) %>% left_join(rd, by = "id_municipio") %>% group_by(rd) %>%
+    summarise(aberturas = sum(aberturas), baixas = sum(baixas), .groups = "drop") %>% mutate(saldo = aberturas - baixas)
+  sec <- f %>% filter(ano == ua, !mei) %>% left_join(empresas$secoes, by = "secao") %>% group_by(descricao_secao) %>%
+    summarise(saldo = sum(aberturas) - sum(baixas), .groups = "drop") %>% filter(!is.na(descricao_secao)) %>%
+    mutate(setor = stringr::str_to_sentence(descricao_secao))
+  htmltools::tagList(
+    cartoes(list(
+      list(rotulo = "Empresas ativas (sem MEI)", valor = fmt_num(sum(empresas$estoque$ativas[!empresas$estoque$mei])),
+           nota = paste("Cadastro da Receita de", format(empresas$data_base, "%m/%Y"))),
+      list(rotulo = "MEI ativos", valor = fmt_num(sum(empresas$estoque$ativas[empresas$estoque$mei]))),
+      list(rotulo = paste("Aberturas em", ua), valor = fmt_num(sum(f$aberturas[f$ano == ua])),
+           nota = paste0(fmt_pct(sum(f$aberturas[f$ano == ua & f$mei]) / sum(f$aberturas[f$ano == ua]), 0), " eram MEI")),
+      list(rotulo = paste("Baixas em", ua), valor = fmt_num(sum(f$baixas[f$ano == ua]))))),
+    htmltools::h4("Aberturas e baixas de estabelecimentos por ano"),
+    grafico_linhas(ser, "ano", "v", "tipo", "Estabelecimentos"),
+    htmltools::div(class = "rx-duas",
+      htmltools::div(htmltools::h4(paste("Saldo de empresas (sem MEI) por setor em", ua)), grafico_barras_h(sec %>% slice_max(abs(saldo), n = 10), "setor", "saldo")),
+      htmltools::div(htmltools::h4(paste("Aberturas por Região de Desenvolvimento em", ua)), grafico_barras_h(por_rd, "rd", "aberturas"))))
+}
+```
+
+<p class="fonte">Fonte: CNPJ (Receita Federal), via Base dos Dados. Estabelecimentos (matrizes e filiais) pela data de início de atividade e pela data da baixa. O ano da base só entra quando o cadastro já cobre mais da metade dele. As maiores empresas de cada cadeia aparecem no raio-X dos municípios.</p>
+
+## Qualificação e educação {#qualificacao-e-educacao}
+
+```{r}
+if (!NROW(qualificacao)) {
+  htmltools::p(class = "aviso", "Dados de qualificação indisponíveis nesta atualização.")
+} else {
+  anos_q <- sort(unique(qualificacao$ano))
+  esc <- qualificacao %>% group_by(ano, escolaridade) %>% summarise(v = sum(vinculos), .groups = "drop") %>%
+    group_by(ano) %>% mutate(p = 100 * v / sum(v)) %>% ungroup() %>% filter(escolaridade != "Não informado")
+  sup_rd <- qualificacao %>% filter(ano == max(anos_q)) %>% left_join(rd, by = "id_municipio") %>% group_by(rd) %>%
+    summarise(p = 100 * sum(vinculos[escolaridade %in% c("Superior", "Pós-graduação")]) / sum(vinculos), .groups = "drop")
+  htmltools::div(class = "rx-duas",
+    htmltools::div(htmltools::h4("Escolaridade dos vínculos formais (%)"),
+      layout_padrao(plotly::plot_ly(esc %>% mutate(escolaridade = factor(escolaridade, c("Até fundamental", "Médio", "Superior", "Pós-graduação"))),
+                                    x = ~escolaridade, y = ~p, color = ~factor(ano), colors = c("#C9D6E3", "#7FA7CF", "#1F4E79"), type = "bar",
+                                    hovertemplate = "%{x}: %{y:.1f}%<extra></extra>"), "% dos vínculos")),
+    htmltools::div(htmltools::h4(paste("Vínculos com ensino superior por região em", max(anos_q), "(%)")),
+      grafico_barras_h(sup_rd, "rd", "p", formato = ",.1f")))
+}
+```
+
+```{r}
+if (!is.null(educacao) && NROW(educacao$cursos)) {
+  cu <- educacao$cursos %>% filter(!grepl("dist", modalidade, ignore.case = TRUE))
+  ua <- max(cu$ano)
+  conc <- cu %>% group_by(ano, area) %>% summarise(concluintes = sum(concluintes, na.rm = TRUE), .groups = "drop")
+  top_a <- conc %>% filter(ano == ua) %>% slice_max(concluintes, n = 6) %>% pull(area)
+  mun_m <- cu %>% filter(ano == ua) %>% group_by(id_municipio) %>% summarise(matriculas = sum(matriculas, na.rm = TRUE), .groups = "drop")
+  htmltools::tagList(
+    cartoes(list(
+      list(rotulo = paste("Matrículas no ensino superior presencial em", ua), valor = fmt_num(sum(mun_m$matriculas))),
+      list(rotulo = "Municípios com oferta presencial", valor = sum(mun_m$matriculas > 0)),
+      list(rotulo = "Instituições de ensino superior com sede em PE", valor = NROW(educacao$ies)),
+      if (NROW(educacao$tecnico)) list(rotulo = paste("Matrículas em educação profissional em", max(educacao$tecnico$ano)),
+        valor = fmt_num(sum(educacao$tecnico$matriculas[educacao$tecnico$ano == max(educacao$tecnico$ano)], na.rm = TRUE))))
+      |> Filter(f = Negate(is.null))),
+    htmltools::div(class = "rx-duas",
+      htmltools::div(htmltools::h4("Concluintes por área (6 maiores)"),
+        grafico_linhas(conc %>% filter(area %in% top_a), "ano", "concluintes", "area", "Concluintes")),
+      htmltools::div(htmltools::h4(paste("Matrículas presenciais por município em", ua)),
+        mapa_municipios(malha, mun_m, "matriculas", "Matrículas", municipios, formato = function(x) fmt_num(x), paleta = "Purples"))))
+}
+```
+
+<p class="fonte">Fontes: RAIS (escolaridade dos vínculos ativos em 31/12), Censo da Educação Superior e Censo Escolar (INEP), via Base dos Dados.</p>
+
+## ICMS {#icms}
+
+```{r}
+if (is.null(icms) || (!NROW(icms$uf) && !NROW(icms$mun))) {
+  htmltools::p(class = "aviso", "Dados de ICMS indisponíveis nesta atualização.")
+} else {
+  partes <- list()
+  if (NROW(icms$uf)) {
+    uf_s <- icms$uf %>% filter(ano >= max(ano) - 10) %>% mutate(v = icms / 1e9)
+    ua <- max(uf_s$ano)
+    part <- uf_s %>% group_by(ano) %>% summarise(p = 100 * sum(v[sigla_uf == "PE"]) / sum(v), .groups = "drop")
+    partes <- c(partes, list(
+      cartoes(list(list(rotulo = paste("ICMS arrecadado por PE em", ua), valor = paste0("R$ ", fmt_num(sum(uf_s$v[uf_s$ano == ua & uf_s$sigla_uf == "PE"]), 1), " bi")),
+                   list(rotulo = "Participação de PE no ICMS do Nordeste", valor = paste0(fmt_num(part$p[part$ano == ua], 1), "%"),
+                        nota = paste0(fmt_num(part$p[part$ano == min(part$ano)], 1), "% em ", min(part$ano))))),
+      htmltools::div(class = "rx-duas",
+        htmltools::div(htmltools::h4("ICMS arrecadado pelos estados do Nordeste (R$ bi nominais)"),
+          grafico_linhas(uf_s %>% mutate(sigla_uf = factor(sigla_uf, c("PE", setdiff(sort(unique(sigla_uf)), "PE")))), "ano", "v", "sigla_uf", "R$ bilhões", formato = ",.1f")),
+        htmltools::div(htmltools::h4(paste("ICMS dos estados do Nordeste em", ua)),
+          grafico_barras_destaque(uf_s %>% filter(ano == ua), "sigla_uf", "v", "PE", "R$ bilhões", formato = ",.1f")))))
+  }
+  if (NROW(icms$mun)) {
+    um <- max(icms$mun$ano)
+    pop_u <- pib_pop %>% filter(!is.na(populacao)) %>% filter(ano == max(ano)) %>% select(id_municipio, populacao)
+    cm <- icms$mun %>% filter(ano == um) %>% left_join(pop_u, by = "id_municipio") %>% mutate(pc = cota_icms / populacao)
+    top <- cm %>% slice_max(cota_icms, n = 10) %>% mutate(municipio = nome_mun(id_municipio), v = cota_icms / 1e6)
+    partes <- c(partes, list(htmltools::div(class = "rx-duas",
+      htmltools::div(htmltools::h4(paste("Cota-parte do ICMS por habitante em", um, "(R$)")),
+        mapa_municipios(malha, cm, "pc", "R$ por habitante", municipios, formato = function(x) fmt_num(x), paleta = "Greens")),
+      htmltools::div(htmltools::h4(paste("Maiores cotas-partes em", um, "(R$ milhões)")),
+        grafico_barras_h(top, "municipio", "v", formato = ",.1f")))))
+  }
+  htmltools::tagList(partes)
+}
+```
+
+<p class="fonte">Fonte: SICONFI (Tesouro Nacional), via Base dos Dados: receita realizada de ICMS dos estados e cota-parte do ICMS recebida pelos municípios (25% da arrecadação estadual, distribuída pelo índice de participação). Valores nominais. A arrecadação por setor econômico (CONFAZ) ainda não está integrada.</p>
+
+## Infraestrutura e ensino superior no mapa
+
+```{r}
+if (NROW(infraestrutura)) {
+  cores <- c(Porto = "#1F4E79", Aeroporto = "#E07A1F", Polo = "#5B8C5A", Ferrovia = "#7A4E9E")
+  pal <- leaflet::colorFactor(unname(cores), domain = names(cores))
+  base <- leaflet::leaflet(malha) %>%
+    leaflet::addPolygons(fillColor = "#EEF2F6", weight = 0.5, color = "white", fillOpacity = 1, label = ~name_muni)
+  if (!is.null(educacao) && NROW(educacao$cursos)) {
+    cu <- educacao$cursos %>% filter(ano == max(ano), !grepl("dist", modalidade, ignore.case = TRUE)) %>%
+      group_by(id_municipio) %>% summarise(matriculas = sum(matriculas, na.rm = TRUE), .groups = "drop") %>% filter(matriculas > 0)
+    cent <- suppressWarnings(sf::st_centroid(malha)) %>% inner_join(cu, by = "id_municipio")
+    base <- base %>% leaflet::addCircleMarkers(data = cent, radius = ~pmax(3, sqrt(matriculas) / 6), color = "#8E44AD", weight = 1,
+      fillOpacity = 0.35, label = ~lapply(sprintf("<b>%s</b><br/>%s matrículas no ensino superior presencial", name_muni, fmt_num(matriculas)), htmltools::HTML),
+      group = "Ensino superior")
+  }
+  base %>% leaflet::addCircleMarkers(data = infraestrutura, lng = ~lon, lat = ~lat, radius = 7, color = "white", weight = 2,
+      fillColor = ~pal(tipo), fillOpacity = 1, label = ~lapply(sprintf("<b>%s</b><br/>%s", nome, nota), htmltools::HTML)) %>%
+    leaflet::addLegend("bottomright", pal = pal, values = infraestrutura$tipo, title = "Infraestrutura")
+}
+```
+
+<p class="fonte">Pontos de infraestrutura de uma lista curada (config/infraestrutura.csv), com localização aproximada. Círculos roxos: matrículas no ensino superior presencial (INEP). Rodovias e linhas de transmissão ainda não estão no mapa.</p>
 
 ## Comércio exterior
 

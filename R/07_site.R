@@ -23,7 +23,7 @@ gerar_paginas_cadeias <- function(meta,
   # remove páginas de cadeias que saíram do cadeias.yml
   antigas <- setdiff(list.files(pasta, pattern = "\\.qmd$"), c("index.qmd", paste0(meta$cadeia_id, ".qmd")))
   file.remove(file.path(pasta, antigas))
-  arqs <- pmap_chr(meta, function(cadeia_id, cadeia, macrossetor, descricao, nota) {
+  arqs <- pmap_chr(meta, function(cadeia_id, cadeia, macrossetor, descricao, nota, ...) {
     out <- txt
     out <- gsub("{{id}}", cadeia_id, out, fixed = TRUE)
     out <- gsub("{{nome}}", cadeia, out, fixed = TRUE)

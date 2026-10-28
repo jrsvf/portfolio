@@ -1,0 +1,142 @@
+---
+title: "Regiões de Desenvolvimento"
+description: "As 12 Regiões de Desenvolvimento de Pernambuco: produção, emprego, cadeias, empresas, qualificação, ICMS e agricultura familiar."
+toc: false
+---
+
+```{ojs}
+//| echo: false
+regs = FileAttachment("dados/regioes.json").json()
+geo0 = FileAttachment("dados/malha_pe.geojson").json()
+geo = ({type: "FeatureCollection", features: geo0.features.map(f => {
+  if (d3.geoArea(f) <= 2 * Math.PI) return f;
+  const g = f.geometry;
+  const rev = poly => poly.map(r => r.slice().reverse());
+  const coords = g.type === "Polygon" ? rev(g.coordinates) : g.coordinates.map(rev);
+  return {...f, geometry: {...g, coordinates: coords}};
+})})
+import {cartoes, blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra} from "./territorio.js"
+nomesR = regs.map(r => r.rd).sort((a, b) => a.localeCompare(b, "pt-BR"))
+inicialR = {
+  const q = new URLSearchParams(window.location.search).get("r");
+  return q && nomesR.includes(q) ? q : "Metropolitana";
+}
+viewof rsel = Inputs.select(nomesR, {label: "Região de Desenvolvimento", value: inicialR})
+r = {
+  try { history.replaceState(null, "", "?r=" + encodeURIComponent(rsel)); } catch (e) {}
+  return regs.find(x => x.rd === rsel);
+}
+ids = new Set(r.municipios.map(d => d.id))
+nf = (x, d = 0) => x == null || isNaN(x) ? "–" : x.toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d})
+pct = (x, d = 1) => x == null || isNaN(x) ? "–" : (100 * x).toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d}) + "%"
+reais = x => x == null ? "–" : x >= 1e9 ? "R$ " + nf(x / 1e9, 2) + " bi" : x >= 1e6 ? "R$ " + nf(x / 1e6, 1) + " mi" : "R$ " + nf(x / 1e3, 0) + " mil"
+AZUL = "#1F4E79"; LAR = "#E07A1F"
+```
+
+```{ojs}
+//| echo: false
+html`<div class="rx-topo">
+  <div>
+    <h2 class="rx-nome">${r.rd}</h2>
+    <p class="rx-sub">${r.municipios.length} municípios · ${nf(r.pop)} habitantes (${r.ano_pop})</p>
+    <p class="rx-chips">${r.municipios.map(d => html`<a href="municipios.html?m=${d.id}">${d.nome}</a>`)}</p>
+  </div>
+  <div class="rx-mapa">${Plot.plot({
+    width: 440, height: 175, margin: 2, projection: {type: "mercator", domain: geo, inset: 4},
+    marks: [Plot.geo(geo.features, {fill: d => ids.has(d.properties.id_municipio) ? LAR : "#DCE6F0", stroke: "white", strokeWidth: 0.3,
+      title: d => d.properties.name_muni})]})}</div>
+</div>`
+```
+
+```{ojs}
+//| echo: false
+cartoes(html, [
+  ["PIB em " + r.pib.ano, reais(r.pib.valor), pct(r.pib.part, 1) + " do PIB de PE"],
+  ["PIB per capita", "R$ " + nf(r.pib.pc), ""],
+  ["Empregos formais em " + r.emprego.ano, nf(r.emprego.total), pct(r.emprego.part, 1) + " do estado"],
+  r.empresas ? ["Empresas ativas (sem MEI)", nf(r.empresas.ativas - r.empresas.ativas_mei), nf(r.empresas.ativas_mei) + " MEI"] : null,
+  r.icms ? ["Cota-parte do ICMS em " + r.icms.ano, reais(r.icms.valor), pct(r.icms.part_estado, 1) + " do repasse"] : null
+])
+```
+
+## Produção e emprego
+
+```{ojs}
+//| echo: false
+va = [
+  {setor: "Agropecuária", v: r.pib.va.agro}, {setor: "Indústria", v: r.pib.va.ind},
+  {setor: "Serviços", v: r.pib.va.serv}, {setor: "Administração pública", v: r.pib.va.adm}]
+vaT = d3.sum(va, d => d.v)
+html`<div class="rx-duas">
+  <div><h4>Composição do valor adicionado</h4>${Plot.plot({
+    height: 120, marginLeft: 10, y: {axis: null}, x: {label: null, tickFormat: d => (100 * d).toFixed(0) + "%", domain: [0, 1]},
+    color: {domain: va.map(d => d.setor), range: ["#5B8C5A", AZUL, "#7FA7CF", "#C9D6E3"], legend: true},
+    marks: [Plot.barX(va.map(d => ({...d, p: d.v / vaT})), Plot.stackX({x: "p", y: () => "VA", fill: "setor", title: d => d.setor + ": " + pct(d.p)}))]})}
+  <h4>Municípios com mais emprego formal</h4><table class="rx-tab"><tbody>
+    ${r.maiores_mun.map(d => html`<tr><td><a href="municipios.html?m=${d.id}">${d.nome}</a></td><td>${nf(d.emprego)}</td></tr>`)}</tbody></table></div>
+  <div><h4>Emprego formal por grande setor</h4>${Plot.plot({
+    height: 40 + 26 * r.emprego.setores.length, marginLeft: 330, marginRight: 30, y: {label: null}, x: {label: null, grid: true, tickFormat: d => nf(d)},
+    marks: [Plot.barX(r.emprego.setores, {y: "setor", x: "emprego", fill: AZUL, sort: {y: "-x"}, tip: true})]})}</div>
+</div>`
+```
+
+## Cadeias e nichos na região
+
+```{ojs}
+//| echo: false
+cadR = (r.cadeias ?? []).slice().sort((a, b) => b.ql - a.ql)
+html`<p>Do maior para o menor quociente locacional (QL). QL acima de 1 indica que a região tem, na cadeia, uma fatia do seu emprego maior que a média do estado.</p>
+<table class="rx-tab rx-cad"><thead><tr><th>Cadeia ou nicho</th><th>Empregos</th><th>QL</th><th>% do emprego da cadeia em PE</th></tr></thead><tbody>
+${cadR.map(c => html`<tr class="${c.ql >= 1 ? "rx-esp" : ""}"><td><a href="cadeias/${c.cadeia_id}.html">${c.cadeia}</a>${c.grupo === "nicho" ? html` <span class="rx-nicho">nicho</span>` : ""}</td>
+  <td>${nf(c.emprego)}</td><td>${nf(c.ql, 2)}</td><td>${pct(c.part_pe)}</td></tr>`)}</tbody></table>`
+```
+
+## Empresas
+
+```{ojs}
+//| echo: false
+blocoEmpresas(r.empresas, {Plot, html})
+```
+
+## Qualificação e educação
+
+::: {.panel-tabset}
+
+### Quem trabalha
+
+```{ojs}
+//| echo: false
+blocoQualif(r.qualificacao, {Plot, html})
+```
+
+### Ensino superior e técnico
+
+```{ojs}
+//| echo: false
+blocoEducacao(r.educacao, {Plot, html})
+```
+
+:::
+
+## ICMS
+
+```{ojs}
+//| echo: false
+blocoIcms(r.icms, {Plot, html})
+```
+
+## Agricultura familiar e crédito rural
+
+```{ojs}
+//| echo: false
+blocoAgro(r.agro, {Plot, html})
+```
+
+## Infraestrutura
+
+```{ojs}
+//| echo: false
+blocoInfra(r.infra, {html})
+```
+
+<p class="fonte">Fontes: IBGE (PIB dos Municípios, estimativas de população, Censo Agropecuário 2017), RAIS, CNPJ (Receita Federal), INEP, SICONFI e Banco Central (SICOR), via Base dos Dados e SIDRA. Regiões de Desenvolvimento conforme a regionalização do governo de Pernambuco.</p>

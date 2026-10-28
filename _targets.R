@@ -86,6 +86,32 @@ list(
   tar_target(conj_resumo, resumo_pim_setores(conj_setores)),
   tar_target(conj_cadeias, ler_conj_cadeias(arq_cadeias)),
 
+  # ---- território: empresas, qualificação, educação, ICMS, agricultura familiar,
+  #      crédito rural, infraestrutura e o corte do ano corrente
+  tar_target(bq_dic,          { bq_esquema; tentar("dicionários BD", extrair_dicionarios_bd(projeto)) }),
+  tar_target(bq_cnpj_fluxos,  { bq_esquema; tentar("CNPJ fluxos", extrair_cnpj_fluxos(projeto, uf)) }),
+  tar_target(bq_cnpj_maiores, { bq_esquema; tentar("CNPJ maiores", extrair_cnpj_maiores(projeto, uf, cad$elos)) }),
+  tar_target(bq_rais_qualif,  { bq_esquema; u <- max(bq_rais_pe$ano)
+                                tentar("RAIS qualificação", extrair_rais_qualif(projeto, uf, c(u - 10, u - 5, u))) }),
+  tar_target(bq_superior,     { bq_esquema; tryCatch(extrair_superior(projeto, uf, 2014), error = function(e) {
+                                  msg("INEP superior falhou: ", conditionMessage(e)); list(cursos = tibble::tibble(), ies = tibble::tibble()) }) }),
+  tar_target(bq_tecnico,      { bq_esquema; tentar("Censo Escolar técnico", extrair_tecnico(projeto, uf, 2014)) }),
+  tar_target(bq_icms,         { bq_esquema; tryCatch(extrair_icms(projeto, uf), error = function(e) {
+                                  msg("ICMS falhou: ", conditionMessage(e)); list(mun = tibble::tibble(), uf = tibble::tibble()) }) }),
+  tar_target(bq_pronaf,       { bq_esquema; tentar("PRONAF", extrair_pronaf(projeto, uf)) }),
+  tar_target(bq_comex_mensal, { bq_esquema; tentar("comex mensal", extrair_comex_mensal(projeto, uf, as.numeric(format(Sys.Date(), "%Y")) - 1)) },
+             cue = tar_cue(mode = "always")),
+  tar_target(agro_familiar,   tentar("Censo Agro", obter_agro_familiar(uf_codigo))),
+  tar_target(empresas,         montar_empresas(bq_cnpj_fluxos, bq_dic, bq_cnae)),
+  tar_target(empresas_maiores, montar_maiores(bq_cnpj_maiores, bq_dic, bq_cnae)),
+  tar_target(qualificacao,     montar_qualif(bq_rais_qualif)),
+  tar_target(educacao,         montar_educacao(bq_superior, bq_tecnico, bq_dic)),
+  tar_target(icms,             montar_icms(bq_icms)),
+  tar_target(credito_rural,    montar_credito_rural(bq_pronaf, bq_dic)),
+  tar_target(arq_infra,        "config/infraestrutura.csv", format = "file"),
+  tar_target(infraestrutura,   ler_infraestrutura(arq_infra)),
+  tar_target(corte_atual,      corte_ano(macro_ibcr, macro_pim, macro_pmc, macro_pms, bq_caged_pe, bq_comex_mensal, bq_cnae, bq_municipios)),
+
   # -------------------------------------------------------------- cadeias
   tar_target(cad_mun, { codigos_ok; agregar_cadeias(bq_rais_pe, cad$elos) }),
   tar_target(total_mun, bq_rais_pe %>% group_by(ano, id_municipio) %>%
@@ -209,6 +235,9 @@ list(
                  pim_setores = pim_setores, pim_resumo = pim_resumo, pim_cadeias = pim_cadeias,
                  macro_pmc = macro_pmc, macro_pms = macro_pms, conj_setores = conj_setores,
                  conj_resumo = conj_resumo, conj_cadeias = conj_cadeias,
+                 empresas = empresas, empresas_maiores = empresas_maiores, qualificacao = qualificacao,
+                 educacao = educacao, icms = icms, credito_rural = credito_rural, agro_familiar = agro_familiar,
+                 infraestrutura = infraestrutura, corte_atual = corte_atual, bq_dic = bq_dic,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),
@@ -229,5 +258,11 @@ list(
              montar_raiox(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, bq_perfil_pe, bq_caged_pe,
                           comex_anos_completos, bq_sh4_nomes, sidra_bruto, locais_cadeia, sidra_cad,
                           comex_cad, cad$meta, krugman, ipca, locais_elo)),
-  tar_target(saida_raiox, exportar_raiox(raiox, malha), format = "file")
+  tar_target(saida_raiox, exportar_raiox(raiox, malha), format = "file"),
+  tar_target(territorio,
+             montar_territorio(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, cad_mun, cad$meta, empresas,
+                               empresas_maiores, qualificacao, educacao, icms, agro_familiar, credito_rural, infraestrutura)),
+  tar_target(bq_cnae_grupos, { bq_esquema; extrair_cnae_grupos(projeto) }),
+  tar_target(setores_base, montar_setores(bq_rais_pe, bq_cnae, bq_cnae_grupos, rd)),
+  tar_target(saida_territorio, exportar_territorio(territorio, setores_base), format = "file")
 )

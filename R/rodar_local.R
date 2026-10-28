@@ -24,7 +24,8 @@ executar_local <- function() {
   proj <- Sys.getenv("PORTFOLIO_PROJETO")
   setwd(proj)
   passo <- function(...) cat(format(Sys.time(), "%H:%M:%S"), "|", ..., "\n")
-  if (nzchar(Sys.getenv("GARGLE_EMAIL"))) options(gargle_oauth_email = Sys.getenv("GARGLE_EMAIL"))
+  # conta do BigQuery: a do GARGLE_EMAIL ou, sem ele, o único token já autorizado
+  options(gargle_oauth_email = if (nzchar(Sys.getenv("GARGLE_EMAIL"))) Sys.getenv("GARGLE_EMAIL") else TRUE)
 
   passo("1/3 pipeline (targets)")
   targets::tar_make(reporter = "summary")

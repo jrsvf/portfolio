@@ -461,3 +461,94 @@ cadeias:
       Restaurantes atendem sobretudo a população local; o elo de alimentação
       é um teto para o turismo.
 
+  # ===========================================================================
+  # NICHOS TRANSVERSAIS (grupo: nicho). Mesma mecânica das cadeias, mas são
+  # recortes que atravessam setores. Podem repetir códigos usados em cadeias.
+  # ===========================================================================
+
+  - id: economia_criativa
+    nome: Economia criativa
+    grupo: nicho
+    macrossetor: Nichos transversais
+    descricao: >
+      Atividades em que a criatividade é o principal insumo, agrupadas como na
+      classificação da FIRJAN: consumo (publicidade, arquitetura, design),
+      cultura, mídias e tecnologia.
+    elos:
+      - nome: Consumo (publicidade, arquitetura, design, fotografia)
+        cnae: ["73114", "73122", "73190", "71111", "74102", "74200"]
+      - nome: Cultura (artes, patrimônio, música)
+        cnae: ["90019", "90027", "90035", "91015", "91023", "32205"]
+      - nome: Mídias (editorial, audiovisual, rádio e TV)
+        cnae: ["58115", "58123", "58131", "58191", "58212", "58221", "58239", "58298", "59111", "59120", "59138", "59146", "59201", "60101", "60217", "60225"]
+      - nome: Tecnologia (software, dados, P&D)
+        cnae: ["62015", "62023", "62031", "62040", "62091", "63119", "72100"]
+    sh4_auto: false
+    nota: >
+      O emprego formal não alcança boa parte da economia criativa, que é feita
+      por autônomos e MEI. A FIRJAN usa também ocupações (CBO) criativas em
+      empresas de outros setores, o que aqui não entra.
+
+  - id: economia_do_mar
+    nome: Economia do mar
+    grupo: nicho
+    macrossetor: Nichos transversais
+    descricao: >
+      Pesca e aquicultura marinha, indústria naval e transporte e serviços
+      portuários. Pernambuco tem Suape e o Porto do Recife.
+    elos:
+      - nome: Pesca e aquicultura marinha
+        cnae: ["03116", "03213", "10201"]
+      - nome: Indústria naval
+        cnae: ["30113", "30121", "33171"]
+      - nome: Transporte aquaviário
+        cnae: ["50114", "50122", "50301", "50912", "50998"]
+      - nome: Portos e serviços portuários
+        cnae: ["52311", "52320", "52397"]
+    sh4: ["0302", "0303", "0304", "0306", "8901", "8902", "8903", "8905", "8906"]
+    nota: >
+      O turismo de sol e praia faz parte da economia do mar, mas não tem código
+      próprio na CNAE e está na cadeia de turismo.
+
+  - id: bioeconomia_renovaveis
+    nome: Bioeconomia e energias renováveis
+    grupo: nicho
+    macrossetor: Nichos transversais
+    descricao: >
+      Geração e distribuição de energia elétrica, biocombustíveis, produção
+      florestal e reciclagem e tratamento de resíduos.
+    elos:
+      - nome: Energia elétrica (geração, transmissão, comércio e distribuição)
+        cnae: ["35115", "35123", "35131", "35140"]
+      - nome: Biocombustíveis
+        cnae: ["19314", "19322"]
+      - nome: Produção florestal
+        cnae: ["02101", "02209", "02306"]
+      - nome: Resíduos e reciclagem
+        cnae: ["38211", "38220", "38319", "38327", "38394"]
+    sh4_auto: false
+    sh4: ["2207", "3826", "4401", "4402"]
+    nota: >
+      A CNAE não separa a geração por fonte: eólica, solar e térmica estão
+      juntas em geração de energia elétrica. A geração por fonte está na ANEEL,
+      ainda não integrada.
+
+  - id: saude
+    nome: Complexo da saúde
+    grupo: nicho
+    macrossetor: Nichos transversais
+    descricao: >
+      Indústria farmacêutica e de equipamentos médicos, comércio de produtos de
+      saúde e serviços hospitalares, ambulatoriais e de diagnóstico. O Recife
+      tem um dos maiores polos médicos do país.
+    elos:
+      - nome: Indústria farmacêutica e de equipamentos
+        cnae: ["21106", "21211", "26604", "32507"]
+      - nome: Comércio de produtos de saúde
+        cnae: ["46443", "46451", "47717"]
+      - nome: Hospitais e clínicas
+        cnae: ["86101", "86305"]
+      - nome: Diagnóstico e outros serviços de saúde
+        cnae: ["86402", "86500", "86607", "86909"]
+    pim: ["3.21"]
+    pmc: [103155]

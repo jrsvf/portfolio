@@ -11,6 +11,7 @@ project:
     - "dados/*.csv"
     - "dados/*.json"
     - "dados/*.geojson"
+    - "territorio.js"
 
 lang: pt-BR
 
@@ -29,6 +30,8 @@ website:
         href: panorama.qmd
       - text: "Cadeias"
         href: cadeias/index.qmd
+      - text: "Regiões"
+        href: regioes.qmd
       - text: "Municípios"
         href: municipios.qmd
       - text: "Encadeamentos"

@@ -46,7 +46,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a3a1a6e89a7cacab86159a5bc836a5c8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c92cc52ec47623789d697d67e293409a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,6 +74,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Procurar"
   }
 }</script>
+<style>body{background:#F3EEE6;} .quarto-title-block{display:none;}</style>
 
 
 </head>
@@ -106,6 +107,10 @@ ul.task-list li input[type="checkbox"] {
   <li class="nav-item">
     <a class="nav-link" href="./cadeias/index.html"> 
 <span class="menu-text">Cadeias</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./regioes.html"> 
+<span class="menu-text">Regiões</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./municipios.html"> 
@@ -153,31 +158,38 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section class="home-hero">
-  <svg class="home-tri" viewbox="0 0 600 400" preserveaspectratio="xMaxYMid slice" aria-hidden="true">
-    <polygon points="600,0 420,0 600,170" fill="#E07A1F" opacity=".9"></polygon>
-    <polygon points="420,0 600,170 470,210" fill="#2E6DA4" opacity=".55"></polygon>
-    <polygon points="600,170 470,210 600,330" fill="#E07A1F" opacity=".35"></polygon>
-    <polygon points="470,210 600,330 520,400" fill="#2E6DA4" opacity=".45"></polygon>
-    <polygon points="600,330 520,400 600,400" fill="#F2B279" opacity=".7"></polygon>
-    <polygon points="420,0 470,210 330,120" fill="#ffffff" opacity=".07"></polygon>
-    <polygon points="470,210 520,400 380,330" fill="#ffffff" opacity=".06"></polygon>
-    <polygon points="330,120 470,210 380,330" fill="#2E6DA4" opacity=".25"></polygon>
-  </svg>
-  <div class="home-hero-txt">
-    <p class="home-kicker">Pernambuco em dados públicos</p>
-    <h1>Onde está, como cresce e para onde vende a economia de Pernambuco</h1>
-    <p class="home-lead">Cadeias produtivas, emprego, produção e comércio exterior dos 185 municípios, montados a partir de fontes oficiais e atualizados por um pipeline aberto em R.</p>
-    <form class="home-busca" action="municipios.html" method="get" role="search">
-      <i class="bi bi-search"></i>
-      <input name="m" list="home-lista-mun" placeholder="Busque um município (ex.: Caruaru)" aria-label="Buscar município" autocomplete="off">
-      <button type="submit">Ver raio-X</button>
-    </form>
-    <div class="home-ctas">
-      <a class="home-btn home-btn-1" href="panorama.html">Panorama do estado</a>
-      <a class="home-btn home-btn-2" href="cadeias/index.html">As 21 cadeias</a>
-    </div>
-  </div>
+<div class="cell">
+<div class="cell-output-display">
+<section class="ato ato-hero">
+<div class="hero-canto hero-tl">PERNAMBUCO</div>
+<div class="hero-canto hero-tr">185 MUNICÍPIOS · 12 REGIÕES</div>
+<div class="hero-guias" aria-hidden="true">
+<div class="guia" style="top:20.0%">
+<span>TETO · 123,5 EM MAI/2026</span>
+</div>
+<div class="guia" style="top:62.0%">
+<span>BASE · 2015 = 100</span>
+</div>
+<div class="guia" style="top:80.7%">
+<span>PISO · 89,5 EM ABR/2020</span>
+</div>
+</div>
+<svg class="hero-serie" viewbox="0 0 1000 100" preserveaspectratio="none" aria-hidden="true"><polyline points="0.0,49.50 7.2,51.21 14.4,55.68 21.6,60.23 28.8,63.02 36.0,62.96 43.2,64.49 50.4,66.30 57.6,67.19 64.7,68.50 71.9,63.74 79.1,71.18 86.3,66.10 93.5,68.12 100.7,63.00 107.9,62.11 115.1,61.36 122.3,61.80 129.5,59.90 136.7,60.68 143.9,60.60 151.1,61.61 158.3,63.60 165.5,66.26 172.7,62.07 179.9,65.77 187.1,63.64 194.2,58.49 201.4,59.36 208.6,58.99 215.8,59.61 223.0,57.60 230.2,59.92 237.4,58.24 244.6,57.11 251.8,56.61 259.0,56.88 266.2,57.62 273.4,56.53 280.6,59.65 287.8,62.54 295.0,53.98 302.2,51.94 309.4,46.98 316.5,50.95 323.7,55.45 330.9,55.99 338.1,55.58 345.3,55.16 352.5,54.46 359.7,54.32 366.9,50.04 374.1,50.59 381.3,51.83 388.5,53.01 395.7,53.41 402.9,51.38 410.1,49.99 417.3,49.99 424.5,50.14 431.7,49.58 438.8,47.18 446.0,60.79 453.2,80.71 460.4,78.21 467.6,67.88 474.8,60.10 482.0,57.73 489.2,54.65 496.4,51.86 503.6,48.55 510.8,49.54 518.0,47.00 525.2,50.90 532.4,55.45 539.6,56.82 546.8,52.72 554.0,51.13 561.2,51.15 568.3,54.71 575.5,51.23 582.7,44.68 589.9,43.71 597.1,45.84 604.3,46.40 611.5,45.61 618.7,42.45 625.9,43.54 633.1,46.96 640.3,48.05 647.5,48.80 654.7,43.79 661.9,46.62 669.1,49.11 676.3,48.49 683.5,51.44 690.6,44.91 697.8,43.96 705.0,41.77 712.2,43.75 719.4,39.64 726.6,39.56 733.8,39.84 741.0,39.76 748.2,46.21 755.4,39.89 762.6,44.37 769.8,40.30 777.0,38.00 784.2,36.54 791.4,35.67 798.6,32.28 805.8,31.37 812.9,33.77 820.1,31.23 827.3,29.10 834.5,29.63 841.7,31.74 848.9,28.74 856.1,27.54 863.3,40.30 870.5,39.22 877.7,41.87 884.9,28.85 892.1,29.30 899.3,26.37 906.5,26.31 913.7,27.90 920.9,27.13 928.1,26.76 935.3,26.37 942.4,25.62 949.6,25.62 956.8,24.49 964.0,20.37 971.2,20.97 978.4,20.00 985.6,20.52 992.8,22.54 1000.0,23.56" fill="none" stroke="#E07A1F" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round"></polyline></svg>
+<div class="hero-palavra">Pernambuco</div>
+<div class="hero-canto hero-bl">ATIVIDADE ECONÔMICA · IBCR-PE COM AJUSTE SAZONAL</div>
+<div class="hero-canto hero-br">DADOS PÚBLICOS 2006 · 2026</div>
+</section>
+</div>
+</div>
+<section class="ato ato-abertura">
+  <p class="rotulo">( EM CARTAZ )</p>
+  <h1 class="ab-nome">José Roberto Verçosa</h1>
+  <p class="ab-tag">Economista que transforma dados públicos em leitura de território.</p>
+  <form class="home-busca" action="municipios.html" method="get" role="search">
+    <i class="bi bi-search"></i>
+    <input name="m" list="home-lista-mun" placeholder="Busque um município (ex.: Caruaru)" aria-label="Buscar município" autocomplete="off">
+    <button type="submit">Ver raio-X</button>
+  </form>
 </section>
 <div class="cell">
 <div class="cell-output-display">
@@ -372,44 +384,137 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div class="cell">
 <div class="cell-output-display">
+<div class="ato ato-texto">
+<p class="rotulo">( PRÓLOGO )</p>
+<p class="prosa">Sou economista, mestre em Economia Regional pela UFPE. Trabalho com dados públicos para entender onde a economia de Pernambuco está, como ela cresce e o que ainda falta medir. Cada página aqui é montada a partir das fontes oficiais, por um código aberto que qualquer pessoa pode rodar de novo.</p>
+<p class="rotulo">( O PROGRAMA )</p>
+<p class="prosa">
+Começo pelo 
+<a class="dica" href="panorama.html">
+nível de atividade
+<span class="dica-card">
+<b>+17,6%</b>
+<span>IBCR de PE em 10 anos, até 2025</span>
+</span>
+</a>
+, desmonto as 
+<a class="dica" href="cadeias/index.html">
+21 cadeias produtivas
+<span class="dica-card">
+<b>485.003</b>
+<span>empregos formais nas cadeias em 2025</span>
+</span>
+</a>
+ em elos, comparo os 
+<a class="dica" href="municipios.html">
+185 municípios
+<span class="dica-card">
+<b>2.070.688</b>
+<span>empregos formais no estado em 2025</span>
+</span>
+</a>
+ e as 
+<a class="dica" href="regioes.html">
+12 Regiões de Desenvolvimento
+<span class="dica-card">
+<b>Metropolitana</b>
+<span>é a região com mais emprego: 1.229.991</span>
+</span>
+</a>
+, sigo as 
+<a class="dica" href="panorama.html#empresas">
+empresas que abrem e fecham
+<span class="dica-card">
+<b>CNPJ</b>
+<span>Receita Federal, por município e setor</span>
+</span>
+</a>
+, a 
+<a class="dica" href="panorama.html#qualificacao-e-educacao">
+qualificação
+<span class="dica-card">
+<b>RAIS + INEP</b>
+<span>escolaridade, ocupações e ensino superior</span>
+</span>
+</a>
+ de quem trabalha e o 
+<a class="dica" href="panorama.html#icms">
+ICMS
+<span class="dica-card">
+<b>SICONFI</b>
+<span>cota-parte de cada município</span>
+</span>
+</a>
+ que circula.
+</p>
+<p class="dica-aviso">PASSE O MOUSE NAS PALAVRAS SUBLINHADAS</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="ato">
+<p class="rotulo">( ATO I · O PANORAMA )</p>
+<h2 class="ato-titulo anchored">O estado inteiro, em séries longas e no ano que está correndo.</h2>
 <div class="cartoes">
 <div class="cartao">
-<div class="cartao-valor">485.003</div>
-<div class="cartao-rotulo">Empregos formais nas cadeias em 2025</div>
-<div class="cartao-nota">RAIS, soma das 21 cadeias</div>
-</div>
-<div class="cartao">
 <div class="cartao-valor">+17,6%</div>
-<div class="cartao-rotulo">Atividade econômica de PE em 10 anos</div>
+<div class="cartao-rotulo">Atividade econômica em 10 anos</div>
 <div class="cartao-nota">IBCR até 2025 · NE +7,0% · BR +11,3%</div>
 </div>
 <div class="cartao">
 <div class="cartao-valor">-3,2%</div>
-<div class="cartao-rotulo">Produção industrial de PE em 10 anos</div>
+<div class="cartao-rotulo">Produção industrial em 10 anos</div>
 <div class="cartao-nota">PIM-PF até 2025 · NE -16,7% · BR -1,9%</div>
 </div>
 <div class="cartao">
 <div class="cartao-valor">-1,0%</div>
-<div class="cartao-rotulo">Vendas do varejo de PE em 10 anos</div>
+<div class="cartao-rotulo">Vendas do varejo em 10 anos</div>
 <div class="cartao-nota">PMC até 2025 · BR +11,1%</div>
 </div>
 <div class="cartao">
 <div class="cartao-valor">-0,5%</div>
-<div class="cartao-rotulo">Volume de serviços de PE em 10 anos</div>
+<div class="cartao-rotulo">Volume de serviços em 10 anos</div>
 <div class="cartao-nota">PMS até 2025 · BR +12,6%</div>
 </div>
+</div>
+<p class="rotulo rotulo-sub">EM 2026 ATÉ AGORA</p>
+<div class="cartoes">
 <div class="cartao">
-<div class="cartao-valor">23/10/2026</div>
-<div class="cartao-rotulo">Última atualização</div>
-<div class="cartao-nota">RAIS 2025 · CAGED 02/2026</div>
+<div class="cartao-valor">+4,9%</div>
+<div class="cartao-rotulo">Atividade econômica (IBCR), jan a ago/2026</div>
+<div class="cartao-nota">contra o mesmo período de 2025 · NE +2,8%</div>
+</div>
+<div class="cartao">
+<div class="cartao-valor">+13,9%</div>
+<div class="cartao-rotulo">Produção industrial (PIM-PF), jan a ago/2026</div>
+<div class="cartao-nota">contra o mesmo período de 2025 · NE +0,9%</div>
+</div>
+<div class="cartao">
+<div class="cartao-valor">+10,0%</div>
+<div class="cartao-rotulo">Vendas do varejo (PMC), jan a ago/2026</div>
+<div class="cartao-nota">contra o mesmo período de 2025 · BR +1,7%</div>
+</div>
+<div class="cartao">
+<div class="cartao-valor">-0,4%</div>
+<div class="cartao-rotulo">Volume de serviços (PMS), jan a ago/2026</div>
+<div class="cartao-nota">contra o mesmo período de 2025 · BR +1,7%</div>
+</div>
+<div class="cartao">
+<div class="cartao-valor">+2.032</div>
+<div class="cartao-rotulo">Saldo de empregos formais, jan a fev/2026</div>
+<div class="cartao-nota">Novo CAGED · 2025: 2.358</div>
+</div>
+</div>
+<a class="ato-link" href="panorama.html">Ver o panorama →</a>
 </div>
 </div>
 </div>
-</div>
-<section id="o-que-os-dados-mostram" class="level2">
-<h2 class="anchored" data-anchor-id="o-que-os-dados-mostram">O que os dados mostram</h2>
 <div class="cell">
 <div class="cell-output-display">
+<div class="ato">
+<p class="rotulo">( ATO II · AS CADEIAS )</p>
+<h2 class="ato-titulo anchored">21 cadeias produtivas, divididas em elos, e 4 nichos que atravessam setores.</h2>
 <div class="home-achados">
 <div class="home-achado">
 <div class="home-achado-ic">
@@ -432,28 +537,10 @@ ul.task-list li input[type="checkbox"] {
 <i class="bi bi-geo-alt"></i>
 </div>
 <h4 class="anchored">83% em três municípios</h4>
-<p>Fruticultura irrigada: Petrolina, Lagoa Grande, Custódia concentram a maior parte do emprego formal da cadeia. É a mais concentrada entre as grandes cadeias do interior.</p>
+<p>Fruticultura irrigada: Petrolina, Lagoa Grande, Custódia concentram a maior parte do emprego formal da cadeia.</p>
 <a href="cadeias/fruticultura.html">Ver o mapa →</a>
 </div>
 </div>
-</div>
-</div>
-</section>
-<section id="explore" class="level2">
-<h2 class="anchored" data-anchor-id="explore">Explore</h2>
-<div class="home-secoes">
-  <a class="home-secao" href="panorama.html"><i class="bi bi-speedometer2"></i><h4 class="anchored">Panorama</h4><p>Nível de atividade (IBCR e indústria), emprego formal, estrutura produtiva e comércio exterior do estado.</p></a>
-  <a class="home-secao" href="municipios.html"><i class="bi bi-pin-map"></i><h4 class="anchored">Raio-X dos municípios</h4><p>PIB por setor, lavouras e rebanhos, emprego, CAGED, cadeias presentes e exportações de cada município.</p></a>
-  <a class="home-secao" href="cadeias/index.html"><i class="bi bi-diagram-3"></i><h4 class="anchored">Cadeias produtivas</h4><p>Uma página por cadeia, com elos, mapas de especialização, comparação com o Nordeste e o Brasil e destinos das exportações.</p></a>
-  <a class="home-secao" href="encadeamentos.html"><i class="bi bi-bezier2"></i><h4 class="anchored">Encadeamentos</h4><p>Ligações para trás e para frente dos setores, a partir da matriz insumo-produto regionalizada.</p></a>
-  <a class="home-secao" href="lacunas.html"><i class="bi bi-search"></i><h4 class="anchored">Lacunas de dados</h4><p>Onde as fontes públicas não alcançam e que informação resolveria.</p></a>
-  <a class="home-secao" href="metodologia.html"><i class="bi bi-gear"></i><h4 class="anchored">Metodologia</h4><p>Fontes, classificação das cadeias em elos, indicadores (QL, participação, concentração) e o pipeline.</p></a>
-</div>
-</section>
-<section id="as-21-cadeias-em-números" class="level2">
-<h2 class="anchored" data-anchor-id="as-21-cadeias-em-números">As 21 cadeias em números</h2>
-<div class="cell">
-<div class="cell-output-display">
 <div class="home-cads">
 <a class="home-cad" href="cadeias/construcao_civil.html">
 <div class="home-cad-nome">Construção civil</div>
@@ -858,22 +945,282 @@ R$ 565 mi em produção (mandioca, 2025)
 </div>
 </a>
 </div>
+<p class="rotulo rotulo-sub">NICHOS TRANSVERSAIS</p>
+<div class="home-cads home-nichos">
+<a class="home-cad" href="cadeias/saude.html">
+<div class="home-cad-nome">Complexo da saúde</div>
+<div class="home-cad-num">
+142.925
+<span> empregos</span>
 </div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++55%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+<div class="home-cad-extra">
+<i class="bi bi-cart"></i>
+Vendas de farmácia e cosméticos (PMC): +59% em 10 anos · BR +68%
+</div>
+</a>
+<a class="home-cad" href="cadeias/economia_criativa.html">
+<div class="home-cad-nome">Economia criativa</div>
+<div class="home-cad-num">
+31.385
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++53%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">3º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/bioeconomia_renovaveis.html">
+<div class="home-cad-nome">Bioeconomia e energias renováveis</div>
+<div class="home-cad-num">
+13.787
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-pos">
++10%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">2º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="cadeias/economia_do_mar.html">
+<div class="home-cad-nome">Economia do mar</div>
+<div class="home-cad-num">
+6.002
+<span> empregos</span>
+</div>
+<div class="home-cad-rodape">
+<span class="home-neg">
+-25%
+ em 10 anos
+</span>
+<span class="home-pos-ne ">3º no NE</span>
+</div>
+</a>
+<a class="home-cad" href="agricultura-familiar.html">
+<div class="home-cad-nome">Agricultura familiar</div>
+<div class="home-cad-extra">
+<i class="bi bi-basket"></i>
+Censo Agropecuário 2017 e crédito do PRONAF por município
+</div>
+</a>
 </div>
 <p class="fonte">
-Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Elaboração própria. Posição no Nordeste pelo emprego formal da cadeia em 2025. Produção: IBGE (PAM, PPM e aquicultura). Indústria, comércio e serviços: PIM-PF, PMC e PMS do IBGE, atividades mais amplas que a cadeia, usadas como termo de comparação (a indústria com o Nordeste; comércio e serviços com o Brasil, porque as duas pesquisas não têm recorte regional).
+Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Posição no Nordeste pelo emprego formal da cadeia em 
+2025
+. PIM-PF, PMC e PMS são atividades mais amplas que a cadeia, usadas como termo de comparação.
 </p>
-</section>
-<section id="sobre-mim" class="level2">
-<h2 class="anchored" data-anchor-id="sobre-mim">Sobre mim</h2>
-<div class="home-sobre">
-<p><strong>José Roberto Verçosa</strong>, economista, mestre em Economia Regional (UFPE). Atuo na interseção entre dados, políticas públicas e desenvolvimento regional: avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, PR, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.</p>
-<p>Ferramentas: R, Python, SQL (BigQuery), Quarto, Shiny, Power BI.</p>
-<p><a href="https://www.linkedin.com/in/jrsvf">LinkedIn</a> · <a href="https://github.com/jrsvf">GitHub</a> · <a href="https://lattes.cnpq.br/1066993955257243">Lattes</a></p>
+<a class="ato-link" href="cadeias/index.html">Ver todas as cadeias e nichos →</a>
 </div>
-
-
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="ato">
+<p class="rotulo">( ATO III · O TERRITÓRIO )</p>
+<h2 class="ato-titulo anchored">Doze regiões, 185 municípios. Cada um com seu raio-X.</h2>
+<div class="rd-grid">
+<a class="rd-card" href="regioes.html?r=Metropolitana">
+<div class="rd-nome">Metropolitana</div>
+<div class="rd-num">
+1.229.991
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">15 municípios · 3.730 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Higiene, limpeza e cosméticos</b>
+ (QL 1,6)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Agreste Central">
+<div class="rd-nome">Agreste Central</div>
+<div class="rd-num">
+204.062
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">27 municípios · 1.152 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Avicultura</b>
+ (QL 5,0)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Sertão do São Francisco">
+<div class="rd-nome">Sertão do São Francisco</div>
+<div class="rd-num">
+122.131
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">7 municípios · 531 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Fruticultura irrigada</b>
+ (QL 13,9)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Mata Norte">
+<div class="rd-nome">Mata Norte</div>
+<div class="rd-num">
+121.020
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">19 municípios · 585 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Sucroenergético</b>
+ (QL 5,6)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Mata Sul">
+<div class="rd-nome">Mata Sul</div>
+<div class="rd-num">
+118.558
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">23 municípios · 648 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Suinocultura</b>
+ (QL 10,9)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Agreste Setentrional">
+<div class="rd-nome">Agreste Setentrional</div>
+<div class="rd-num">
+76.765
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">19 municípios · 542 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Têxtil e confecções</b>
+ (QL 6,3)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Agreste Meridional">
+<div class="rd-nome">Agreste Meridional</div>
+<div class="rd-num">
+65.061
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">26 municípios · 669 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Bovinocultura de leite e corte</b>
+ (QL 5,5)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Sertão do Pajeú">
+<div class="rd-nome">Sertão do Pajeú</div>
+<div class="rd-num">
+38.147
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">17 municípios · 329 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Aquicultura e pesca</b>
+ (QL 2,5)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Sertão do Araripe">
+<div class="rd-nome">Sertão do Araripe</div>
+<div class="rd-num">
+29.029
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">10 municípios · 319 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Gesso (Polo Gesseiro do Araripe)</b>
+ (QL 52,9)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Sertão do Moxotó">
+<div class="rd-nome">Sertão do Moxotó</div>
+<div class="rd-num">
+28.785
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">7 municípios · 238 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Fruticultura irrigada</b>
+ (QL 2,2)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Sertão Central">
+<div class="rd-nome">Sertão Central</div>
+<div class="rd-num">
+21.317
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">8 municípios · 177 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Construção civil</b>
+ (QL 1,9)
+</div>
+</a>
+<a class="rd-card" href="regioes.html?r=Sertão de Itaparica">
+<div class="rd-nome">Sertão de Itaparica</div>
+<div class="rd-num">
+15.822
+<span> empregos formais</span>
+</div>
+<div class="rd-meta">7 municípios · 137 mil habitantes</div>
+<div class="rd-cad">
+Mais especializada em 
+<b>Fruticultura irrigada</b>
+ (QL 3,5)
+</div>
+</a>
+</div>
+<a class="ato-link" href="regioes.html">Ver as regiões →</a>
+ 
+<a class="ato-link" href="municipios.html">Ver os municípios →</a>
+</div>
+</div>
+</div>
+<section class="ato">
+  <p class="rotulo">( ATO IV · OS ENCADEAMENTOS )</p>
+  <h2 class="ato-titulo anchored">Quem compra de quem: as ligações para trás e para frente de cada setor.</h2>
+  <p class="prosa">A matriz insumo-produto nacional, regionalizada para Pernambuco, mostra quais setores puxam o resto da economia quando crescem e quais dependem de insumos de fora do estado.</p>
+  <a class="ato-link" href="encadeamentos.html">Ver os encadeamentos →</a>
 </section>
+
+<section class="ato">
+  <p class="rotulo">( BASTIDORES · O MÉTODO )</p>
+  <h2 class="ato-titulo anchored">O mesmo caminho para cada número do site.</h2>
+  <div class="passos">
+    <div class="passo"><span>01</span><h4 class="anchored">Coletar</h4><p>Consultas à Base dos Dados (RAIS, CAGED, CNPJ, ComexStat, INEP, SICONFI), ao SIDRA do IBGE e ao Banco Central.</p></div>
+    <div class="passo"><span>02</span><h4 class="anchored">Classificar</h4><p>Cada cadeia é dividida em elos por códigos CNAE, conferidos contra o diretório oficial.</p></div>
+    <div class="passo"><span>03</span><h4 class="anchored">Medir</h4><p>Quociente locacional, participação, concentração, shift-share e variações em 10, 5 e 2 anos.</p></div>
+    <div class="passo"><span>04</span><h4 class="anchored">Comparar</h4><p>Pernambuco frente ao Nordeste e ao Brasil, e cada município frente à sua região.</p></div>
+    <div class="passo"><span>05</span><h4 class="anchored">Publicar</h4><p>Um pipeline em R (targets e Quarto) refaz tudo a partir das fontes. O código é aberto.</p></div>
+  </div>
+  <a class="ato-link" href="metodologia.html">Ver a metodologia →</a> <a class="ato-link" href="lacunas.html">O que os dados não mostram →</a>
+</section>
+
+<section class="ato ato-cortina">
+  <p class="rotulo">( CORTINA )</p>
+  <h2 class="cortina-titulo anchored">Vamos conversar sobre<br>o seu território.</h2>
+  <p class="prosa">Avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.</p>
+  <p class="cortina-links"><a href="https://www.linkedin.com/in/jrsvf">LinkedIn ↗</a> <a href="https://github.com/jrsvf">GitHub ↗</a> <a href="https://lattes.cnpq.br/1066993955257243">Lattes ↗</a></p>
+</section>
+
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -66,6 +66,7 @@ ler_cadeias <- function(arquivo = caminho("config", "cadeias.yml"),
     cadeia_id   = c$id,
     cadeia      = c$nome,
     macrossetor = c$macrossetor %||% "Outros",
+    grupo       = c$grupo %||% "cadeia",
     descricao   = str_squish(c$descricao %||% ""),
     nota        = str_squish(c$nota %||% "")
   ))

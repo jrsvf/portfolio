@@ -1,0 +1,73 @@
+---
+title: "Agricultura familiar"
+description: "Estabelecimentos, área e valor da produção da agricultura familiar em Pernambuco (Censo Agropecuário 2017) e o crédito do PRONAF por município."
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+carregar("rd", "pib_pop")
+opcional <- function(n) tryCatch(ler_base(n, ""), error = function(e) NULL)
+af <- opcional("agro_familiar"); cr <- opcional("credito_rural")
+```
+
+A agricultura familiar segue a definição da Lei 11.326/2006 (área de até quatro módulos fiscais, mão de obra e renda principalmente da família). Ela não tem código próprio na CNAE e quase não aparece no emprego formal, por isso tem uma página separada das cadeias.
+
+```{r}
+if (!NROW(af)) {
+  htmltools::p(class = "aviso", "Os dados do Censo Agropecuário não foram carregados nesta atualização.")
+} else {
+  tot <- af %>% group_by(familiar, medida) %>% summarise(v = sum(valor, na.rm = TRUE), .groups = "drop")
+  g <- function(m, f) sum(tot$v[tot$medida == m & tot$familiar == f])
+  sh <- function(m) g(m, TRUE) / (g(m, TRUE) + g(m, FALSE))
+  cartoes(list(
+    list(rotulo = "Dos estabelecimentos agropecuários são familiares", valor = fmt_pct(sh("estabelecimentos"), 0),
+         nota = paste(fmt_num(g("estabelecimentos", TRUE)), "estabelecimentos (2017)")),
+    list(rotulo = "Da área dos estabelecimentos", valor = fmt_pct(sh("area_ha"), 0), nota = paste(fmt_num(g("area_ha", TRUE)), "hectares")),
+    list(rotulo = "Do valor da produção", valor = fmt_pct(sh("valor_producao_mil"), 0),
+         nota = paste0("R$ ", fmt_num(g("valor_producao_mil", TRUE) / 1e6, 2), " bi"))))
+}
+```
+
+```{r}
+if (NROW(af)) {
+  pm <- af %>% filter(medida == "valor_producao_mil") %>% group_by(id_municipio) %>%
+    summarise(p = 100 * sum(valor[familiar]) / sum(valor), .groups = "drop")
+  pe <- af %>% filter(medida == "estabelecimentos") %>% group_by(id_municipio) %>%
+    summarise(p = 100 * sum(valor[familiar]) / sum(valor), .groups = "drop")
+  htmltools::div(class = "rx-duas",
+    htmltools::div(htmltools::h4("Participação da agricultura familiar no valor da produção (%)"),
+      mapa_municipios(malha, pm, "p", "% do valor da produção", municipios, formato = function(x) fmt_num(x, 0), paleta = "Greens")),
+    htmltools::div(htmltools::h4("Participação nos estabelecimentos (%)"),
+      mapa_municipios(malha, pe, "p", "% dos estabelecimentos", municipios, formato = function(x) fmt_num(x, 0), paleta = "Greens")))
+}
+```
+
+<p class="fonte">Fonte: IBGE, Censo Agropecuário 2017 (tabelas SIDRA 6753 e 6898), tipologia da agricultura familiar.</p>
+
+## Crédito do PRONAF
+
+```{r}
+if (!NROW(cr) || !any(cr$pronaf)) {
+  htmltools::p(class = "aviso", "Os dados de crédito rural não foram carregados nesta atualização.")
+} else {
+  ser <- cr %>% group_by(ano, Programa = ifelse(pronaf, "PRONAF", "Demais programas")) %>%
+    summarise(v = sum(valor) / 1e6, .groups = "drop")
+  u <- max(cr$ano[cr$ano < as.numeric(format(Sys.Date(), "%Y"))])
+  pr_rd <- cr %>% filter(pronaf, ano == u) %>% left_join(rd, by = "id_municipio") %>% group_by(rd) %>%
+    summarise(v = sum(valor) / 1e6, contratos = sum(contratos), .groups = "drop")
+  pr_mun <- cr %>% filter(pronaf, ano == u) %>% group_by(id_municipio) %>% summarise(v = sum(valor) / 1e6, .groups = "drop")
+  htmltools::tagList(
+    cartoes(list(
+      list(rotulo = paste("Crédito do PRONAF contratado em", u), valor = paste0("R$ ", fmt_num(sum(pr_rd$v), 1), " mi"),
+           nota = paste(fmt_num(sum(pr_rd$contratos)), "contratos")),
+      list(rotulo = "Do crédito rural com recursos públicos", valor = fmt_pct(sum(pr_rd$v) / sum(ser$v[ser$ano == u]), 0)))),
+    htmltools::div(class = "rx-duas",
+      htmltools::div(htmltools::h4("Crédito rural contratado em PE (R$ milhões nominais)"), grafico_linhas(ser, "ano", "v", "Programa", "R$ milhões", formato = ",.1f")),
+      htmltools::div(htmltools::h4(paste("PRONAF por Região de Desenvolvimento em", u, "(R$ mi)")), grafico_barras_h(pr_rd, "rd", "v", formato = ",.1f"))),
+    htmltools::h4(paste("PRONAF por município em", u, "(R$ milhões)")),
+    mapa_municipios(malha, pr_mun, "v", "R$ milhões", municipios, formato = function(x) fmt_num(x, 1), paleta = "Greens"))
+}
+```
+
+<p class="fonte">Fonte: Banco Central, Matriz de Dados do Crédito Rural (SICOR), via Base dos Dados. Operações com recursos públicos, pelo município do empreendimento. Valores nominais.</p>
