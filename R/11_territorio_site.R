@@ -142,6 +142,8 @@ montar_territorio <- function(municipios, rd, pib_pop, pop, rais_secao, cad_mun,
   # Regiões de Desenvolvimento
   rds <- sort(unique(rd$rd))
   pib_u <- pib_pop %>% filter(!is.na(pib)) %>% filter(ano == max(ano))
+  # o valor adicionado por setor sai com defasagem em relação ao PIB total
+  va_u <- pib_pop %>% filter(!is.na(va_industria)) %>% filter(ano == max(ano))
   regioes <- lapply(rds, function(r) {
     ids <- rd$id_municipio[rd$rd == r]
     p <- pib_u %>% filter(id_municipio %in% ids)
@@ -152,8 +154,9 @@ montar_territorio <- function(municipios, rd, pib_pop, pop, rais_secao, cad_mun,
            pop = sum(pop_u$populacao[pop_u$id_municipio %in% ids]), ano_pop = max(pop_u$ano),
            pib = list(ano = max(pib_u$ano), valor = sum(p$pib), part = sum(p$pib) / sum(pib_u$pib),
                       pc = sum(p$pib) / sum(p$populacao),
-                      va = list(agro = sum(p$va_agropecuaria, na.rm = TRUE), ind = sum(p$va_industria, na.rm = TRUE),
-                                serv = sum(p$va_servicos, na.rm = TRUE), adm = sum(p$va_adespss, na.rm = TRUE))),
+                      va = with(va_u[va_u$id_municipio %in% ids, ],
+                                list(ano = max(va_u$ano), agro = sum(va_agropecuaria, na.rm = TRUE), ind = sum(va_industria, na.rm = TRUE),
+                                     serv = sum(va_servicos, na.rm = TRUE), adm = sum(va_adespss, na.rm = TRUE)))),
            emprego = list(ano = ult, total = sum(e_s$emprego), part = sum(e_s$emprego) / sum(emp_tot$e[emp_tot$ano == ult]),
                           serie = e_ser, setores = e_s %>% head(8) %>% transmute(setor = stringr::str_to_sentence(descricao_secao), emprego)),
            cadeias = pedaco_cadeias(cad_mun, emp_tot, cad_meta, ids, ult),

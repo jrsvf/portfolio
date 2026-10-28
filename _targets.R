@@ -101,6 +101,12 @@ list(
   tar_target(bq_pronaf,       { bq_esquema; tentar("PRONAF", extrair_pronaf(projeto, uf)) }),
   tar_target(bq_comex_mensal, { bq_esquema; tentar("comex mensal", extrair_comex_mensal(projeto, uf, as.numeric(format(Sys.Date(), "%Y")) - 1)) },
              cue = tar_cue(mode = "always")),
+  tar_target(arq_cadeia_cursos, "config/cadeia_cursos.csv", format = "file"),
+  tar_target(bq_cursos_nome,  { bq_esquema; tentar("cursos por nome", extrair_cursos_nome(projeto, uf)) }),
+  tar_target(bq_escoamento,   { bq_esquema; tentar("escoamento", extrair_comex_escoamento(projeto, uf)) }),
+  tar_target(nomes_urf,       { bq_esquema; obter_nomes_comex(projeto) }),
+  tar_target(cursos_cad,      cursos_cadeia(bq_cursos_nome, ler_cadeia_cursos(arq_cadeia_cursos), bq_dic, bq_municipios)),
+  tar_target(escoamento_cad,  escoamento_cadeia(bq_escoamento, cad$sh4, nomes_urf)),
   tar_target(agro_familiar,   tentar("Censo Agro", obter_agro_familiar(uf_codigo))),
   tar_target(empresas,         montar_empresas(bq_cnpj_fluxos, bq_dic, bq_cnae)),
   tar_target(empresas_maiores, montar_maiores(bq_cnpj_maiores, bq_dic, bq_cnae)),
@@ -238,6 +244,7 @@ list(
                  empresas = empresas, empresas_maiores = empresas_maiores, qualificacao = qualificacao,
                  educacao = educacao, icms = icms, credito_rural = credito_rural, agro_familiar = agro_familiar,
                  infraestrutura = infraestrutura, corte_atual = corte_atual, bq_dic = bq_dic,
+                 cursos_cad = cursos_cad, escoamento_cad = escoamento_cad,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),

@@ -11,7 +11,7 @@
     "href": "regioes.html#produção-e-emprego",
     "title": "Regiões de Desenvolvimento",
     "section": "Produção e emprego",
-    "text": "Produção e emprego\n\n\nCódigo\nva = [\n  {setor: \"Agropecuária\", v: r.pib.va.agro}, {setor: \"Indústria\", v: r.pib.va.ind},\n  {setor: \"Serviços\", v: r.pib.va.serv}, {setor: \"Administração pública\", v: r.pib.va.adm}]\nvaT = d3.sum(va, d =&gt; d.v)\nhtml`&lt;div class=\"rx-duas\"&gt;\n  &lt;div&gt;&lt;h4&gt;Composição do valor adicionado&lt;/h4&gt;${Plot.plot({\n    height: 120, marginLeft: 10, y: {axis: null}, x: {label: null, tickFormat: d =&gt; (100 * d).toFixed(0) + \"%\", domain: [0, 1]},\n    color: {domain: va.map(d =&gt; d.setor), range: [\"#5B8C5A\", AZUL, \"#7FA7CF\", \"#C9D6E3\"], legend: true},\n    marks: [Plot.barX(va.map(d =&gt; ({...d, p: d.v / vaT})), Plot.stackX({x: \"p\", y: () =&gt; \"VA\", fill: \"setor\", title: d =&gt; d.setor + \": \" + pct(d.p)}))]})}\n  &lt;h4&gt;Municípios com mais emprego formal&lt;/h4&gt;&lt;table class=\"rx-tab\"&gt;&lt;tbody&gt;\n    ${r.maiores_mun.map(d =&gt; html`&lt;tr&gt;&lt;td&gt;&lt;a href=\"municipios.html?m=${d.id}\"&gt;${d.nome}&lt;/a&gt;&lt;/td&gt;&lt;td&gt;${nf(d.emprego)}&lt;/td&gt;&lt;/tr&gt;`)}&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;\n  &lt;div&gt;&lt;h4&gt;Emprego formal por grande setor&lt;/h4&gt;${Plot.plot({\n    height: 40 + 26 * r.emprego.setores.length, marginLeft: 330, marginRight: 30, y: {label: null}, x: {label: null, grid: true, tickFormat: d =&gt; nf(d)},\n    marks: [Plot.barX(r.emprego.setores, {y: \"setor\", x: \"emprego\", fill: AZUL, sort: {y: \"-x\"}, tip: true})]})}&lt;/div&gt;\n&lt;/div&gt;`"
+    "text": "Produção e emprego\n\n\nCódigo\nva = [\n  {setor: \"Agropecuária\", v: r.pib.va.agro}, {setor: \"Indústria\", v: r.pib.va.ind},\n  {setor: \"Serviços\", v: r.pib.va.serv}, {setor: \"Administração pública\", v: r.pib.va.adm}]\nvaT = d3.sum(va, d =&gt; d.v)\nhtml`&lt;div class=\"rx-duas\"&gt;\n  &lt;div&gt;&lt;h4&gt;Composição do valor adicionado${r.pib.va.ano ? \" (\" + r.pib.va.ano + \")\" : \"\"}&lt;/h4&gt;${vaT &gt; 0 ? Plot.plot({\n    height: 120, marginLeft: 10, y: {axis: null}, x: {label: null, tickFormat: d =&gt; (100 * d).toFixed(0) + \"%\", domain: [0, 1]},\n    color: {domain: va.map(d =&gt; d.setor), range: [\"#5B8C5A\", AZUL, \"#7FA7CF\", \"#C9D6E3\"], legend: true},\n    marks: [Plot.barX(va.map(d =&gt; ({...d, p: d.v / vaT})), Plot.stackX({x: \"p\", y: () =&gt; \"VA\", fill: \"setor\", title: d =&gt; d.setor + \": \" + pct(d.p)}))]}) : html`&lt;p class=\"aviso\"&gt;Valor adicionado por setor indisponível.&lt;/p&gt;`}\n  &lt;h4&gt;Municípios com mais emprego formal&lt;/h4&gt;&lt;table class=\"rx-tab\"&gt;&lt;tbody&gt;\n    ${r.maiores_mun.map(d =&gt; html`&lt;tr&gt;&lt;td&gt;&lt;a href=\"municipios.html?m=${d.id}\"&gt;${d.nome}&lt;/a&gt;&lt;/td&gt;&lt;td&gt;${nf(d.emprego)}&lt;/td&gt;&lt;/tr&gt;`)}&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;\n  &lt;div&gt;&lt;h4&gt;Emprego formal por grande setor&lt;/h4&gt;${Plot.plot({\n    height: 40 + 26 * r.emprego.setores.length, marginLeft: 330, marginRight: 30, y: {label: null}, x: {label: null, grid: true, tickFormat: d =&gt; nf(d)},\n    marks: [Plot.barX(r.emprego.setores, {y: \"setor\", x: \"emprego\", fill: AZUL, sort: {y: \"-x\"}, tip: true})]})}&lt;/div&gt;\n&lt;/div&gt;`"
   },
   {
     "objectID": "regioes.html#cadeias-e-nichos-na-região",
@@ -263,7 +263,14 @@
     "href": "cadeias/ti_software.html#comércio-exterior",
     "title": "Tecnologia da informação",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat)."
+    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat).\n\n\n\nEscoamento das exportações\n\n\nSem exportações registradas da cadeia com origem em Pernambuco no último ano completo."
+  },
+  {
+    "objectID": "cadeias/ti_software.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/ti_software.html#formação-cursos-ligados-à-cadeia",
+    "title": "Tecnologia da informação",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n16.076\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n1.856\nConcluintes no ano\n\n\n19\nMunicípios com oferta\n\n\n12\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nAnálise E Desenvolvimento De Sistemas\n8\n26\n6.645\n6.449\n887\n16,9%\n\n\nCiência Da Computação\n8\n18\n4.113\n4.727\n425\n38,6%\n\n\nSistemas De Informação\n5\n9\n2.042\n1.291\n110\n34,8%\n\n\nEngenharia Da Computação\n1\n2\n250\n972\n63\n100,0%\n\n\nSistemas Para Internet\n3\n4\n466\n719\n164\n43,1%\n\n\nComputação\n4\n4\n294\n693\n35\n100,0%\n\n\nEngenharia De Computação\n3\n5\n1.585\n499\n37\n39,7%\n\n\nGestão Da Tecnologia Da Informação\n6\n7\n618\n283\n38\n64,3%\n\n\nRedes De Computadores\n1\n4\n1.124\n173\n60\n0,0%\n\n\nEngenharia De Software\n4\n4\n391\n150\n10\n74,0%\n\n\nJogos Digitais\n1\n3\n215\n109\n27\n0,0%\n\n\nSegurança Da Informação\n1\n2\n480\n11\n0\n0,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/ti_software.html#encadeamentos-com-o-resto-da-economia",
@@ -354,7 +361,14 @@
     "href": "cadeias/suinocultura.html#comércio-exterior",
     "title": "Suinocultura",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 100,0% do valor exportado, e o principal ponto de saída é Irf - Porto De Suape (47,9%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/suinocultura.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/suinocultura.html#formação-cursos-ligados-à-cadeia",
+    "title": "Suinocultura",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n5.058\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n698\nConcluintes no ano\n\n\n8\nMunicípios com oferta\n\n\n2\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nMedicina Veterinária\n8\n13\n3.449\n4.240\n598\n27,2%\n\n\nZootecnia\n4\n4\n450\n818\n100\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/suinocultura.html#encadeamentos-com-o-resto-da-economia",
@@ -445,7 +459,14 @@
     "href": "cadeias/saude.html#comércio-exterior",
     "title": "Complexo da saúde",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 57,4% do valor exportado, e o principal ponto de saída é Irf - Porto De Suape (47,2%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/saude.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/saude.html#formação-cursos-ligados-à-cadeia",
+    "title": "Complexo da saúde",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n57.958\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n8.418\nConcluintes no ano\n\n\n28\nMunicípios com oferta\n\n\n13\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEnfermagem\n26\n61\n15.935\n13.095\n1.975\n14,9%\n\n\nMedicina\n11\n21\n3.505\n11.894\n1.601\n26,2%\n\n\nFisioterapia\n15\n39\n12.013\n8.542\n1.287\n8,3%\n\n\nOdontologia\n16\n35\n9.256\n7.613\n1.103\n15,7%\n\n\nFarmácia\n16\n33\n9.623\n6.735\n1.150\n10,9%\n\n\nNutrição\n11\n35\n9.641\n5.067\n738\n14,0%\n\n\nBiomedicina\n5\n16\n3.959\n2.789\n349\n17,8%\n\n\nTerapia Ocupacional\n5\n9\n2.410\n868\n33\n21,1%\n\n\nFonoaudiologia\n3\n6\n1.226\n617\n20\n24,8%\n\n\nRadiologia\n1\n3\n288\n315\n119\n32,1%\n\n\nSaúde Coletiva\n2\n2\n120\n269\n33\n100,0%\n\n\nEngenharia Biomédica\n1\n1\n30\n120\n10\n100,0%\n\n\nGestão Hospitalar\n1\n1\n40\n34\n0\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/saude.html#encadeamentos-com-o-resto-da-economia",
@@ -536,7 +557,14 @@
     "href": "cadeias/ovinocaprinocultura.html#comércio-exterior",
     "title": "Ovinocaprinocultura",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Aérea responde por 88,2% do valor exportado, e o principal ponto de saída é Irf - Aeroporto Internacional De Salvador (64,8%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/ovinocaprinocultura.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/ovinocaprinocultura.html#formação-cursos-ligados-à-cadeia",
+    "title": "Ovinocaprinocultura",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n5.058\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n698\nConcluintes no ano\n\n\n8\nMunicípios com oferta\n\n\n2\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nMedicina Veterinária\n8\n13\n3.449\n4.240\n598\n27,2%\n\n\nZootecnia\n4\n4\n450\n818\n100\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/ovinocaprinocultura.html#encadeamentos-com-o-resto-da-economia",
@@ -627,7 +655,14 @@
     "href": "cadeias/mandiocultura.html#comércio-exterior",
     "title": "Mandiocultura",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 92,9% do valor exportado, e o principal ponto de saída é Alf - Salvador (92,1%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/mandiocultura.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/mandiocultura.html#formação-cursos-ligados-à-cadeia",
+    "title": "Mandiocultura",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n2.061\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n292\nConcluintes no ano\n\n\n8\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nAgronomia\n7\n7\n837\n1.566\n216\n98,1%\n\n\nEngenharia De Alimentos\n2\n2\n145\n355\n57\n100,0%\n\n\nAgroecologia\n2\n2\n120\n140\n19\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/mandiocultura.html#encadeamentos-com-o-resto-da-economia",
@@ -725,7 +760,14 @@
     "href": "cadeias/gesso.html#comércio-exterior",
     "title": "Gesso (Polo Gesseiro do Araripe)",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Vicinal fronteiriço responde por 92,9% do valor exportado, e o principal ponto de saída é Alf - Foz Do Iguacu (92,9%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/gesso.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/gesso.html#formação-cursos-ligados-à-cadeia",
+    "title": "Gesso (Polo Gesseiro do Araripe)",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n572\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n41\nConcluintes no ano\n\n\n2\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEngenharia De Materiais\n2\n2\n160\n303\n20\n100,0%\n\n\nGeologia\n1\n1\n40\n143\n17\n100,0%\n\n\nEngenharia De Minas\n1\n1\n50\n126\n4\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/gesso.html#encadeamentos-com-o-resto-da-economia",
@@ -816,7 +858,14 @@
     "href": "cadeias/economia_do_mar.html#comércio-exterior",
     "title": "Economia do mar",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 62,6% do valor exportado, e o principal ponto de saída é Porto De Santos (29,7%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/economia_do_mar.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/economia_do_mar.html#formação-cursos-ligados-à-cadeia",
+    "title": "Economia do mar",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n659\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n61\nConcluintes no ano\n\n\n2\nMunicípios com oferta\n\n\n5\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEngenharia De Pesca\n2\n2\n280\n314\n35\n100,0%\n\n\nEngenharia Naval\n1\n1\n20\n97\n5\n100,0%\n\n\nAqüicultura\n1\n1\n60\n86\n1\n100,0%\n\n\nCiências Aeronáuticas\n1\n1\n486\n82\n13\n0,0%\n\n\nOceanografia\n1\n1\n25\n80\n7\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/economia_do_mar.html#encadeamentos-com-o-resto-da-economia",
@@ -907,7 +956,14 @@
     "href": "cadeias/construcao_civil.html#comércio-exterior",
     "title": "Construção civil",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 80,6% do valor exportado, e o principal ponto de saída é Porto De Santos (37,0%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/construcao_civil.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/construcao_civil.html#formação-cursos-ligados-à-cadeia",
+    "title": "Construção civil",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n8.027\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n1.064\nConcluintes no ano\n\n\n13\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEngenharia Civil\n12\n28\n9.123\n4.660\n595\n59,1%\n\n\nArquitetura E Urbanismo\n7\n19\n12.474\n3.206\n462\n20,3%\n\n\nEngenharia Cartográfica E De Agrimensura\n1\n1\n60\n161\n7\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/construcao_civil.html#encadeamentos-com-o-resto-da-economia",
@@ -998,7 +1054,14 @@
     "href": "cadeias/bioeconomia_renovaveis.html#comércio-exterior",
     "title": "Bioeconomia e energias renováveis",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 100,0% do valor exportado, e o principal ponto de saída é Alf - Recife (98,1%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/bioeconomia_renovaveis.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/bioeconomia_renovaveis.html#formação-cursos-ligados-à-cadeia",
+    "title": "Bioeconomia e energias renováveis",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n3.364\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n374\nConcluintes no ano\n\n\n10\nMunicípios com oferta\n\n\n9\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEngenharia Elétrica\n8\n12\n5.083\n1.585\n186\n59,5%\n\n\nEngenharia Elétrica - Eletrotécnica\n1\n1\n150\n425\n33\n100,0%\n\n\nEngenharia Ambiental\n2\n3\n230\n261\n13\n96,6%\n\n\nGestão Ambiental\n3\n4\n600\n260\n67\n80,4%\n\n\nEngenharia Florestal\n1\n1\n140\n244\n25\n100,0%\n\n\nEngenharia Elétrica - Eletrônica\n1\n1\n80\n200\n17\n100,0%\n\n\nEngenharia Elétrica - Telecomunicações\n1\n1\n50\n194\n11\n100,0%\n\n\nEngenharia De Energia\n1\n1\n20\n110\n15\n100,0%\n\n\nEngenharia Ambiental E Sanitária\n3\n4\n1.392\n85\n7\n96,5%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/bioeconomia_renovaveis.html#encadeamentos-com-o-resto-da-economia",
@@ -1089,7 +1152,14 @@
     "href": "cadeias/avicultura.html#comércio-exterior",
     "title": "Avicultura",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 100,0% do valor exportado, e o principal ponto de saída é Irf - Porto De Suape (76,3%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/avicultura.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/avicultura.html#formação-cursos-ligados-à-cadeia",
+    "title": "Avicultura",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n6.979\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n971\nConcluintes no ano\n\n\n10\nMunicípios com oferta\n\n\n4\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nMedicina Veterinária\n8\n13\n3.449\n4.240\n598\n27,2%\n\n\nAgronomia\n7\n7\n837\n1.566\n216\n98,1%\n\n\nZootecnia\n4\n4\n450\n818\n100\n100,0%\n\n\nEngenharia De Alimentos\n2\n2\n145\n355\n57\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/avicultura.html#encadeamentos-com-o-resto-da-economia",
@@ -1180,7 +1250,14 @@
     "href": "cadeias/audiovisual.html#comércio-exterior",
     "title": "Audiovisual",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat)."
+    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat).\n\n\n\nEscoamento das exportações\n\n\nSem exportações registradas da cadeia com origem em Pernambuco no último ano completo."
+  },
+  {
+    "objectID": "cadeias/audiovisual.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/audiovisual.html#formação-cursos-ligados-à-cadeia",
+    "title": "Audiovisual",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n2.234\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n345\nConcluintes no ano\n\n\n4\nMunicípios com oferta\n\n\n9\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nComunicação Social - Publicidade E Propaganda\n4\n7\n1.679\n659\n90\n0,0%\n\n\nJornalismo\n4\n7\n1.090\n499\n109\n43,7%\n\n\nComunicação Social - Jornalismo\n1\n1\n662\n311\n42\n0,0%\n\n\nCinema E Audiovisual\n2\n2\n160\n291\n44\n83,5%\n\n\nPublicidade E Propaganda\n1\n1\n45\n211\n39\n100,0%\n\n\nComunicação Social\n1\n1\n40\n179\n17\n100,0%\n\n\nProdução Multimídia\n1\n1\n38\n57\n0\n100,0%\n\n\nFotografia\n1\n1\n66\n27\n4\n0,0%\n\n\nProdução Audiovisual\n1\n1\n100\n0\n0\n0,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/audiovisual.html#encadeamentos-com-o-resto-da-economia",
@@ -1271,7 +1348,14 @@
     "href": "cadeias/apicultura.html#comércio-exterior",
     "title": "Apicultura",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 90,4% do valor exportado, e o principal ponto de saída é Alf - Fortaleza (58,1%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/apicultura.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/apicultura.html#formação-cursos-ligados-à-cadeia",
+    "title": "Apicultura",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n2.524\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n335\nConcluintes no ano\n\n\n8\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nAgronomia\n7\n7\n837\n1.566\n216\n98,1%\n\n\nZootecnia\n4\n4\n450\n818\n100\n100,0%\n\n\nAgroecologia\n2\n2\n120\n140\n19\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/apicultura.html#encadeamentos-com-o-resto-da-economia",
@@ -1376,7 +1460,14 @@
     "href": "cadeias/aquicultura.html#comércio-exterior",
     "title": "Aquicultura e pesca",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Aérea responde por 60,0% do valor exportado, e o principal ponto de saída é Aeroporto Internacional De Sao Paulo/Guarulhos (32,3%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/aquicultura.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/aquicultura.html#formação-cursos-ligados-à-cadeia",
+    "title": "Aquicultura e pesca",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n480\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n43\nConcluintes no ano\n\n\n2\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEngenharia De Pesca\n2\n2\n280\n314\n35\n100,0%\n\n\nAqüicultura\n1\n1\n60\n86\n1\n100,0%\n\n\nOceanografia\n1\n1\n25\n80\n7\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/aquicultura.html#encadeamentos-com-o-resto-da-economia",
@@ -1467,7 +1558,14 @@
     "href": "cadeias/automotivo.html#comércio-exterior",
     "title": "Automotivo",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 93,6% do valor exportado, e o principal ponto de saída é Irf - Porto De Suape (85,5%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/automotivo.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/automotivo.html#formação-cursos-ligados-à-cadeia",
+    "title": "Automotivo",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n6.719\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n846\nConcluintes no ano\n\n\n14\nMunicípios com oferta\n\n\n9\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEngenharia Mecânica\n7\n17\n6.027\n2.447\n226\n61,6%\n\n\nEngenharia Elétrica\n8\n12\n5.083\n1.585\n186\n59,5%\n\n\nEngenharia De Produção\n10\n20\n6.608\n1.190\n309\n40,9%\n\n\nEngenharia De Controle E Automação\n4\n6\n740\n649\n44\n95,2%\n\n\nEngenharia Elétrica - Eletrotécnica\n1\n1\n150\n425\n33\n100,0%\n\n\nEngenharia Elétrica - Eletrônica\n1\n1\n80\n200\n17\n100,0%\n\n\nEngenharia Elétrica - Telecomunicações\n1\n1\n50\n194\n11\n100,0%\n\n\nAutomação Industrial\n1\n1\n406\n16\n10\n0,0%\n\n\nEngenharia Mecatrônica\n1\n1\n0\n13\n10\n0,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/automotivo.html#encadeamentos-com-o-resto-da-economia",
@@ -1558,7 +1656,14 @@
     "href": "cadeias/bebidas.html#comércio-exterior",
     "title": "Bebidas",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 86,5% do valor exportado, e o principal ponto de saída é Alf - Recife (28,8%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/bebidas.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/bebidas.html#formação-cursos-ligados-à-cadeia",
+    "title": "Bebidas",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n1.048\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n141\nConcluintes no ano\n\n\n5\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEngenharia Química\n3\n7\n1.465\n599\n79\n80,6%\n\n\nEngenharia De Alimentos\n2\n2\n145\n355\n57\n100,0%\n\n\nViticultura E Enologia\n1\n1\n51\n94\n5\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/bebidas.html#encadeamentos-com-o-resto-da-economia",
@@ -1649,7 +1754,14 @@
     "href": "cadeias/bovinocultura.html#comércio-exterior",
     "title": "Bovinocultura de leite e corte",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 99,5% do valor exportado, e o principal ponto de saída é Irf - Porto De Suape (57,2%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/bovinocultura.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/bovinocultura.html#formação-cursos-ligados-à-cadeia",
+    "title": "Bovinocultura de leite e corte",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n6.624\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n914\nConcluintes no ano\n\n\n10\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nMedicina Veterinária\n8\n13\n3.449\n4.240\n598\n27,2%\n\n\nAgronomia\n7\n7\n837\n1.566\n216\n98,1%\n\n\nZootecnia\n4\n4\n450\n818\n100\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/bovinocultura.html#encadeamentos-com-o-resto-da-economia",
@@ -1740,7 +1852,14 @@
     "href": "cadeias/economia_criativa.html#comércio-exterior",
     "title": "Economia criativa",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat)."
+    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat).\n\n\n\nEscoamento das exportações\n\n\nSem exportações registradas da cadeia com origem em Pernambuco no último ano completo."
+  },
+  {
+    "objectID": "cadeias/economia_criativa.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/economia_criativa.html#formação-cursos-ligados-à-cadeia",
+    "title": "Economia criativa",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n8.749\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n1.309\nConcluintes no ano\n\n\n8\nMunicípios com oferta\n\n\n20\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nArquitetura E Urbanismo\n7\n19\n12.474\n3.206\n462\n20,3%\n\n\nDesign\n2\n4\n1.667\n1.600\n192\n64,4%\n\n\nComunicação Social - Publicidade E Propaganda\n4\n7\n1.679\n659\n90\n0,0%\n\n\nJornalismo\n4\n7\n1.090\n499\n109\n43,7%\n\n\nMúsica\n3\n4\n168\n469\n61\n92,3%\n\n\nDesign Gráfico\n4\n6\n670\n356\n88\n45,8%\n\n\nComunicação Social - Jornalismo\n1\n1\n662\n311\n42\n0,0%\n\n\nDesign De Moda\n2\n5\n767\n298\n58\n0,0%\n\n\nCinema E Audiovisual\n2\n2\n160\n291\n44\n83,5%\n\n\nArtes Visuais\n1\n2\n55\n265\n28\n100,0%\n\n\nPublicidade E Propaganda\n1\n1\n45\n211\n39\n100,0%\n\n\nTeatro\n1\n1\n35\n155\n16\n100,0%\n\n\nDança\n1\n1\n30\n136\n16\n100,0%\n\n\nJogos Digitais\n1\n3\n215\n109\n27\n0,0%\n\n\nDesign De Interiores\n3\n5\n1.440\n63\n12\n0,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/economia_criativa.html#encadeamentos-com-o-resto-da-economia",
@@ -1831,7 +1950,14 @@
     "href": "cadeias/fruticultura.html#comércio-exterior",
     "title": "Fruticultura irrigada",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 88,6% do valor exportado, e o principal ponto de saída é Alf - Fortaleza (55,1%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/fruticultura.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/fruticultura.html#formação-cursos-ligados-à-cadeia",
+    "title": "Fruticultura irrigada",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n1.893\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n234\nConcluintes no ano\n\n\n7\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nAgronomia\n7\n7\n837\n1.566\n216\n98,1%\n\n\nEngenharia Agrícola E Ambiental\n1\n1\n120\n233\n13\n100,0%\n\n\nViticultura E Enologia\n1\n1\n51\n94\n5\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/fruticultura.html#encadeamentos-com-o-resto-da-economia",
@@ -1922,7 +2048,14 @@
     "href": "cadeias/higiene_limpeza.html#comércio-exterior",
     "title": "Higiene, limpeza e cosméticos",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Rodoviária responde por 62,3% do valor exportado, e o principal ponto de saída é Pacaraima (62,3%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/higiene_limpeza.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/higiene_limpeza.html#formação-cursos-ligados-à-cadeia",
+    "title": "Higiene, limpeza e cosméticos",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n10.740\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n1.738\nConcluintes no ano\n\n\n21\nMunicípios com oferta\n\n\n5\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nFarmácia\n16\n33\n9.623\n6.735\n1.150\n10,9%\n\n\nQuímica\n9\n12\n833\n1.692\n173\n99,1%\n\n\nEstética E Cosmética\n6\n14\n2.677\n1.543\n322\n0,0%\n\n\nEngenharia Química\n3\n7\n1.465\n599\n79\n80,6%\n\n\nQuímica Industrial\n1\n1\n40\n171\n14\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/higiene_limpeza.html#encadeamentos-com-o-resto-da-economia",
@@ -2013,7 +2146,14 @@
     "href": "cadeias/logistica.html#comércio-exterior",
     "title": "Logística",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat)."
+    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat).\n\n\n\nEscoamento das exportações\n\n\nSem exportações registradas da cadeia com origem em Pernambuco no último ano completo."
+  },
+  {
+    "objectID": "cadeias/logistica.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/logistica.html#formação-cursos-ligados-à-cadeia",
+    "title": "Logística",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n1.166\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n266\nConcluintes no ano\n\n\n12\nMunicípios com oferta\n\n\n2\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nLogística\n11\n20\n3.179\n1.133\n261\n7,9%\n\n\nComércio Exterior\n2\n2\n108\n33\n5\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/logistica.html#encadeamentos-com-o-resto-da-economia",
@@ -2104,7 +2244,14 @@
     "href": "cadeias/moveleiro.html#comércio-exterior",
     "title": "Moveleiro",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 49,5% do valor exportado, e o principal ponto de saída é Porto Do Rio De Janeiro (20,8%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/moveleiro.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/moveleiro.html#formação-cursos-ligados-à-cadeia",
+    "title": "Moveleiro",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n307\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n37\nConcluintes no ano\n\n\n3\nMunicípios com oferta\n\n\n2\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nEngenharia Florestal\n1\n1\n140\n244\n25\n100,0%\n\n\nDesign De Interiores\n3\n5\n1.440\n63\n12\n0,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/moveleiro.html#encadeamentos-com-o-resto-da-economia",
@@ -2195,7 +2342,14 @@
     "href": "cadeias/petroquimica_plasticos.html#comércio-exterior",
     "title": "Petróleo, química e plásticos",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 90,6% do valor exportado, e o principal ponto de saída é Irf - Porto De Suape (56,0%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/petroquimica_plasticos.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/petroquimica_plasticos.html#formação-cursos-ligados-à-cadeia",
+    "title": "Petróleo, química e plásticos",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n2.765\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n286\nConcluintes no ano\n\n\n11\nMunicípios com oferta\n\n\n4\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nQuímica\n9\n12\n833\n1.692\n173\n99,1%\n\n\nEngenharia Química\n3\n7\n1.465\n599\n79\n80,6%\n\n\nEngenharia De Materiais\n2\n2\n160\n303\n20\n100,0%\n\n\nQuímica Industrial\n1\n1\n40\n171\n14\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/petroquimica_plasticos.html#encadeamentos-com-o-resto-da-economia",
@@ -2286,7 +2440,14 @@
     "href": "cadeias/sucroenergetico.html#comércio-exterior",
     "title": "Sucroenergético",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Marítima responde por 99,9% do valor exportado, e o principal ponto de saída é Alf - Recife (61,9%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/sucroenergetico.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/sucroenergetico.html#formação-cursos-ligados-à-cadeia",
+    "title": "Sucroenergético",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n2.398\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n308\nConcluintes no ano\n\n\n9\nMunicípios com oferta\n\n\n3\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nAgronomia\n7\n7\n837\n1.566\n216\n98,1%\n\n\nEngenharia Química\n3\n7\n1.465\n599\n79\n80,6%\n\n\nEngenharia Agrícola E Ambiental\n1\n1\n120\n233\n13\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/sucroenergetico.html#encadeamentos-com-o-resto-da-economia",
@@ -2377,7 +2538,14 @@
     "href": "cadeias/textil_confeccoes.html#comércio-exterior",
     "title": "Têxtil e confecções",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria."
+    "text": "Comércio exterior\n\n\n\n\nPrincipais destinos em 2025 (US$ milhões)\n\n\nFonte: ComexStat (MDIC), por município de domicílio fiscal da empresa. Elaboração própria.\n\n\n\nEscoamento das exportações\n\n\nPor onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em 2025. Rodoviária responde por 59,0% do valor exportado, e o principal ponto de saída é Alf - Mundo Novo (40,0%).\n\n\nVia de transporte (% do valor)\n\n\n\n\nPonto de saída (unidade da Receita, US$ milhões)\n\n\n\n\nFonte: ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco. Elaboração própria."
+  },
+  {
+    "objectID": "cadeias/textil_confeccoes.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/textil_confeccoes.html#formação-cursos-ligados-à-cadeia",
+    "title": "Têxtil e confecções",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n298\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n58\nConcluintes no ano\n\n\n2\nMunicípios com oferta\n\n\n1\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nDesign De Moda\n2\n5\n767\n298\n58\n0,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/textil_confeccoes.html#encadeamentos-com-o-resto-da-economia",
@@ -2468,7 +2636,14 @@
     "href": "cadeias/turismo.html#comércio-exterior",
     "title": "Turismo",
     "section": "Comércio exterior",
-    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat)."
+    "text": "Comércio exterior\n\n\nA cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat).\n\n\n\nEscoamento das exportações\n\n\nSem exportações registradas da cadeia com origem em Pernambuco no último ano completo."
+  },
+  {
+    "objectID": "cadeias/turismo.html#formação-cursos-ligados-à-cadeia",
+    "href": "cadeias/turismo.html#formação-cursos-ligados-à-cadeia",
+    "title": "Turismo",
+    "section": "Formação: cursos ligados à cadeia",
+    "text": "Formação: cursos ligados à cadeia\n\n\n\n\n2.087\nMatrículas em 2024\nEnsino superior presencial, cursos ligados à cadeia\n\n\n307\nConcluintes no ano\n\n\n6\nMunicípios com oferta\n\n\n4\nCursos distintos\n\n\n\n\nOnde estão as matrículas\n\n\n\n\nCursos\n\n\n\n\nCurso\nMunicípios\nCursos\nVagas\nMatrículas\nConcluintes\n% pública\n\n\n\n\nGastronomia\n5\n11\n2.743\n1.329\n234\n24,9%\n\n\nTurismo\n2\n2\n130\n307\n19\n100,0%\n\n\nGestão De Turismo\n1\n1\n197\n286\n20\n100,0%\n\n\nHotelaria\n2\n2\n92\n165\n34\n100,0%\n\n\n\n\n\n\nFonte: INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram. Elaboração própria."
   },
   {
     "objectID": "cadeias/turismo.html#encadeamentos-com-o-resto-da-economia",
@@ -2496,7 +2671,7 @@
     "href": "index.html",
     "title": "José Roberto Verçosa",
     "section": "",
-    "text": "PERNAMBUCO\n185 MUNICÍPIOS · 12 REGIÕES\n\n\nTETO · 123,5 EM MAI/2026\n\n\nBASE · 2015 = 100\n\n\nPISO · 89,5 EM ABR/2020\n\n\n\nPernambuco\nATIVIDADE ECONÔMICA · IBCR-PE COM AJUSTE SAZONAL\nDADOS PÚBLICOS 2006 · 2026\n\n\n\n\n  ( EM CARTAZ )\n  José Roberto Verçosa\n  Economista que transforma dados públicos em leitura de território.\n  \n    \n    \n    Ver raio-X\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n( PRÓLOGO )\nSou economista, mestre em Economia Regional pela UFPE. Trabalho com dados públicos para entender onde a economia de Pernambuco está, como ela cresce e o que ainda falta medir. Cada página aqui é montada a partir das fontes oficiais, por um código aberto que qualquer pessoa pode rodar de novo.\n( O PROGRAMA )\n\nComeço pelo \n\nnível de atividade\n\n+17,6%\nIBCR de PE em 10 anos, até 2025\n\n\n, desmonto as \n\n21 cadeias produtivas\n\n485.003\nempregos formais nas cadeias em 2025\n\n\n em elos, comparo os \n\n185 municípios\n\n2.070.688\nempregos formais no estado em 2025\n\n\n e as \n\n12 Regiões de Desenvolvimento\n\nMetropolitana\né a região com mais emprego: 1.229.991\n\n\n, sigo as \n\nempresas que abrem e fecham\n\nCNPJ\nReceita Federal, por município e setor\n\n\n, a \n\nqualificação\n\nRAIS + INEP\nescolaridade, ocupações e ensino superior\n\n\n de quem trabalha e o \n\nICMS\n\nSICONFI\ncota-parte de cada município\n\n\n que circula.\n\nPASSE O MOUSE NAS PALAVRAS SUBLINHADAS\n\n\n\n\n\n\n( ATO I · O PANORAMA )\nO estado inteiro, em séries longas e no ano que está correndo.\n\n\n+17,6%\nAtividade econômica em 10 anos\nIBCR até 2025 · NE +7,0% · BR +11,3%\n\n\n-3,2%\nProdução industrial em 10 anos\nPIM-PF até 2025 · NE -16,7% · BR -1,9%\n\n\n-1,0%\nVendas do varejo em 10 anos\nPMC até 2025 · BR +11,1%\n\n\n-0,5%\nVolume de serviços em 10 anos\nPMS até 2025 · BR +12,6%\n\n\nEM 2026 ATÉ AGORA\n\n\n+4,9%\nAtividade econômica (IBCR), jan a ago/2026\ncontra o mesmo período de 2025 · NE +2,8%\n\n\n+13,9%\nProdução industrial (PIM-PF), jan a ago/2026\ncontra o mesmo período de 2025 · NE +0,9%\n\n\n+10,0%\nVendas do varejo (PMC), jan a ago/2026\ncontra o mesmo período de 2025 · BR +1,7%\n\n\n-0,4%\nVolume de serviços (PMS), jan a ago/2026\ncontra o mesmo período de 2025 · BR +1,7%\n\n\n+2.032\nSaldo de empregos formais, jan a fev/2026\nNovo CAGED · 2025: 2.358\n\n\nVer o panorama →\n\n\n\n\n\n\n( ATO II · AS CADEIAS )\n21 cadeias produtivas, divididas em elos, e 4 nichos que atravessam setores.\n\n\n\n\n\nLíder do Nordeste em 5 cadeias\nPernambuco tem o maior emprego formal do Nordeste em Automotivo; Fruticultura irrigada; Avicultura; Higiene, limpeza e cosméticos; Gesso (Polo Gesseiro do Araripe). Em outras 13 cadeias, fica em segundo.\nVer o panorama →\n\n\n\n\n\nAvicultura +64% em 10 anos\nEntre as cadeias com mais de 5 mil empregos, foi a que mais cresceu desde 2015, chegando a 17.051 vínculos formais em 2025.\nVer a cadeia →\n\n\n\n\n\n83% em três municípios\nFruticultura irrigada: Petrolina, Lagoa Grande, Custódia concentram a maior parte do emprego formal da cadeia.\nVer o mapa →\n\n\n\n\nConstrução civil\n\n99.860\n empregos\n\n\n\n+6%\n em 10 anos\n\n2º no NE\n\n\n\nIndústria de minerais não metálicos (PIM): -44% em 10 anos · NE -24%\n\n\n\nVendas de material de construção (PMC): -28% em 10 anos · BR +14%\n\n\n\nTurismo\n\n66.745\n empregos\n\n\n\n+12%\n em 10 anos\n\n2º no NE\n\n\n\nAtividades turísticas (PMS): +28% em 10 anos · BR +11%\n\n\n\nSucroenergético\n\n48.119\n empregos\n\n\n\n-9%\n em 10 anos\n\n2º no NE\n\n\n\nR$ 2,2 bi em produção (cana-de-açúcar, 2025)\n\n\n\nIndústria de alimentos (PIM): -12% em 10 anos · NE -3%\n\n\n\nLogística\n\n44.548\n empregos\n\n\n\n+35%\n em 10 anos\n\n2º no NE\n\n\n\nServiços de transporte (PMS): +20% em 10 anos\n\n\n\nTêxtil e confecções\n\n42.098\n empregos\n\n\n\n-8%\n em 10 anos\n\n2º no NE\n\n\n\nVendas de tecidos, vestuário e calçados (PMC): -35% em 10 anos · BR -17%\n\n\n\nAutomotivo\n\n41.266\n empregos\n\n\n\n+43%\n em 10 anos\n\n1º no NE\n\n\n\nIndústria de veículos (PIM): +18% em 2 anos · NE +16%\n\n\n\nVendas de veículos e peças (PMC): +64% em 10 anos · BR +28%\n\n\n\nFruticultura irrigada\n\n35.038\n empregos\n\n\n\n+52%\n em 10 anos\n\n1º no NE\n\n\n\nR$ 7,4 bi em produção (uva, banana, 2025)\n\n\n\nAvicultura\n\n17.051\n empregos\n\n\n\n+64%\n em 10 anos\n\n1º no NE\n\n\n\nR$ 2,2 bi em produção (ovos de galinha, 2025)\n\n\n\nTecnologia da informação\n\n16.505\n empregos\n\n\n\n+58%\n em 10 anos\n\n2º no NE\n\n\n\nServiços de informação e comunicação (PMS): +0% em 10 anos\n\n\n\nBebidas\n\n13.653\n empregos\n\n\n\n-9%\n em 10 anos\n\n2º no NE\n\n\n\nIndústria de bebidas (PIM): +18% em 10 anos · NE +11%\n\n\n\nAtacado de alimentos e bebidas (PMC): +5% em 2 anos · BR -9%\n\n\n\nMoveleiro\n\n13.229\n empregos\n\n\n\n-3%\n em 10 anos\n\n3º no NE\n\n\n\nVendas de móveis (PMC): -51% em 10 anos · BR -14%\n\n\n\nBovinocultura de leite e corte\n\n13.228\n empregos\n\n\n\n+34%\n em 10 anos\n\n2º no NE\n\n\n\nR$ 3,3 bi em produção (leite, 2025)\n\n\n\nPetróleo, química e plásticos\n\n12.746\n empregos\n\n\n\n+33%\n em 10 anos\n\n2º no NE\n\n\n\nIndústria química (PIM): -10% em 10 anos · NE -28%\n\n\n\nVendas de combustíveis (PMC): +18% em 10 anos · BR -9%\n\n\n\nHigiene, limpeza e cosméticos\n\n5.859\n empregos\n\n\n\n+17%\n em 10 anos\n\n1º no NE\n\n\n\nIndústria química (PIM): -10% em 10 anos · NE -28%\n\n\n\nVendas de farmácia e cosméticos (PMC): +59% em 10 anos · BR +68%\n\n\n\nAquicultura e pesca\n\n5.445\n empregos\n\n\n\n+60%\n em 10 anos\n\n2º no NE\n\n\n\nR$ 524 mi em produção (tilápia, camarão, 2025)\n\n\n\nGesso (Polo Gesseiro do Araripe)\n\n3.130\n empregos\n\n\n\n-35%\n em 10 anos\n\n1º no NE\n\n\n\nIndústria de minerais não metálicos (PIM): -44% em 10 anos · NE -24%\n\n\n\nSuinocultura\n\n2.653\n empregos\n\n\n\n+55%\n em 10 anos\n\n2º no NE\n\n\n\n865 mil cabeças (suíno, 2025)\n\n\n\nApicultura\n\n2.051\n empregos\n\n\n\n-30%\n em 10 anos\n\n2º no NE\n\n\n\nR$ 21 mi em produção (mel de abelha, 2025)\n\n\n\nAudiovisual\n\n1.546\n empregos\n\n\n\n-7%\n em 10 anos\n\n3º no NE\n\n\n\nServiços de informação e comunicação (PMS): +0% em 10 anos\n\n\n\nMandiocultura\n\n122\n empregos\n\n\n\n+30%\n em 10 anos\n\n4º no NE\n\n\n\nR$ 565 mi em produção (mandioca, 2025)\n\n\n\nOvinocaprinocultura\n\n111\n empregos\n\n\n\n-52%\n em 10 anos\n\n2º no NE\n\n\n\n7,1 milhões de cabeças (caprino e ovino, 2025)\n\n\n\nNICHOS TRANSVERSAIS\n\n\nComplexo da saúde\n\n142.925\n empregos\n\n\n\n+55%\n em 10 anos\n\n2º no NE\n\n\n\nVendas de farmácia e cosméticos (PMC): +59% em 10 anos · BR +68%\n\n\n\nEconomia criativa\n\n31.385\n empregos\n\n\n\n+53%\n em 10 anos\n\n3º no NE\n\n\n\nBioeconomia e energias renováveis\n\n13.787\n empregos\n\n\n\n+10%\n em 10 anos\n\n2º no NE\n\n\n\nEconomia do mar\n\n6.002\n empregos\n\n\n\n-25%\n em 10 anos\n\n3º no NE\n\n\n\nAgricultura familiar\n\n\nCenso Agropecuário 2017 e crédito do PRONAF por município\n\n\n\n\nFonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Posição no Nordeste pelo emprego formal da cadeia em \n2025\n. PIM-PF, PMC e PMS são atividades mais amplas que a cadeia, usadas como termo de comparação.\n\nVer todas as cadeias e nichos →\n\n\n\n\n\n\n( ATO III · O TERRITÓRIO )\nDoze regiões, 185 municípios. Cada um com seu raio-X.\n\n\nMetropolitana\n\n1.229.991\n empregos formais\n\n15 municípios · 3.730 mil habitantes\n\nMais especializada em \nHigiene, limpeza e cosméticos\n (QL 1,6)\n\n\n\nAgreste Central\n\n204.062\n empregos formais\n\n27 municípios · 1.152 mil habitantes\n\nMais especializada em \nAvicultura\n (QL 5,0)\n\n\n\nSertão do São Francisco\n\n122.131\n empregos formais\n\n7 municípios · 531 mil habitantes\n\nMais especializada em \nFruticultura irrigada\n (QL 13,9)\n\n\n\nMata Norte\n\n121.020\n empregos formais\n\n19 municípios · 585 mil habitantes\n\nMais especializada em \nSucroenergético\n (QL 5,6)\n\n\n\nMata Sul\n\n118.558\n empregos formais\n\n23 municípios · 648 mil habitantes\n\nMais especializada em \nSuinocultura\n (QL 10,9)\n\n\n\nAgreste Setentrional\n\n76.765\n empregos formais\n\n19 municípios · 542 mil habitantes\n\nMais especializada em \nTêxtil e confecções\n (QL 6,3)\n\n\n\nAgreste Meridional\n\n65.061\n empregos formais\n\n26 municípios · 669 mil habitantes\n\nMais especializada em \nBovinocultura de leite e corte\n (QL 5,5)\n\n\n\nSertão do Pajeú\n\n38.147\n empregos formais\n\n17 municípios · 329 mil habitantes\n\nMais especializada em \nAquicultura e pesca\n (QL 2,5)\n\n\n\nSertão do Araripe\n\n29.029\n empregos formais\n\n10 municípios · 319 mil habitantes\n\nMais especializada em \nGesso (Polo Gesseiro do Araripe)\n (QL 52,9)\n\n\n\nSertão do Moxotó\n\n28.785\n empregos formais\n\n7 municípios · 238 mil habitantes\n\nMais especializada em \nFruticultura irrigada\n (QL 2,2)\n\n\n\nSertão Central\n\n21.317\n empregos formais\n\n8 municípios · 177 mil habitantes\n\nMais especializada em \nConstrução civil\n (QL 1,9)\n\n\n\nSertão de Itaparica\n\n15.822\n empregos formais\n\n7 municípios · 137 mil habitantes\n\nMais especializada em \nFruticultura irrigada\n (QL 3,5)\n\n\n\nVer as regiões →\n \nVer os municípios →\n\n\n\n\n  ( ATO IV · OS ENCADEAMENTOS )\n  Quem compra de quem: as ligações para trás e para frente de cada setor.\n  A matriz insumo-produto nacional, regionalizada para Pernambuco, mostra quais setores puxam o resto da economia quando crescem e quais dependem de insumos de fora do estado.\n  Ver os encadeamentos →\n\n\n\n  ( BASTIDORES · O MÉTODO )\n  O mesmo caminho para cada número do site.\n  \n    01ColetarConsultas à Base dos Dados (RAIS, CAGED, CNPJ, ComexStat, INEP, SICONFI), ao SIDRA do IBGE e ao Banco Central.\n    02ClassificarCada cadeia é dividida em elos por códigos CNAE, conferidos contra o diretório oficial.\n    03MedirQuociente locacional, participação, concentração, shift-share e variações em 10, 5 e 2 anos.\n    04CompararPernambuco frente ao Nordeste e ao Brasil, e cada município frente à sua região.\n    05PublicarUm pipeline em R (targets e Quarto) refaz tudo a partir das fontes. O código é aberto.\n  \n  Ver a metodologia → O que os dados não mostram →\n\n\n\n  ( CORTINA )\n  Vamos conversar sobreo seu território.\n  Avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.\n  LinkedIn ↗ GitHub ↗ Lattes ↗"
+    "text": "PERNAMBUCO\n185 MUNICÍPIOS · 12 REGIÕES\n\n\nTETO · 123,5 EM MAI/2026\n\n\nBASE · 2015 = 100\n\n\nPISO · 89,5 EM ABR/2020\n\n\n\nPernambuco\nATIVIDADE ECONÔMICA · IBCR-PE COM AJUSTE SAZONAL\nDADOS PÚBLICOS 2006 · 2026\n\n\n\n\n  ( EM CARTAZ )\n  José Roberto Verçosa\n  Economista que transforma dados públicos em leitura de território.\n  \n    \n    \n    Ver raio-X\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n( PRÓLOGO )\nSou economista, mestre em Economia Regional pela UFPE. Trabalho com dados públicos para entender onde a economia de Pernambuco está, como ela cresce e o que ainda falta medir. Cada página aqui é montada a partir das fontes oficiais, por um código aberto que qualquer pessoa pode rodar de novo.\n( O PROGRAMA )\n\nComeço pelo \n\nnível de atividade\n\n+17,6%\nIBCR de PE em 10 anos, até 2025\n\n\n, desmonto as \n\ncadeias e nichos\n\n485.003\nempregos formais nas cadeias em 2025\n\n\n em elos, comparo os \n\n185 municípios\n\n2.070.688\nempregos formais no estado em 2025\n\n\n e as \n\n12 Regiões de Desenvolvimento\n\nMetropolitana\né a região com mais emprego: 1.229.991\n\n\n, sigo as \n\nempresas que abrem e fecham\n\nCNPJ\nReceita Federal, por município e setor\n\n\n, a \n\nqualificação\n\nRAIS + INEP\nescolaridade, ocupações e ensino superior\n\n\n de quem trabalha e o \n\nICMS\n\nSICONFI\ncota-parte de cada município\n\n\n que circula.\n\nPASSE O MOUSE NAS PALAVRAS SUBLINHADAS\n\n\n\n\n\n\n( ATO I · O PANORAMA )\nO estado inteiro, em séries longas e no ano que está correndo.\n\n\n+17,6%\nAtividade econômica em 10 anos\nIBCR até 2025 · NE +7,0% · BR +11,3%\n\n\n-3,2%\nProdução industrial em 10 anos\nPIM-PF até 2025 · NE -16,7% · BR -1,9%\n\n\n-1,0%\nVendas do varejo em 10 anos\nPMC até 2025 · BR +11,1%\n\n\n-0,5%\nVolume de serviços em 10 anos\nPMS até 2025 · BR +12,6%\n\n\nEM 2026 ATÉ AGORA\n\n\n+4,9%\nAtividade econômica (IBCR), jan a ago/2026\ncontra o mesmo período de 2025 · NE +2,8%\n\n\n+13,9%\nProdução industrial (PIM-PF), jan a ago/2026\ncontra o mesmo período de 2025 · NE +0,9%\n\n\n+10,0%\nVendas do varejo (PMC), jan a ago/2026\ncontra o mesmo período de 2025 · BR +1,7%\n\n\n-0,4%\nVolume de serviços (PMS), jan a ago/2026\ncontra o mesmo período de 2025 · BR +1,7%\n\n\n+2.032\nSaldo de empregos formais, jan a fev/2026\nNovo CAGED · 2025: 2.358\n\n\nVer o panorama →\n\n\n\n\n\n\n( ATO II · AS CADEIAS )\nCadeias e nichos: a economia desmontada em elos, do insumo ao consumidor.\n\n\n\n\n\nLíder do Nordeste em 5 cadeias\nPernambuco tem o maior emprego formal do Nordeste em Automotivo; Fruticultura irrigada; Avicultura; Higiene, limpeza e cosméticos; Gesso (Polo Gesseiro do Araripe). Em outras 13 cadeias, fica em segundo.\nVer o panorama →\n\n\n\n\n\nAvicultura +64% em 10 anos\nEntre as cadeias com mais de 5 mil empregos, foi a que mais cresceu desde 2015, chegando a 17.051 vínculos formais em 2025.\nVer a cadeia →\n\n\n\n\n\n83% em três municípios\nFruticultura irrigada: Petrolina, Lagoa Grande, Custódia concentram a maior parte do emprego formal da cadeia.\nVer o mapa →\n\n\n\n\nConstrução civil\n\n99.860\n empregos\n\n\n\n+6%\n em 10 anos\n\n2º no NE\n\n\n\nIndústria de minerais não metálicos (PIM): -44% em 10 anos · NE -24%\n\n\n\nVendas de material de construção (PMC): -28% em 10 anos · BR +14%\n\n\n\nTurismo\n\n66.745\n empregos\n\n\n\n+12%\n em 10 anos\n\n2º no NE\n\n\n\nAtividades turísticas (PMS): +28% em 10 anos · BR +11%\n\n\n\nSucroenergético\n\n48.119\n empregos\n\n\n\n-9%\n em 10 anos\n\n2º no NE\n\n\n\nR$ 2,2 bi em produção (cana-de-açúcar, 2025)\n\n\n\nIndústria de alimentos (PIM): -12% em 10 anos · NE -3%\n\n\n\nLogística\n\n44.548\n empregos\n\n\n\n+35%\n em 10 anos\n\n2º no NE\n\n\n\nServiços de transporte (PMS): +20% em 10 anos\n\n\n\nTêxtil e confecções\n\n42.098\n empregos\n\n\n\n-8%\n em 10 anos\n\n2º no NE\n\n\n\nVendas de tecidos, vestuário e calçados (PMC): -35% em 10 anos · BR -17%\n\n\n\nAutomotivo\n\n41.266\n empregos\n\n\n\n+43%\n em 10 anos\n\n1º no NE\n\n\n\nIndústria de veículos (PIM): +18% em 2 anos · NE +16%\n\n\n\nVendas de veículos e peças (PMC): +64% em 10 anos · BR +28%\n\n\n\nFruticultura irrigada\n\n35.038\n empregos\n\n\n\n+52%\n em 10 anos\n\n1º no NE\n\n\n\nR$ 7,4 bi em produção (uva, banana, 2025)\n\n\n\nAvicultura\n\n17.051\n empregos\n\n\n\n+64%\n em 10 anos\n\n1º no NE\n\n\n\nR$ 2,2 bi em produção (ovos de galinha, 2025)\n\n\n\nTecnologia da informação\n\n16.505\n empregos\n\n\n\n+58%\n em 10 anos\n\n2º no NE\n\n\n\nServiços de informação e comunicação (PMS): +0% em 10 anos\n\n\n\nBebidas\n\n13.653\n empregos\n\n\n\n-9%\n em 10 anos\n\n2º no NE\n\n\n\nIndústria de bebidas (PIM): +18% em 10 anos · NE +11%\n\n\n\nAtacado de alimentos e bebidas (PMC): +5% em 2 anos · BR -9%\n\n\n\nMoveleiro\n\n13.229\n empregos\n\n\n\n-3%\n em 10 anos\n\n3º no NE\n\n\n\nVendas de móveis (PMC): -51% em 10 anos · BR -14%\n\n\n\nBovinocultura de leite e corte\n\n13.228\n empregos\n\n\n\n+34%\n em 10 anos\n\n2º no NE\n\n\n\nR$ 3,3 bi em produção (leite, 2025)\n\n\n\nPetróleo, química e plásticos\n\n12.746\n empregos\n\n\n\n+33%\n em 10 anos\n\n2º no NE\n\n\n\nIndústria química (PIM): -10% em 10 anos · NE -28%\n\n\n\nVendas de combustíveis (PMC): +18% em 10 anos · BR -9%\n\n\n\nHigiene, limpeza e cosméticos\n\n5.859\n empregos\n\n\n\n+17%\n em 10 anos\n\n1º no NE\n\n\n\nIndústria química (PIM): -10% em 10 anos · NE -28%\n\n\n\nVendas de farmácia e cosméticos (PMC): +59% em 10 anos · BR +68%\n\n\n\nAquicultura e pesca\n\n5.445\n empregos\n\n\n\n+60%\n em 10 anos\n\n2º no NE\n\n\n\nR$ 524 mi em produção (tilápia, camarão, 2025)\n\n\n\nGesso (Polo Gesseiro do Araripe)\n\n3.130\n empregos\n\n\n\n-35%\n em 10 anos\n\n1º no NE\n\n\n\nIndústria de minerais não metálicos (PIM): -44% em 10 anos · NE -24%\n\n\n\nSuinocultura\n\n2.653\n empregos\n\n\n\n+55%\n em 10 anos\n\n2º no NE\n\n\n\n865 mil cabeças (suíno, 2025)\n\n\n\nApicultura\n\n2.051\n empregos\n\n\n\n-30%\n em 10 anos\n\n2º no NE\n\n\n\nR$ 21 mi em produção (mel de abelha, 2025)\n\n\n\nAudiovisual\n\n1.546\n empregos\n\n\n\n-7%\n em 10 anos\n\n3º no NE\n\n\n\nServiços de informação e comunicação (PMS): +0% em 10 anos\n\n\n\nMandiocultura\n\n122\n empregos\n\n\n\n+30%\n em 10 anos\n\n4º no NE\n\n\n\nR$ 565 mi em produção (mandioca, 2025)\n\n\n\nOvinocaprinocultura\n\n111\n empregos\n\n\n\n-52%\n em 10 anos\n\n2º no NE\n\n\n\n7,1 milhões de cabeças (caprino e ovino, 2025)\n\n\n\nnicho\nComplexo da saúde\n\n142.925\n empregos\n\n\n\n+55%\n em 10 anos\n\n2º no NE\n\n\n\nVendas de farmácia e cosméticos (PMC): +59% em 10 anos · BR +68%\n\n\n\nnicho\nEconomia criativa\n\n31.385\n empregos\n\n\n\n+53%\n em 10 anos\n\n3º no NE\n\n\n\nnicho\nBioeconomia e energias renováveis\n\n13.787\n empregos\n\n\n\n+10%\n em 10 anos\n\n2º no NE\n\n\n\nnicho\nEconomia do mar\n\n6.002\n empregos\n\n\n\n-25%\n em 10 anos\n\n3º no NE\n\n\n\nnicho\nAgricultura familiar\n\n\nCenso Agropecuário 2017 e crédito do PRONAF por município\n\n\n\n\nFonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Posição no Nordeste pelo emprego formal da cadeia em \n2025\n. PIM-PF, PMC e PMS são atividades mais amplas que a cadeia, usadas como termo de comparação.\n\nVer todas as cadeias e nichos →\n\n\n\n\n\n\n( ATO III · O TERRITÓRIO )\nDoze regiões, 185 municípios. Cada um com seu raio-X.\n\n\nMetropolitana\n\n1.229.991\n empregos formais\n\n15 municípios · 3.730 mil habitantes\n\nMais especializada em \nHigiene, limpeza e cosméticos\n (QL 1,6)\n\n\n\nAgreste Central\n\n204.062\n empregos formais\n\n27 municípios · 1.152 mil habitantes\n\nMais especializada em \nAvicultura\n (QL 5,0)\n\n\n\nSertão do São Francisco\n\n122.131\n empregos formais\n\n7 municípios · 531 mil habitantes\n\nMais especializada em \nFruticultura irrigada\n (QL 13,9)\n\n\n\nMata Norte\n\n121.020\n empregos formais\n\n19 municípios · 585 mil habitantes\n\nMais especializada em \nSucroenergético\n (QL 5,6)\n\n\n\nMata Sul\n\n118.558\n empregos formais\n\n23 municípios · 648 mil habitantes\n\nMais especializada em \nSuinocultura\n (QL 10,9)\n\n\n\nAgreste Setentrional\n\n76.765\n empregos formais\n\n19 municípios · 542 mil habitantes\n\nMais especializada em \nTêxtil e confecções\n (QL 6,3)\n\n\n\nAgreste Meridional\n\n65.061\n empregos formais\n\n26 municípios · 669 mil habitantes\n\nMais especializada em \nBovinocultura de leite e corte\n (QL 5,5)\n\n\n\nSertão do Pajeú\n\n38.147\n empregos formais\n\n17 municípios · 329 mil habitantes\n\nMais especializada em \nAquicultura e pesca\n (QL 2,5)\n\n\n\nSertão do Araripe\n\n29.029\n empregos formais\n\n10 municípios · 319 mil habitantes\n\nMais especializada em \nGesso (Polo Gesseiro do Araripe)\n (QL 52,9)\n\n\n\nSertão do Moxotó\n\n28.785\n empregos formais\n\n7 municípios · 238 mil habitantes\n\nMais especializada em \nFruticultura irrigada\n (QL 2,2)\n\n\n\nSertão Central\n\n21.317\n empregos formais\n\n8 municípios · 177 mil habitantes\n\nMais especializada em \nConstrução civil\n (QL 1,9)\n\n\n\nSertão de Itaparica\n\n15.822\n empregos formais\n\n7 municípios · 137 mil habitantes\n\nMais especializada em \nFruticultura irrigada\n (QL 3,5)\n\n\n\nVer as regiões →\n \nVer os municípios →\n\n\n\n\n  ( ATO IV · OS ENCADEAMENTOS )\n  Quem compra de quem: as ligações para trás e para frente de cada setor.\n  A matriz insumo-produto nacional, regionalizada para Pernambuco, mostra quais setores puxam o resto da economia quando crescem e quais dependem de insumos de fora do estado.\n  Ver os encadeamentos →\n\n\n\n  ( BASTIDORES · O MÉTODO )\n  O mesmo caminho para cada número do site.\n  \n    01ColetarConsultas à Base dos Dados (RAIS, CAGED, CNPJ, ComexStat, INEP, SICONFI), ao SIDRA do IBGE e ao Banco Central.\n    02ClassificarCada cadeia é dividida em elos por códigos CNAE, conferidos contra o diretório oficial.\n    03MedirQuociente locacional, participação, concentração, shift-share e variações em 10, 5 e 2 anos.\n    04CompararPernambuco frente ao Nordeste e ao Brasil, e cada município frente à sua região.\n    05PublicarUm pipeline em R (targets e Quarto) refaz tudo a partir das fontes. O código é aberto.\n  \n  Ver a metodologia → O que os dados não mostram →\n\n\n\n  ( CORTINA )\n  Vamos conversar sobreo seu território.\n  Avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.\n  LinkedIn ↗ GitHub ↗ Lattes ↗"
   },
   {
     "objectID": "metodologia.html",

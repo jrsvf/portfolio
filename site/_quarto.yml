@@ -28,18 +28,18 @@ website:
         href: index.qmd
       - text: "Panorama"
         href: panorama.qmd
-      - text: "Cadeias"
+      - text: "Cadeias e nichos"
         href: cadeias/index.qmd
-      - text: "Regiões"
-        href: regioes.qmd
-      - text: "Municípios"
-        href: municipios.qmd
       - text: "Encadeamentos"
         href: encadeamentos.qmd
-      - text: "Lacunas"
-        href: lacunas.qmd
+      - text: "Municípios"
+        href: municipios.qmd
+      - text: "RDs"
+        href: regioes.qmd
       - text: "Metodologia"
         href: metodologia.qmd
+      - text: "Lacunas"
+        href: lacunas.qmd
     right:
       - icon: linkedin
         href: https://www.linkedin.com/in/jrsvf

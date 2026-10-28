@@ -264,6 +264,59 @@ if (nrow(cx) > 0) {
 } else htmltools::p("A cadeia não tem posições SH4 associadas (serviços não aparecem no ComexStat).")
 ```
 
+### Escoamento das exportações
+
+```{r}
+esc <- tryCatch(ler_base("escoamento_cad", ""), error = function(e) NULL)
+ev <- if (!is.null(esc) && NROW(esc$via)) esc$via %>% filter(cadeia_id == CADEIA, valor_fob > 0) else tibble()
+eu <- if (!is.null(esc) && NROW(esc$urf)) esc$urf %>% filter(cadeia_id == CADEIA, valor_fob > 0) else tibble()
+if (nrow(ev) > 0) {
+  ev <- ev %>% arrange(desc(valor_fob)); eu <- eu %>% head(8)
+  htmltools::tagList(
+    htmltools::p(paste0("Por onde saem os produtos da cadeia fabricados ou colhidos em Pernambuco, em ", ev$ano[1], ". ",
+      ev$via_nome[1], " responde por ", fmt_pct(ev$part[1]), " do valor exportado",
+      if (nrow(eu)) paste0(", e o principal ponto de saída é ", eu$nome[1], " (", fmt_pct(eu$part[1]), ")") else "", ".")),
+    htmltools::div(class = "rx-duas",
+      htmltools::div(htmltools::h4("Via de transporte (% do valor)"),
+        grafico_barras_h(ev %>% mutate(p = 100 * part), "via_nome", "p", cor = PALETA$principal, formato = ",.1f")),
+      if (nrow(eu)) htmltools::div(htmltools::h4("Ponto de saída (unidade da Receita, US$ milhões)"),
+        grafico_barras_h(eu %>% mutate(v = valor_fob / 1e6), "nome", "v", cor = PALETA$destaque, formato = ",.2f",
+                         hover = paste0(eu$nome, " · ", eu$via_nome, " · ", fmt_pct(eu$part))))),
+    rodape_fonte("ComexStat (MDIC), exportações por UF de produção da mercadoria, NCM, via e unidade da Receita de despacho, via Base dos Dados. O ponto de saída é onde a mercadoria foi despachada, que pode ficar fora de Pernambuco"))
+} else htmltools::p("Sem exportações registradas da cadeia com origem em Pernambuco no último ano completo.")
+```
+
+## Formação: cursos ligados à cadeia
+
+```{r}
+cc <- tryCatch(ler_base("cursos_cad", ""), error = function(e) NULL)
+cc <- if (NROW(cc)) cc %>% filter(cadeia_id == CADEIA) else tibble()
+if (nrow(cc) > 0) {
+  porc <- cc %>% group_by(Curso = nome_curso) %>%
+    summarise(Municípios = n_distinct(id_municipio), Cursos = sum(cursos), Vagas = sum(vagas, na.rm = TRUE),
+              Matrículas = sum(matriculas, na.rm = TRUE), Concluintes = sum(concluintes, na.rm = TRUE),
+              `% pública` = fmt_pct(sum(matriculas[rede == "Pública"], na.rm = TRUE) / max(1, sum(matriculas, na.rm = TRUE))), .groups = "drop") %>%
+    arrange(desc(Matrículas))
+  porm <- cc %>% group_by(id_municipio, municipio) %>%
+    summarise(matriculas = sum(matriculas, na.rm = TRUE), concluintes = sum(concluintes, na.rm = TRUE), cursos = sum(cursos), .groups = "drop") %>%
+    arrange(desc(matriculas))
+  htmltools::tagList(
+    cartoes(list(
+      list(rotulo = paste("Matrículas em", cc$ano[1]), valor = fmt_num(sum(cc$matriculas, na.rm = TRUE)),
+           nota = "Ensino superior presencial, cursos ligados à cadeia"),
+      list(rotulo = "Concluintes no ano", valor = fmt_num(sum(cc$concluintes, na.rm = TRUE))),
+      list(rotulo = "Municípios com oferta", valor = fmt_num(nrow(porm))),
+      list(rotulo = "Cursos distintos", valor = fmt_num(nrow(porc))))),
+    htmltools::div(class = "rx-duas",
+      htmltools::div(htmltools::h4("Onde estão as matrículas"),
+        grafico_barras_h(porm %>% head(12), "municipio", "matriculas", cor = PALETA$principal)),
+      htmltools::div(htmltools::h4("Cursos"),
+        htmltools::HTML(knitr::kable(porc %>% head(15) %>% mutate(across(c(Vagas, Matrículas, Concluintes), fmt_num)),
+                                     format = "html", table.attr = "class='table table-sm'")))),
+    rodape_fonte("INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram"))
+} else htmltools::p("Nenhum curso superior presencial em Pernambuco com nome ligado a esta cadeia.")
+```
+
 ## Encadeamentos com o resto da economia
 
 ```{r}

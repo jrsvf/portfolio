@@ -1,0 +1,26 @@
+cadeia_id,padrao,excluir
+avicultura,zootecnia|medicina veterinaria|agronomia|engenharia de alimentos|tecnologia de alimentos|agropecuaria|agronegocio|agroindustria,
+bovinocultura,zootecnia|medicina veterinaria|agronomia|laticinio|agropecuaria|agronegocio|agroindustria,
+ovinocaprinocultura,zootecnia|medicina veterinaria|agropecuaria|agronegocio,
+apicultura,zootecnia|agronomia|agroecologia|apicultura,
+aquicultura,engenharia de pesca|aquicultura|recursos pesqueiros|oceanografia|\bpesca\b,
+fruticultura,agronomia|fruticultura|irrigacao|agroindustria|agronegocio|engenharia agricola|viticultura|enologia,
+sucroenergetico,agronomia|engenharia quimica|bioenergia|biocombustive|sucroalcool|engenharia agricola,
+textil_confeccoes,\bmoda\b|textil|vestuario|confeccao,
+gesso,engenharia de minas|mineracao|geologia|engenharia de materiais,
+moveleiro,design de interiores|design de moveis|\bmoveis\b|engenharia florestal|madeira,
+construcao_civil,engenharia civil|arquitetura|construcao|edificacoes|agrimensura|engenharia sanitaria,
+automotivo,engenharia mecanica|automotiv|mecatronica|engenharia de producao|automacao|manutencao industrial|engenharia eletrica,
+petroquimica_plasticos,engenharia quimica|\bquimica\b|petroleo|engenharia de materiais|polimeros|processos quimicos,licenciatura
+ti_software,computacao|sistemas de informacao|engenharia de software|desenvolvimento de sistemas|redes de computadores|tecnologia da informacao|ciencia de dados|seguranca da informacao|jogos digitais|inteligencia artificial|sistemas para internet,
+audiovisual,cinema|audiovisual|jornalismo|radio e tv|radialismo|producao multimidia|fotografia|publicidade|comunicacao social,
+logistica,logistica|comercio exterior|engenharia de transportes|gestao portuaria|transporte,
+suinocultura,zootecnia|medicina veterinaria|agropecuaria|agronegocio,
+mandiocultura,agronomia|agroecologia|agropecuaria|tecnologia de alimentos|engenharia de alimentos,
+bebidas,engenharia de alimentos|tecnologia de alimentos|viticultura|enologia|engenharia quimica|bebidas|cervejaria,
+higiene_limpeza,engenharia quimica|\bquimica\b|farmacia|cosmetologia|estetica,licenciatura
+turismo,turismo|hotelaria|gastronomia|eventos|lazer,
+economia_criativa,design|arquitetura|\bartes\b|musica|teatro|danca|cinema|audiovisual|publicidade|jornalismo|\bmoda\b|jogos digitais|producao cultural|fotografia,
+economia_do_mar,oceanografia|engenharia de pesca|engenharia naval|nautica|gestao portuaria|aquicultura|recursos pesqueiros,
+bioeconomia_renovaveis,energias renovaveis|engenharia de energia|engenharia ambiental|gestao ambiental|engenharia florestal|biotecnologia|bioenergia|engenharia eletrica|sistemas eletricos|engenharia sanitaria,
+saude,medicina|enfermagem|farmacia|odontologia|fisioterapia|nutricao|biomedicina|fonoaudiologia|terapia ocupacional|radiologia|engenharia biomedica|gestao hospitalar|saude,veterinaria

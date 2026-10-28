@@ -68,10 +68,10 @@ va = [
   {setor: "Serviços", v: r.pib.va.serv}, {setor: "Administração pública", v: r.pib.va.adm}]
 vaT = d3.sum(va, d => d.v)
 html`<div class="rx-duas">
-  <div><h4>Composição do valor adicionado</h4>${Plot.plot({
+  <div><h4>Composição do valor adicionado${r.pib.va.ano ? " (" + r.pib.va.ano + ")" : ""}</h4>${vaT > 0 ? Plot.plot({
     height: 120, marginLeft: 10, y: {axis: null}, x: {label: null, tickFormat: d => (100 * d).toFixed(0) + "%", domain: [0, 1]},
     color: {domain: va.map(d => d.setor), range: ["#5B8C5A", AZUL, "#7FA7CF", "#C9D6E3"], legend: true},
-    marks: [Plot.barX(va.map(d => ({...d, p: d.v / vaT})), Plot.stackX({x: "p", y: () => "VA", fill: "setor", title: d => d.setor + ": " + pct(d.p)}))]})}
+    marks: [Plot.barX(va.map(d => ({...d, p: d.v / vaT})), Plot.stackX({x: "p", y: () => "VA", fill: "setor", title: d => d.setor + ": " + pct(d.p)}))]}) : html`<p class="aviso">Valor adicionado por setor indisponível.</p>`}
   <h4>Municípios com mais emprego formal</h4><table class="rx-tab"><tbody>
     ${r.maiores_mun.map(d => html`<tr><td><a href="municipios.html?m=${d.id}">${d.nome}</a></td><td>${nf(d.emprego)}</td></tr>`)}</tbody></table></div>
   <div><h4>Emprego formal por grande setor</h4>${Plot.plot({
