@@ -64,7 +64,7 @@ ql_exportacoes <- function(comex_pe, comex_cad) {
 # tabelas baixadas (lavouras, produtos de origem animal, aquicultura e
 # extrativismo/silvicultura), não só os da cadeia.
 ql_producao_agro <- function(sidra_bruto, sidra_cad) {
-  vp <- function(d) d %>% filter(variavel == "Valor da produção", !grepl("^Total", produto), !is.na(valor))
+  vp <- function(d) d %>% filter(variavel == "Valor da produção", !sidra_subtotais(produto), !is.na(valor))
   b <- vp(sidra_bruto); if (!nrow(b)) return(tibble())
   ult <- b %>% group_by(tabela) %>% summarise(ult = max(ano), .groups = "drop")
   b <- b %>% inner_join(ult, by = "tabela") %>% filter(ano == ult)

@@ -180,6 +180,7 @@ mapa_municipios <- function(malha, dados, valor, rotulo_valor, municipios, forma
                             paleta = "Blues", quebras = NULL) {
   m <- malha %>% left_join(dados, by = "id_municipio")
   v <- m[[valor]]
+  if (is.null(v) || !is.numeric(v) || !any(is.finite(v) & v > 0)) return(htmltools::p(class = "aviso", "Sem dados suficientes para o mapa."))
   if (is.null(quebras)) {
     pos <- v[!is.na(v) & v > 0]
     quebras <- unique(signif(stats::quantile(pos, c(0, .2, .4, .6, .8, 1), names = FALSE), 2))

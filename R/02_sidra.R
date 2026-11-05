@@ -121,7 +121,7 @@ sidra_por_cadeia <- function(sidra, cadeias_sidra) {
   if (nrow(sidra) == 0 || nrow(cadeias_sidra) == 0) return(tibble())
   pmap_dfr(cadeias_sidra, function(cadeia_id, tabela, padrao) {
     sidra %>%
-      filter(.data$tabela == !!tabela,
+      filter(.data$tabela == !!tabela, !sidra_subtotais(produto),
              str_detect(produto, regex(padrao, ignore_case = TRUE))) %>%
       mutate(cadeia_id = cadeia_id)
   })

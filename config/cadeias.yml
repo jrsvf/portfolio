@@ -552,3 +552,213 @@ cadeias:
         cnae: ["86402", "86500", "86607", "86909"]
     pim: ["3.21"]
     pmc: [103155]
+
+  # NICHOS PRODUTIVOS (grupo: nicho). Atividades específicas, algumas já
+  # contidas em cadeias maiores (uva na fruticultura, cachaça em bebidas,
+  # camarão na aquicultura), destacadas para leitura própria.
+  - id: cafeicultura
+    nome: Cafeicultura
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Café de altitude nos brejos do Agreste e do Sertão (Taquaritinga do
+      Norte, Vertentes, Triunfo), com torrefações locais e duas Indicações
+      Geográficas em estruturação.
+    elos:
+      - nome: Cultivo
+        cnae: ["0134200"]
+      - nome: Beneficiamento e torrefação
+        cnae: ["1081301", "1081302", "1082100"]
+      - nome: Comércio atacadista
+        cnae: ["4621400", "4637101"]
+    sh4: ["0901", "2101"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 5457, padrao: "^Café \\(em grão\\) Total"}
+    nota: >
+      Boa parte do café de altitude é produzida por agricultores familiares
+      sem vínculo formal; a produção do IBGE é a melhor medida do cultivo.
+
+  - id: vitivinicultura
+    nome: Vitivinicultura
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Uva de mesa e vinhos tropicais do Vale do São Francisco (Petrolina,
+      Lagoa Grande, Santa Maria da Boa Vista), com mais de uma safra por ano.
+    elos:
+      - nome: Cultivo de uva
+        cnae: ["0132600"]
+      - nome: Vinhos
+        cnae: ["1112700"]
+    sh4: ["0806", "2204"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 5457, padrao: "^Uva"}
+    nota: >
+      O cultivo de uva também entra na fruticultura irrigada; aqui ele aparece
+      junto com o vinho, para a leitura da vitivinicultura.
+
+  - id: cacau_chocolate
+    nome: Cacau e chocolate
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Cacau na Mata Sul e chocolates artesanais e industriais, com comércio
+      atacadista de chocolates e confeitos.
+    elos:
+      - nome: Cultivo de cacau
+        cnae: ["0135100"]
+      - nome: Chocolates e derivados
+        cnae: ["1093701"]
+      - nome: Comércio atacadista
+        cnae: ["4623105", "4637107"]
+    sh4: ["1801", "1803", "1804", "1805", "1806"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 5457, padrao: "^Cacau"}
+
+  - id: floricultura
+    nome: Flores e plantas ornamentais
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Flores tropicais e plantas ornamentais, sobretudo na Mata e nos brejos
+      do Agreste (Gravatá, Chã Grande), e o comércio de flores.
+    elos:
+      - nome: Cultivo
+        cnae: ["0122900"]
+      - nome: Comércio
+        cnae: ["4623106", "4789002"]
+    sh4: ["0602", "0603", "0604"]
+    sh4_auto: false
+    nota: >
+      O IBGE não divulga produção municipal de flores na PAM; o Censo
+      Agropecuário de 2017 é a referência mais recente.
+
+  - id: carcinicultura
+    nome: Carcinicultura
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Criação de camarão no litoral e no interior, com beneficiamento de
+      pescado. Parte da cadeia de aquicultura e pesca, destacada aqui.
+    elos:
+      - nome: Criação de camarão
+        cnae: ["0321302", "0322102"]
+      - nome: Beneficiamento
+        cnae: ["1020101", "1020102"]
+    sh4: ["0306", "1605"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 3940, padrao: "Camarão"}
+
+  - id: cachaca
+    nome: Cachaça e destilados
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Aguardente de cana e outros destilados, com engenhos e alambiques na Mata
+      e no Brejo e marcas premiadas no exterior. Parte da cadeia de bebidas.
+    elos:
+      - nome: Aguardente de cana
+        cnae: ["1111901"]
+      - nome: Outros destilados
+        cnae: ["1111902"]
+    sh4: ["2208"]
+    sh4_auto: false
+
+  - id: cajucultura
+    nome: Cajucultura
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Caju e castanha de caju no Sertão e no Agreste, em boa parte da
+      agricultura familiar.
+    elos:
+      - nome: Cultivo
+        cnae: ["0133403"]
+    sh4: ["0801"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 5457, padrao: "^Castanha de caju"}
+    nota: >
+      O beneficiamento da castanha não tem código próprio na CNAE e fica fora;
+      a posição 0801 do comércio exterior junta castanha de caju, coco e
+      castanha-do-pará.
+
+  - id: coco
+    nome: Coco-da-baía
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Coqueirais do litoral e do Vale do São Francisco, para coco verde e
+      coco seco.
+    elos:
+      - nome: Cultivo
+        cnae: ["0133405"]
+    sh4: ["0801"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 5457, padrao: "^Coco-da-baía"}
+
+  - id: cotonicultura
+    nome: Algodão
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Algodão herbáceo, com destaque para o algodão agroecológico da agricultura
+      familiar no Sertão, e a fiação.
+    elos:
+      - nome: Cultivo
+        cnae: ["0112101"]
+      - nome: Preparação e fiação
+        cnae: ["1311100"]
+    sh4: ["5201", "5203", "5205"]
+    sh4_auto: false
+    sidra:
+      - {tabela: 5457, padrao: "^Algodão"}
+
+  - id: calcados
+    nome: Calçados e artefatos de couro
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Curtumes, fábricas de calçados e de artefatos de couro, com o comércio
+      de calçados.
+    elos:
+      - nome: Curtimento
+        cnae: ["1510600"]
+      - nome: Calçados
+        cnae: ["1531901", "1531902", "1533500", "1539400", "1540800"]
+      - nome: Comércio
+        cnae: ["4643501", "4782201"]
+    sh4: ["4107", "6401", "6402", "6403", "6404", "6405", "6406"]
+    sh4_auto: false
+
+  - id: ceramica_vermelha
+    nome: Cerâmica vermelha
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Olarias de tijolos e telhas, com polos no Agreste e na Mata, ligadas à
+      construção civil e grandes consumidoras de lenha.
+    elos:
+      - nome: Tijolos, telhas e artefatos
+        cnae: ["2342702"]
+    sh4: ["6904", "6905"]
+    sh4_auto: false
+
+  - id: joias
+    nome: Joias e bijuterias
+    grupo: nicho
+    macrossetor: Nichos produtivos
+    descricao: >
+      Joalheria, ourivesaria e bijuterias, com o comércio atacadista do setor.
+    elos:
+      - nome: Fabricação
+        cnae: ["32116", "3212400"]
+      - nome: Comércio atacadista
+        cnae: ["4649410"]
+    sh4: ["7113", "7114", "7117"]
+    sh4_auto: false

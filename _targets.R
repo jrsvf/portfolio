@@ -61,9 +61,16 @@ list(
   tar_target(bq_caged_pe,   { bq_esquema; extrair_caged_uf(projeto, uf, anos$caged_inicio) }),
   tar_target(bq_comex_pe,   { bq_esquema; extrair_comex_uf(projeto, uf, anos$comex_inicio) }),
   tar_target(bq_pib_pop,    { bq_esquema; extrair_pib_pop_uf(projeto, uf) }),
+  # só as tabelas importam: mudar o padrão de um produto em cadeias.yml não refaz o download
+  tar_target(sidra_tabelas, sort(unique(cad$sidra$tabela))),
   tar_target(sidra_bruto,
-             extrair_sidra(cad$sidra$tabela, anos$sidra_inicio,
-                           uf_codigo, anos$sidra_fim)),
+             tryCatch(extrair_sidra(sidra_tabelas, anos$sidra_inicio, uf_codigo, anos$sidra_fim), error = function(e) {
+               # API do IBGE fora do ar: mantém a base da última atualização em vez de parar o painel
+               anterior <- file.path("_targets", "objects", "sidra_bruto")
+               if (!file.exists(anterior)) stop(e)
+               msg("SIDRA indisponível (", conditionMessage(e), "). Mantida a base anterior.")
+               readRDS(anterior)
+             })),
   tar_target(malha, obter_malha(uf_codigo)),
   tar_target(ipca, tryCatch(extrair_ipca(), error = function(e) { msg("IPCA indisponível: ", conditionMessage(e)); NULL })),
   tar_target(rd, ler_rd()),
@@ -220,6 +227,13 @@ list(
   tar_target(ql_mult, montar_ql_multiplo(locais_cadeia, ql_emp, ql_exp, ql_prod)),
   tar_target(ql_vab, ql_vab_municipios(bq_pib_pop)),
 
+  # --------------------------------------- vocações: todas as subclasses CNAE
+  tar_target(vocacoes, montar_vocacoes(bq_rais_pe, bq_cnae, cad$elos, cad$meta, rd, bq_municipios, par_ind$emprego_minimo)),
+  tar_target(saida_vocacoes, exportar_vocacoes(vocacoes), format = "file"),
+  tar_target(saida_retrato, retrato_vocacoes(locais_cadeia, cad$meta, malha, rd), format = "file"),
+  tar_target(producao_terr, montar_producao(sidra_bruto, rd)),
+  tar_target(saida_producao, exportar_producao(producao_terr), format = "file"),
+
   # --------------------------------------------------------- lacunas/destaques
   tar_target(ultimos_anos, tibble::tibble(
     fonte = c("RAIS", "Novo CAGED", "ComexStat", "PIB dos Municípios", "Produção agropecuária (SIDRA)"),
@@ -268,10 +282,10 @@ list(
   tar_target(saida_diag, exportar_diag(locais_cadeia, cad$meta, bq_municipios, malha, rd), format = "file"),
   tar_target(saida_csv, exportar_csv(list(
     emprego_cadeia_municipio = locais_cadeia %>% left_join(bq_municipios, by = "id_municipio"),
-    emprego_elo_municipio    = locais_elo %>% left_join(bq_municipios, by = "id_municipio"),
+    emprego_elo_municipio    = locais_elo %>% filter(ano >= max(ano) - 10) %>% left_join(bq_municipios, by = "id_municipio"),
     caged_cadeia             = caged_cad,
     comex_cadeia             = comex_cad,
-    producao_ibge_cadeia     = sidra_cad,
+    producao_ibge_cadeia     = sidra_cad %>% filter(ano >= max(ano) - 10) %>% select(-any_of(c("valor_txt", "situacao"))),
     lacunas                  = lacunas
   )), format = "file"),
   tar_target(arq_modelo_cadeia, "site/_modelos/cadeia.qmd", format = "file"),

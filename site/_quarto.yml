@@ -8,6 +8,7 @@ project:
     - "!estudos.qmd"
     - "!paineis.qmd"
   resources:
+    - "imagens/*.pdf"
     - "dados/*.csv"
     - "dados/*.json"
     - "dados/*.geojson"
@@ -29,17 +30,25 @@ website:
       - text: "Panorama"
         href: panorama.qmd
       - text: "Cadeias e nichos"
-        href: cadeias/index.qmd
-      - text: "Encadeamentos"
-        href: encadeamentos.qmd
-      - text: "Municípios"
-        href: municipios.qmd
-      - text: "RDs"
-        href: regioes.qmd
-      - text: "Metodologia"
-        href: metodologia.qmd
-      - text: "Lacunas"
-        href: lacunas.qmd
+        menu:
+          - text: "Todas as cadeias e nichos"
+            href: cadeias/index.qmd
+          - text: "Encadeamentos (insumo-produto)"
+            href: encadeamentos.qmd
+      - text: "Território"
+        menu:
+          - text: "Municípios"
+            href: municipios.qmd
+          - text: "Regiões de Desenvolvimento"
+            href: regioes.qmd
+          - text: "Vocações (todas as atividades)"
+            href: vocacoes.qmd
+      - text: "Sobre os dados"
+        menu:
+          - text: "Metodologia"
+            href: metodologia.qmd
+          - text: "Lacunas"
+            href: lacunas.qmd
     right:
       - icon: linkedin
         href: https://www.linkedin.com/in/jrsvf

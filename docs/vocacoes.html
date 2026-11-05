@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Todas as atividades econômicas da CNAE em cada município e Região de Desenvolvimento: onde cada atividade está e em que cada território é especializado.">
+
+<title>Vocações – José Roberto Verçosa</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./imagens/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e930a289ccdad4df0d6ebb62afc479b1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nenhum resultado",
+    "search-matching-documents-text": "documentos correspondentes",
+    "search-copy-link-title": "Copiar link para a busca",
+    "search-hide-matches-text": "Esconder correspondências adicionais",
+    "search-more-match-text": "mais correspondência neste documento",
+    "search-more-matches-text": "mais correspondências neste documento",
+    "search-clear-button-title": "Limpar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Procurar"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">José Roberto Verçosa</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Procurar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Alternar de navegação" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Início</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./panorama.html"> 
+<span class="menu-text">Panorama</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-cadeias-e-nichos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Cadeias e nichos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-cadeias-e-nichos">    
+        <li>
+    <a class="dropdown-item" href="./cadeias/index.html">
+ <span class="dropdown-text">Todas as cadeias e nichos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./encadeamentos.html">
+ <span class="dropdown-text">Encadeamentos (insumo-produto)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-território" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Território</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-território">    
+        <li>
+    <a class="dropdown-item" href="./municipios.html">
+ <span class="dropdown-text">Municípios</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./regioes.html">
+ <span class="dropdown-text">Regiões de Desenvolvimento</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vocacoes.html">
+ <span class="dropdown-text">Vocações (todas as atividades)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-sobre-os-dados" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Sobre os dados</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-sobre-os-dados">    
+        <li>
+    <a class="dropdown-item" href="./metodologia.html">
+ <span class="dropdown-text">Metodologia</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./lacunas.html">
+ <span class="dropdown-text">Lacunas</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/jrsvf"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jrsvf"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Vocações</h1>
+</div>
+
+<div>
+  <div class="description">
+    Todas as atividades econômicas da CNAE em cada município e Região de Desenvolvimento: onde cada atividade está e em que cada território é especializado.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta column-page">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>As cadeias e nichos do painel cobrem as atividades mais importantes do estado, mas não todas. Esta página mede <strong>todas as subclasses da CNAE com emprego formal em Pernambuco</strong>, para responder duas perguntas: em que um município ou região é especializado, e onde está uma atividade qualquer. A medida é o quociente locacional (QL) do emprego formal: o peso da atividade no território dividido pelo peso dela no estado. Acima de 1, o território é especializado.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="imagens/retrato_vocacoes.png" class="retrato img-fluid figure-img"></p>
+<figcaption>Retrato das vocações de Pernambuco: cada município pela cadeia ou nicho em que é mais especializado.</figcaption>
+</figure>
+</div>
+<p class="fonte">
+Baixe o retrato em <a href="imagens/retrato_vocacoes.png" download="">PNG</a> ou <a href="imagens/retrato_vocacoes.pdf" download="">PDF</a>.
+</p>
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="15" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 14;"><span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"dados/vocacoes.json"</span>)<span class="op">.</span><span class="fu">json</span>()</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>geo <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"dados/malha_pe.geojson"</span>)<span class="op">.</span><span class="fu">json</span>()</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>PROD <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"dados/producao.json"</span>)<span class="op">.</span><span class="fu">json</span>()</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>tabProd <span class="op">=</span> (linhas<span class="op">,</span> n <span class="op">=</span> <span class="dv">15</span><span class="op">,</span> total <span class="op">=</span> <span class="kw">null</span>) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>linhas <span class="op">||</span> <span class="op">!</span>linhas<span class="op">.</span><span class="at">length</span>) <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;p&gt;Sem produção agropecuária registrada pelo IBGE.&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> PR <span class="op">=</span> PROD<span class="op">.</span><span class="at">produtos</span><span class="op">;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> linhas<span class="op">.</span><span class="fu">map</span>(([p<span class="op">,</span> v<span class="op">,</span> q<span class="op">,</span> ql]) <span class="kw">=&gt;</span> ({p<span class="op">,</span> <span class="dt">nome</span><span class="op">:</span> PR<span class="op">.</span><span class="at">nome</span>[p]<span class="op">,</span> <span class="dt">grupo</span><span class="op">:</span> PR<span class="op">.</span><span class="at">grupo</span>[p]<span class="op">,</span> v<span class="op">,</span> q<span class="op">,</span> ql<span class="op">,</span> <span class="dt">un</span><span class="op">:</span> PR<span class="op">.</span><span class="at">unidade</span>[p]<span class="op">,</span> <span class="dt">part</span><span class="op">:</span> PR<span class="op">.</span><span class="at">valor</span>[p] <span class="op">?</span> v <span class="op">/</span> PR<span class="op">.</span><span class="at">valor</span>[p] <span class="op">:</span> <span class="kw">null</span>}))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">v</span> <span class="op">&gt;</span> <span class="dv">0</span>)<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> b<span class="op">.</span><span class="at">v</span> <span class="op">-</span> a<span class="op">.</span><span class="at">v</span>)<span class="op">;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> tot <span class="op">=</span> d3<span class="op">.</span><span class="fu">sum</span>(t<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">v</span>)<span class="op">;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;p&gt;Valor da produção agropecuária e da aquicultura: &lt;b&gt;</span><span class="sc">${</span><span class="fu">reaisMil</span>(tot)<span class="sc">}</span><span class="vs">&lt;/b&gt;</span><span class="sc">${</span>total <span class="op">?</span> <span class="fu">html</span><span class="vs">`, </span><span class="sc">${</span>(<span class="dv">100</span> <span class="op">*</span> tot <span class="op">/</span> total)<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"pt-BR"</span><span class="op">,</span> {<span class="dt">maximumFractionDigits</span><span class="op">:</span> <span class="dv">1</span>})<span class="sc">}</span><span class="vs">% do estado`</span> <span class="op">:</span> <span class="st">""</span><span class="sc">}</span><span class="vs"> (IBGE </span><span class="sc">${</span>PROD<span class="op">.</span><span class="at">anos</span>[PROD<span class="op">.</span><span class="at">anos</span><span class="op">.</span><span class="at">length</span> <span class="op">-</span> <span class="dv">1</span>]<span class="sc">}</span><span class="vs">).&lt;/p&gt;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;table class="rx-tab"&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Produto&lt;/th&gt;&lt;th&gt;Valor&lt;/th&gt;&lt;th&gt;Quantidade&lt;/th&gt;&lt;th&gt;QL do valor&lt;/th&gt;&lt;th&gt;% de PE&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>t<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> n)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`&lt;tr class="</span><span class="sc">${</span>d<span class="op">.</span><span class="at">ql</span> <span class="op">&gt;=</span> <span class="dv">1</span> <span class="op">?</span> <span class="st">"rx-esp"</span> <span class="op">:</span> <span class="st">""</span><span class="sc">}</span><span class="vs">"&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">nome</span><span class="sc">}</span><span class="vs"> &lt;span class="voc-cod"&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">grupo</span><span class="sc">}</span><span class="vs">&lt;/span&gt;&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span><span class="fu">reaisMil</span>(d<span class="op">.</span><span class="at">v</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">q</span> <span class="op">?</span> d<span class="op">.</span><span class="at">q</span><span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"pt-BR"</span>) <span class="op">+</span> <span class="st">" "</span> <span class="op">+</span> (d<span class="op">.</span><span class="at">un</span> <span class="op">??</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">toLowerCase</span>() <span class="op">:</span> <span class="st">"–"</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">ql</span> <span class="op">==</span> <span class="kw">null</span> <span class="op">?</span> <span class="st">"–"</span> <span class="op">:</span> d<span class="op">.</span><span class="at">ql</span><span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"pt-BR"</span><span class="op">,</span> {<span class="dt">maximumFractionDigits</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">minimumFractionDigits</span><span class="op">:</span> <span class="dv">1</span>})<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">part</span> <span class="op">==</span> <span class="kw">null</span> <span class="op">?</span> <span class="st">"–"</span> <span class="op">:</span> (<span class="dv">100</span> <span class="op">*</span> d<span class="op">.</span><span class="at">part</span>)<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"pt-BR"</span><span class="op">,</span> {<span class="dt">maximumFractionDigits</span><span class="op">:</span> <span class="dv">1</span>}) <span class="op">+</span> <span class="st">"%"</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;/tr&gt;`</span>)<span class="sc">}</span><span class="vs">&lt;/tbody&gt;&lt;/table&gt;`</span><span class="op">;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>reaisMil <span class="op">=</span> v <span class="kw">=&gt;</span> v <span class="op">==</span> <span class="kw">null</span> <span class="op">?</span> <span class="st">"–"</span> <span class="op">:</span> v <span class="op">&gt;=</span> <span class="fl">1e6</span> <span class="op">?</span> <span class="st">"R$ "</span> <span class="op">+</span> (v <span class="op">/</span> <span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"pt-BR"</span><span class="op">,</span> {<span class="dt">maximumFractionDigits</span><span class="op">:</span> <span class="dv">2</span>}) <span class="op">+</span> <span class="st">" bi"</span> <span class="op">:</span> v <span class="op">&gt;=</span> <span class="fl">1e3</span> <span class="op">?</span> <span class="st">"R$ "</span> <span class="op">+</span> (v <span class="op">/</span> <span class="fl">1e3</span>)<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"pt-BR"</span><span class="op">,</span> {<span class="dt">maximumFractionDigits</span><span class="op">:</span> <span class="dv">1</span>}) <span class="op">+</span> <span class="st">" mi"</span> <span class="op">:</span> <span class="st">"R$ "</span> <span class="op">+</span> v<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"pt-BR"</span>) <span class="op">+</span> <span class="st">" mil"</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>nf <span class="op">=</span> (x<span class="op">,</span> d <span class="op">=</span> <span class="dv">0</span>) <span class="kw">=&gt;</span> x <span class="op">==</span> <span class="kw">null</span> <span class="op">||</span> <span class="pp">isNaN</span>(x) <span class="op">?</span> <span class="st">"–"</span> <span class="op">:</span> x<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"pt-BR"</span><span class="op">,</span> {<span class="dt">maximumFractionDigits</span><span class="op">:</span> d<span class="op">,</span> <span class="dt">minimumFractionDigits</span><span class="op">:</span> d})</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> V<span class="op">.</span><span class="at">atividades</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>nomeMun <span class="op">=</span> <span class="kw">new</span> <span class="bu">Map</span>(geo<span class="op">.</span><span class="at">features</span><span class="op">.</span><span class="fu">map</span>(f <span class="kw">=&gt;</span> [f<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">id_municipio</span><span class="op">,</span> f<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">name_muni</span>]))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>listaMun <span class="op">=</span> [<span class="op">...</span><span class="bu">Object</span><span class="op">.</span><span class="fu">keys</span>(V<span class="op">.</span><span class="at">municipios</span>)]<span class="op">.</span><span class="fu">map</span>(id <span class="kw">=&gt;</span> ({id<span class="op">,</span> <span class="dt">nome</span><span class="op">:</span> nomeMun<span class="op">.</span><span class="fu">get</span>(id) <span class="op">??</span> id<span class="op">,</span> tipo<span class="op">:</span> <span class="st">"Município"</span>}))<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> a<span class="op">.</span><span class="at">nome</span><span class="op">.</span><span class="fu">localeCompare</span>(b<span class="op">.</span><span class="at">nome</span><span class="op">,</span> <span class="st">"pt-BR"</span>))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>listaRd <span class="op">=</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">keys</span>(V<span class="op">.</span><span class="at">regioes</span>)<span class="op">.</span><span class="fu">sort</span>()<span class="op">.</span><span class="fu">map</span>(r <span class="kw">=&gt;</span> ({<span class="dt">id</span><span class="op">:</span> r<span class="op">,</span> <span class="dt">nome</span><span class="op">:</span> r<span class="op">,</span> <span class="dt">tipo</span><span class="op">:</span> <span class="st">"Região de Desenvolvimento"</span>}))</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>tagCad <span class="op">=</span> i <span class="kw">=&gt;</span> (A<span class="op">.</span><span class="at">cadeias</span>[i] <span class="op">||</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">split</span>(<span class="st">";"</span>)<span class="op">.</span><span class="fu">filter</span>(<span class="bu">Boolean</span>)<span class="op">.</span><span class="fu">map</span>(c <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`&lt;a class="voc-cad" href="cadeias/</span><span class="sc">${</span>c<span class="sc">}</span><span class="vs">.html"&gt;</span><span class="sc">${</span>V<span class="op">.</span><span class="at">cadeias</span>[c] <span class="op">??</span> c<span class="sc">}</span><span class="vs">&lt;/a&gt;`</span>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-9" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-10" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-11" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Em que o território é especializado</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Onde a atividade está</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Onde o produto agropecuário está</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="45" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 44;"><span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>viewof terr <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>([<span class="op">...</span>listaRd<span class="op">,</span> <span class="op">...</span>listaMun]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Município ou RD"</span><span class="op">,</span> <span class="dt">format</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">tipo</span> <span class="op">===</span> <span class="st">"Município"</span> <span class="op">?</span> d<span class="op">.</span><span class="at">nome</span> <span class="op">:</span> <span class="st">"RD "</span> <span class="op">+</span> d<span class="op">.</span><span class="at">nome</span><span class="op">,</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> listaMun<span class="op">.</span><span class="fu">find</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">nome</span> <span class="op">===</span> <span class="st">"Caruaru"</span>)})</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>viewof soEsp <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">toggle</span>({<span class="dt">label</span><span class="op">:</span> <span class="st">"Só atividades com QL ≥ 1"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="kw">true</span>})</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>viewof ordem <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">"Empregos"</span><span class="op">,</span> <span class="st">"QL"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Ordenar por"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"Empregos"</span>})</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="52" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 51;"><span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> linhas <span class="op">=</span> (terr<span class="op">.</span><span class="at">tipo</span> <span class="op">===</span> <span class="st">"Município"</span> <span class="op">?</span> V<span class="op">.</span><span class="at">municipios</span> <span class="op">:</span> V<span class="op">.</span><span class="at">regioes</span>)[terr<span class="op">.</span><span class="at">id</span>] <span class="op">??</span> []<span class="op">;</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> tot <span class="op">=</span> d3<span class="op">.</span><span class="fu">sum</span>(linhas<span class="op">,</span> l <span class="kw">=&gt;</span> l[<span class="dv">1</span>])<span class="op">;</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> linhas<span class="op">.</span><span class="fu">map</span>(([i<span class="op">,</span> e<span class="op">,</span> s<span class="op">,</span> q]) <span class="kw">=&gt;</span> ({i<span class="op">,</span> <span class="dt">atividade</span><span class="op">:</span> A<span class="op">.</span><span class="at">nome</span>[i]<span class="op">,</span> <span class="dt">cod</span><span class="op">:</span> A<span class="op">.</span><span class="at">cod</span>[i]<span class="op">,</span> <span class="dt">emprego</span><span class="op">:</span> e<span class="op">,</span> <span class="dt">estab</span><span class="op">:</span> s<span class="op">,</span> <span class="dt">ql</span><span class="op">:</span> q<span class="op">,</span> <span class="dt">part</span><span class="op">:</span> e <span class="op">/</span> A<span class="op">.</span><span class="at">emprego</span>[i]}))</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">emprego</span> <span class="op">&gt;=</span> V<span class="op">.</span><span class="at">emprego_minimo</span> <span class="op">&amp;&amp;</span> (<span class="op">!</span>soEsp <span class="op">||</span> d<span class="op">.</span><span class="at">ql</span> <span class="op">&gt;=</span> <span class="dv">1</span>))<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> ordem <span class="op">===</span> <span class="st">"QL"</span> <span class="op">?</span> b<span class="op">.</span><span class="at">ql</span> <span class="op">-</span> a<span class="op">.</span><span class="at">ql</span> <span class="op">:</span> b<span class="op">.</span><span class="at">emprego</span> <span class="op">-</span> a<span class="op">.</span><span class="at">emprego</span>)<span class="op">;</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;p&gt;&lt;b&gt;</span><span class="sc">${</span>terr<span class="op">.</span><span class="at">tipo</span> <span class="op">===</span> <span class="st">"Município"</span> <span class="op">?</span> terr<span class="op">.</span><span class="at">nome</span> <span class="op">:</span> <span class="st">"RD "</span> <span class="op">+</span> terr<span class="op">.</span><span class="at">nome</span><span class="sc">}</span><span class="vs">&lt;/b&gt;: </span><span class="sc">${</span><span class="fu">nf</span>(tot)<span class="sc">}</span><span class="vs"> empregos formais em </span><span class="sc">${</span><span class="fu">nf</span>(linhas<span class="op">.</span><span class="at">length</span>)<span class="sc">}</span><span class="vs"> atividades (RAIS </span><span class="sc">${</span>V<span class="op">.</span><span class="at">ano</span><span class="sc">}</span><span class="vs">). </span><span class="sc">${</span><span class="fu">nf</span>(t<span class="op">.</span><span class="at">length</span>)<span class="sc">}</span><span class="vs"> atividades </span><span class="sc">${</span>soEsp <span class="op">?</span> <span class="st">"com QL ≥ 1 e"</span> <span class="op">:</span> <span class="st">"com"</span><span class="sc">}</span><span class="vs"> pelo menos </span><span class="sc">${</span>V<span class="op">.</span><span class="at">emprego_minimo</span><span class="sc">}</span><span class="vs"> empregos.&lt;/p&gt;</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div class="voc-tab"&gt;&lt;table class="table table-sm"&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Atividade (subclasse CNAE)&lt;/th&gt;&lt;th&gt;Empregos&lt;/th&gt;&lt;th&gt;Estab.&lt;/th&gt;&lt;th&gt;QL&lt;/th&gt;&lt;th&gt;% de PE&lt;/th&gt;&lt;th&gt;Cadeia ou nicho&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>t<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">150</span>)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`&lt;tr&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">atividade</span><span class="sc">}</span><span class="vs"> &lt;span class="voc-cod"&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">cod</span><span class="sc">}</span><span class="vs">&lt;/span&gt;&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span><span class="fu">nf</span>(d<span class="op">.</span><span class="at">emprego</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span><span class="fu">nf</span>(d<span class="op">.</span><span class="at">estab</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;td&gt;&lt;b&gt;</span><span class="sc">${</span><span class="fu">nf</span>(d<span class="op">.</span><span class="at">ql</span><span class="op">,</span> <span class="dv">1</span>)<span class="sc">}</span><span class="vs">&lt;/b&gt;&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span><span class="fu">nf</span>(<span class="dv">100</span> <span class="op">*</span> d<span class="op">.</span><span class="at">part</span><span class="op">,</span> <span class="dv">1</span>)<span class="sc">}</span><span class="vs">%&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span><span class="fu">tagCad</span>(d<span class="op">.</span><span class="at">i</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;/tr&gt;`</span>)<span class="sc">}</span><span class="vs">&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>t<span class="op">.</span><span class="at">length</span> <span class="op">&gt;</span> <span class="dv">150</span> <span class="op">?</span> <span class="fu">html</span><span class="vs">`&lt;p class="fonte"&gt;Mostrando as 150 primeiras de </span><span class="sc">${</span><span class="fu">nf</span>(t<span class="op">.</span><span class="at">length</span>)<span class="sc">}</span><span class="vs">.&lt;/p&gt;`</span> <span class="op">:</span> <span class="st">""</span><span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb4" data-startfrom="67" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 66;"><span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;h4&gt;Produção agropecuária&lt;/h4&gt;</span><span class="sc">${</span><span class="fu">tabProd</span>(((terr<span class="op">.</span><span class="at">tipo</span> <span class="op">===</span> <span class="st">"Município"</span> <span class="op">?</span> PROD<span class="op">.</span><span class="at">municipios</span> <span class="op">:</span> PROD<span class="op">.</span><span class="at">regioes</span>) <span class="op">??</span> {})[terr<span class="op">.</span><span class="at">id</span>]<span class="op">,</span> <span class="dv">20</span><span class="op">,</span> d3<span class="op">.</span><span class="fu">sum</span>(PROD<span class="op">.</span><span class="at">produtos</span><span class="op">.</span><span class="at">valor</span>))<span class="sc">}</span><span class="vs">`</span></span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<p class="fonte">
+Fonte: IBGE, Produção Agrícola Municipal, Pesquisa da Pecuária Municipal e produção da aquicultura, via SIDRA. QL do valor: peso do produto no valor agropecuário do território dividido pelo peso no estado; só com R$ 50 mil ou mais. Rebanhos aparecem em cabeças, sem valor nem QL.
+</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="77" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 76;"><span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>opcoes <span class="op">=</span> A<span class="op">.</span><span class="at">nome</span><span class="op">.</span><span class="fu">map</span>((n<span class="op">,</span> i) <span class="kw">=&gt;</span> ({i<span class="op">,</span> <span class="dt">nome</span><span class="op">:</span> n<span class="op">,</span> <span class="dt">cod</span><span class="op">:</span> A<span class="op">.</span><span class="at">cod</span>[i]<span class="op">,</span> <span class="dt">emprego</span><span class="op">:</span> A<span class="op">.</span><span class="at">emprego</span>[i]<span class="op">,</span> <span class="dt">n_mun</span><span class="op">:</span> A<span class="op">.</span><span class="at">n_mun</span>[i]<span class="op">,</span> <span class="dt">secao</span><span class="op">:</span> A<span class="op">.</span><span class="at">nome_secao</span>[i]}))</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>viewof busca <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">search</span>(opcoes<span class="op">,</span> {<span class="dt">placeholder</span><span class="op">:</span> <span class="st">"Busque uma atividade: café, uva, cerâmica, software, hotel..."</span><span class="op">,</span> <span class="dt">columns</span><span class="op">:</span> [<span class="st">"nome"</span><span class="op">,</span> <span class="st">"cod"</span><span class="op">,</span> <span class="st">"secao"</span>]})</span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>viewof escolha <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(busca<span class="op">,</span> {<span class="dt">columns</span><span class="op">:</span> [<span class="st">"nome"</span><span class="op">,</span> <span class="st">"cod"</span><span class="op">,</span> <span class="st">"emprego"</span><span class="op">,</span> <span class="st">"n_mun"</span>]<span class="op">,</span> <span class="dt">header</span><span class="op">:</span> {<span class="dt">nome</span><span class="op">:</span> <span class="st">"Atividade"</span><span class="op">,</span> <span class="dt">cod</span><span class="op">:</span> <span class="st">"Subclasse"</span><span class="op">,</span> <span class="dt">emprego</span><span class="op">:</span> <span class="st">"Empregos em PE"</span><span class="op">,</span> <span class="dt">n_mun</span><span class="op">:</span> <span class="st">"Municípios"</span>}<span class="op">,</span></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> {<span class="dt">emprego</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="fu">nf</span>(d)}<span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">required</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">rows</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> opcoes<span class="op">.</span><span class="fu">find</span>(d <span class="kw">=&gt;</span> <span class="ss">/cultivo de café/i</span><span class="op">.</span><span class="fu">test</span>(d<span class="op">.</span><span class="at">nome</span>)) <span class="op">??</span> opcoes[<span class="dv">0</span>]})</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-5-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-5-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-5-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb6" data-startfrom="84" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 83;"><span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> sel <span class="op">=</span> escolha <span class="op">??</span> opcoes[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> por <span class="op">=</span> <span class="kw">new</span> <span class="bu">Map</span>()<span class="op">;</span></span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> [id<span class="op">,</span> linhas] <span class="kw">of</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">entries</span>(V<span class="op">.</span><span class="at">municipios</span>)) <span class="cf">for</span> (<span class="kw">const</span> l <span class="kw">of</span> linhas) <span class="cf">if</span> (l[<span class="dv">0</span>] <span class="op">===</span> sel<span class="op">.</span><span class="at">i</span>) por<span class="op">.</span><span class="fu">set</span>(id<span class="op">,</span> {<span class="dt">emprego</span><span class="op">:</span> l[<span class="dv">1</span>]<span class="op">,</span> <span class="dt">estab</span><span class="op">:</span> l[<span class="dv">2</span>]<span class="op">,</span> <span class="dt">ql</span><span class="op">:</span> l[<span class="dv">3</span>]})<span class="op">;</span></span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> feats <span class="op">=</span> geo<span class="op">.</span><span class="at">features</span><span class="op">.</span><span class="fu">map</span>(f <span class="kw">=&gt;</span> ({<span class="op">...</span>f<span class="op">,</span> <span class="dt">properties</span><span class="op">:</span> {<span class="op">...</span>f<span class="op">.</span><span class="at">properties</span><span class="op">,</span> <span class="op">...</span>(por<span class="op">.</span><span class="fu">get</span>(f<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">id_municipio</span>) <span class="op">??</span> {})}}))<span class="op">;</span></span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> faixa <span class="op">=</span> q <span class="kw">=&gt;</span> q <span class="op">==</span> <span class="kw">null</span> <span class="op">?</span> <span class="st">"Sem emprego formal"</span> <span class="op">:</span> q <span class="op">&lt;</span> <span class="dv">1</span> <span class="op">?</span> <span class="st">"Abaixo de 1"</span> <span class="op">:</span> q <span class="op">&lt;</span> <span class="dv">2</span> <span class="op">?</span> <span class="st">"1 a 2"</span> <span class="op">:</span> q <span class="op">&lt;</span> <span class="dv">5</span> <span class="op">?</span> <span class="st">"2 a 5"</span> <span class="op">:</span> <span class="st">"5 ou mais"</span><span class="op">;</span></span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> dom <span class="op">=</span> [<span class="st">"Sem emprego formal"</span><span class="op">,</span> <span class="st">"Abaixo de 1"</span><span class="op">,</span> <span class="st">"1 a 2"</span><span class="op">,</span> <span class="st">"2 a 5"</span><span class="op">,</span> <span class="st">"5 ou mais"</span>]<span class="op">;</span></span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mapa <span class="op">=</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>    <span class="dt">projection</span><span class="op">:</span> {<span class="dt">type</span><span class="op">:</span> <span class="st">"mercator"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> {<span class="dt">type</span><span class="op">:</span> <span class="st">"FeatureCollection"</span><span class="op">,</span> <span class="dt">features</span><span class="op">:</span> feats}}<span class="op">,</span> <span class="dt">width</span><span class="op">:</span> <span class="dv">1000</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">340</span><span class="op">,</span></span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>    <span class="dt">color</span><span class="op">:</span> {<span class="dt">domain</span><span class="op">:</span> dom<span class="op">,</span> <span class="dt">range</span><span class="op">:</span> [<span class="st">"#EEF1F4"</span><span class="op">,</span> <span class="st">"#C9DCEC"</span><span class="op">,</span> <span class="st">"#7FB1D8"</span><span class="op">,</span> <span class="st">"#2E78B7"</span><span class="op">,</span> <span class="st">"#023471"</span>]<span class="op">,</span> <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [Plot<span class="op">.</span><span class="fu">geo</span>(feats<span class="op">,</span> {<span class="dt">fill</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="fu">faixa</span>(d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">emprego</span> <span class="op">&gt;=</span> V<span class="op">.</span><span class="at">emprego_minimo</span> <span class="op">?</span> d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">ql</span> <span class="op">:</span> (d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">emprego</span> <span class="op">?</span> <span class="fl">0.5</span> <span class="op">:</span> <span class="kw">null</span>))<span class="op">,</span></span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a>      <span class="dt">stroke</span><span class="op">:</span> <span class="st">"white"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.4</span><span class="op">,</span></span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a>      <span class="dt">title</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="vs">`</span><span class="sc">${</span>d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">name_muni</span><span class="sc">}\n${</span>d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">emprego</span> <span class="op">?</span> <span class="fu">nf</span>(d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">emprego</span>) <span class="op">+</span> <span class="st">" empregos · QL "</span> <span class="op">+</span> <span class="fu">nf</span>(d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">ql</span><span class="op">,</span> <span class="dv">1</span>) <span class="op">:</span> <span class="st">"sem emprego formal"</span><span class="sc">}</span><span class="vs">`</span>})]})<span class="op">;</span></span>
+<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> [<span class="op">...</span>por<span class="op">.</span><span class="fu">entries</span>()]<span class="op">.</span><span class="fu">map</span>(([id<span class="op">,</span> d]) <span class="kw">=&gt;</span> ({<span class="dt">mun</span><span class="op">:</span> nomeMun<span class="op">.</span><span class="fu">get</span>(id) <span class="op">??</span> id<span class="op">,</span> <span class="op">...</span>d}))<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> b<span class="op">.</span><span class="at">emprego</span> <span class="op">-</span> a<span class="op">.</span><span class="at">emprego</span>)<span class="op">;</span></span>
+<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;h4&gt;</span><span class="sc">${</span>sel<span class="op">.</span><span class="at">nome</span><span class="sc">}</span><span class="vs"> &lt;span class="voc-cod"&gt;</span><span class="sc">${</span>sel<span class="op">.</span><span class="at">cod</span><span class="sc">}</span><span class="vs">&lt;/span&gt;&lt;/h4&gt;</span></span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;p&gt;</span><span class="sc">${</span><span class="fu">nf</span>(A<span class="op">.</span><span class="at">emprego</span>[sel<span class="op">.</span><span class="at">i</span>])<span class="sc">}</span><span class="vs"> empregos formais e </span><span class="sc">${</span><span class="fu">nf</span>(A<span class="op">.</span><span class="at">estab</span>[sel<span class="op">.</span><span class="at">i</span>])<span class="sc">}</span><span class="vs"> estabelecimentos em </span><span class="sc">${</span><span class="fu">nf</span>(A<span class="op">.</span><span class="at">n_mun</span>[sel<span class="op">.</span><span class="at">i</span>])<span class="sc">}</span><span class="vs"> municípios (RAIS </span><span class="sc">${</span>V<span class="op">.</span><span class="at">ano</span><span class="sc">}</span><span class="vs">). </span><span class="sc">${</span><span class="fu">tagCad</span>(sel<span class="op">.</span><span class="at">i</span>)<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="fu">html</span><span class="vs">`Faz parte de: </span><span class="sc">${</span><span class="fu">tagCad</span>(sel<span class="op">.</span><span class="at">i</span>)<span class="sc">}</span><span class="vs">`</span> <span class="op">:</span> <span class="st">""</span><span class="sc">}</span><span class="vs">&lt;/p&gt;</span></span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>mapa<span class="sc">}</span></span>
+<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div class="voc-tab"&gt;&lt;table class="table table-sm"&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Município&lt;/th&gt;&lt;th&gt;Empregos&lt;/th&gt;&lt;th&gt;Estab.&lt;/th&gt;&lt;th&gt;QL&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;</span></span>
+<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>t<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">40</span>)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`&lt;tr&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">mun</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span><span class="fu">nf</span>(d<span class="op">.</span><span class="at">emprego</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span><span class="fu">nf</span>(d<span class="op">.</span><span class="at">estab</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">emprego</span> <span class="op">&gt;=</span> V<span class="op">.</span><span class="at">emprego_minimo</span> <span class="op">?</span> <span class="fu">nf</span>(d<span class="op">.</span><span class="at">ql</span><span class="op">,</span> <span class="dv">1</span>) <span class="op">:</span> <span class="st">"–"</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;/tr&gt;`</span>)<span class="sc">}</span><span class="vs">&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;</span></span>
+<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;p class="fonte"&gt;Municípios com menos de </span><span class="sc">${</span>V<span class="op">.</span><span class="at">emprego_minimo</span><span class="sc">}</span><span class="vs"> empregos na atividade aparecem como "abaixo de 1" no mapa e sem QL na tabela, para evitar QL alto com poucos vínculos.&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-6" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb7" data-startfrom="112" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 111;"><span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>prodOp <span class="op">=</span> PROD<span class="op">.</span><span class="at">produtos</span><span class="op">.</span><span class="at">nome</span><span class="op">.</span><span class="fu">map</span>((n<span class="op">,</span> i) <span class="kw">=&gt;</span> ({i<span class="op">,</span> <span class="dt">nome</span><span class="op">:</span> n<span class="op">,</span> <span class="dt">grupo</span><span class="op">:</span> PROD<span class="op">.</span><span class="at">produtos</span><span class="op">.</span><span class="at">grupo</span>[i]<span class="op">,</span> <span class="dt">valor</span><span class="op">:</span> PROD<span class="op">.</span><span class="at">produtos</span><span class="op">.</span><span class="at">valor</span>[i]<span class="op">,</span> <span class="dt">n_mun</span><span class="op">:</span> PROD<span class="op">.</span><span class="at">produtos</span><span class="op">.</span><span class="at">n_mun</span>[i]}))</span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a>viewof buscaP <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">search</span>(prodOp<span class="op">,</span> {<span class="dt">placeholder</span><span class="op">:</span> <span class="st">"Busque um produto: uva, leite, café, tilápia, mandioca..."</span><span class="op">,</span> <span class="dt">columns</span><span class="op">:</span> [<span class="st">"nome"</span><span class="op">,</span> <span class="st">"grupo"</span>]})</span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>viewof escP <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">table</span>(buscaP<span class="op">,</span> {<span class="dt">columns</span><span class="op">:</span> [<span class="st">"nome"</span><span class="op">,</span> <span class="st">"grupo"</span><span class="op">,</span> <span class="st">"valor"</span><span class="op">,</span> <span class="st">"n_mun"</span>]<span class="op">,</span> <span class="dt">header</span><span class="op">:</span> {<span class="dt">nome</span><span class="op">:</span> <span class="st">"Produto"</span><span class="op">,</span> <span class="dt">grupo</span><span class="op">:</span> <span class="st">"Pesquisa"</span><span class="op">,</span> <span class="dt">valor</span><span class="op">:</span> <span class="st">"Valor em PE (R$ mil)"</span><span class="op">,</span> <span class="dt">n_mun</span><span class="op">:</span> <span class="st">"Municípios"</span>}<span class="op">,</span></span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> {<span class="dt">valor</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="fu">nf</span>(d)}<span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">required</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">rows</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> prodOp[<span class="dv">0</span>]})</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-7-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-7-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-7-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold hidden">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="119" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 118;"><span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> sel <span class="op">=</span> escP <span class="op">??</span> prodOp[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> por <span class="op">=</span> <span class="kw">new</span> <span class="bu">Map</span>()<span class="op">;</span></span>
+<span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> [id<span class="op">,</span> ls] <span class="kw">of</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">entries</span>(PROD<span class="op">.</span><span class="at">municipios</span>)) <span class="cf">for</span> (<span class="kw">const</span> l <span class="kw">of</span> ls) <span class="cf">if</span> (l[<span class="dv">0</span>] <span class="op">===</span> sel<span class="op">.</span><span class="at">i</span>) por<span class="op">.</span><span class="fu">set</span>(id<span class="op">,</span> {<span class="dt">valor</span><span class="op">:</span> l[<span class="dv">1</span>]<span class="op">,</span> <span class="dt">qtd</span><span class="op">:</span> l[<span class="dv">2</span>]<span class="op">,</span> <span class="dt">ql</span><span class="op">:</span> l[<span class="dv">3</span>]})<span class="op">;</span></span>
+<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> feats <span class="op">=</span> geo<span class="op">.</span><span class="at">features</span><span class="op">.</span><span class="fu">map</span>(f <span class="kw">=&gt;</span> ({<span class="op">...</span>f<span class="op">,</span> <span class="dt">properties</span><span class="op">:</span> {<span class="op">...</span>f<span class="op">.</span><span class="at">properties</span><span class="op">,</span> <span class="op">...</span>(por<span class="op">.</span><span class="fu">get</span>(f<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">id_municipio</span>) <span class="op">??</span> {})}}))<span class="op">;</span></span>
+<span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> rebanho <span class="op">=</span> <span class="ss">/Rebanhos/</span><span class="op">.</span><span class="fu">test</span>(sel<span class="op">.</span><span class="at">grupo</span>)<span class="op">;</span></span>
+<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> faixa <span class="op">=</span> d <span class="kw">=&gt;</span> rebanho <span class="op">?</span> (d<span class="op">.</span><span class="at">qtd</span> <span class="op">?</span> <span class="st">"Com rebanho"</span> <span class="op">:</span> <span class="st">"Sem registro"</span>) <span class="op">:</span> d<span class="op">.</span><span class="at">ql</span> <span class="op">==</span> <span class="kw">null</span> <span class="op">?</span> (d<span class="op">.</span><span class="at">valor</span> <span class="op">?</span> <span class="st">"Abaixo de R$ 50 mil"</span> <span class="op">:</span> <span class="st">"Sem registro"</span>) <span class="op">:</span> d<span class="op">.</span><span class="at">ql</span> <span class="op">&lt;</span> <span class="dv">1</span> <span class="op">?</span> <span class="st">"QL abaixo de 1"</span> <span class="op">:</span> d<span class="op">.</span><span class="at">ql</span> <span class="op">&lt;</span> <span class="dv">2</span> <span class="op">?</span> <span class="st">"QL 1 a 2"</span> <span class="op">:</span> d<span class="op">.</span><span class="at">ql</span> <span class="op">&lt;</span> <span class="dv">5</span> <span class="op">?</span> <span class="st">"QL 2 a 5"</span> <span class="op">:</span> <span class="st">"QL 5 ou mais"</span><span class="op">;</span></span>
+<span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> dom <span class="op">=</span> rebanho <span class="op">?</span> [<span class="st">"Sem registro"</span><span class="op">,</span> <span class="st">"Com rebanho"</span>] <span class="op">:</span> [<span class="st">"Sem registro"</span><span class="op">,</span> <span class="st">"Abaixo de R$ 50 mil"</span><span class="op">,</span> <span class="st">"QL abaixo de 1"</span><span class="op">,</span> <span class="st">"QL 1 a 2"</span><span class="op">,</span> <span class="st">"QL 2 a 5"</span><span class="op">,</span> <span class="st">"QL 5 ou mais"</span>]<span class="op">;</span></span>
+<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cores <span class="op">=</span> rebanho <span class="op">?</span> [<span class="st">"#EEF1F4"</span><span class="op">,</span> <span class="st">"#2E9E5B"</span>] <span class="op">:</span> [<span class="st">"#EEF1F4"</span><span class="op">,</span> <span class="st">"#E3EDE5"</span><span class="op">,</span> <span class="st">"#C3DFC9"</span><span class="op">,</span> <span class="st">"#7CC08E"</span><span class="op">,</span> <span class="st">"#2E9E5B"</span><span class="op">,</span> <span class="st">"#145A32"</span>]<span class="op">;</span></span>
+<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> [<span class="op">...</span>por<span class="op">.</span><span class="fu">entries</span>()]<span class="op">.</span><span class="fu">map</span>(([id<span class="op">,</span> d]) <span class="kw">=&gt;</span> ({<span class="dt">mun</span><span class="op">:</span> nomeMun<span class="op">.</span><span class="fu">get</span>(id) <span class="op">??</span> id<span class="op">,</span> <span class="op">...</span>d}))<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> (b<span class="op">.</span><span class="at">valor</span> <span class="op">||</span> b<span class="op">.</span><span class="at">qtd</span>) <span class="op">-</span> (a<span class="op">.</span><span class="at">valor</span> <span class="op">||</span> a<span class="op">.</span><span class="at">qtd</span>))<span class="op">;</span></span>
+<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> un <span class="op">=</span> (PROD<span class="op">.</span><span class="at">produtos</span><span class="op">.</span><span class="at">unidade</span>[sel<span class="op">.</span><span class="at">i</span>] <span class="op">??</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">toLowerCase</span>()<span class="op">;</span></span>
+<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;h4&gt;</span><span class="sc">${</span>sel<span class="op">.</span><span class="at">nome</span><span class="sc">}</span><span class="vs"> &lt;span class="voc-cod"&gt;</span><span class="sc">${</span>sel<span class="op">.</span><span class="at">grupo</span><span class="sc">}</span><span class="vs">&lt;/span&gt;&lt;/h4&gt;</span></span>
+<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;p&gt;</span><span class="sc">${</span>sel<span class="op">.</span><span class="at">valor</span> <span class="op">?</span> <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span><span class="fu">reaisMil</span>(sel<span class="op">.</span><span class="at">valor</span>)<span class="sc">}</span><span class="vs"> de valor da produção em `</span> <span class="op">:</span> <span class="st">""</span><span class="sc">}${</span><span class="fu">nf</span>(sel<span class="op">.</span><span class="at">n_mun</span>)<span class="sc">}</span><span class="vs"> municípios (IBGE </span><span class="sc">${</span>PROD<span class="op">.</span><span class="at">produtos</span><span class="op">.</span><span class="at">ano</span>[sel<span class="op">.</span><span class="at">i</span>] <span class="op">??</span> <span class="st">""</span><span class="sc">}</span><span class="vs">).&lt;/p&gt;</span></span>
+<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>Plot<span class="op">.</span><span class="fu">plot</span>({<span class="dt">projection</span><span class="op">:</span> {<span class="dt">type</span><span class="op">:</span> <span class="st">"mercator"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> {<span class="dt">type</span><span class="op">:</span> <span class="st">"FeatureCollection"</span><span class="op">,</span> <span class="dt">features</span><span class="op">:</span> feats}}<span class="op">,</span> <span class="dt">width</span><span class="op">:</span> <span class="dv">1000</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">340</span><span class="op">,</span></span>
+<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a>      <span class="dt">color</span><span class="op">:</span> {<span class="dt">domain</span><span class="op">:</span> dom<span class="op">,</span> <span class="dt">range</span><span class="op">:</span> cores<span class="op">,</span> <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a>      <span class="dt">marks</span><span class="op">:</span> [Plot<span class="op">.</span><span class="fu">geo</span>(feats<span class="op">,</span> {<span class="dt">fill</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="fu">faixa</span>(d<span class="op">.</span><span class="at">properties</span>)<span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"white"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.4</span><span class="op">,</span></span>
+<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a>        <span class="dt">title</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="vs">`</span><span class="sc">${</span>d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">name_muni</span><span class="sc">}\n${</span>d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">valor</span> <span class="op">?</span> <span class="fu">reaisMil</span>(d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">valor</span>) <span class="op">:</span> <span class="st">""</span><span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">qtd</span> <span class="op">?</span> <span class="fu">nf</span>(d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">qtd</span>) <span class="op">+</span> <span class="st">" "</span> <span class="op">+</span> un <span class="op">:</span> <span class="st">"sem registro"</span><span class="sc">}${</span>d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">ql</span> <span class="op">!=</span> <span class="kw">null</span> <span class="op">?</span> <span class="st">" · QL "</span> <span class="op">+</span> <span class="fu">nf</span>(d<span class="op">.</span><span class="at">properties</span><span class="op">.</span><span class="at">ql</span><span class="op">,</span> <span class="dv">1</span>) <span class="op">:</span> <span class="st">""</span><span class="sc">}</span><span class="vs">`</span>})]})<span class="sc">}</span></span>
+<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div class="voc-tab"&gt;&lt;table class="table table-sm"&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Município&lt;/th&gt;&lt;th&gt;Valor&lt;/th&gt;&lt;th&gt;Quantidade&lt;/th&gt;&lt;th&gt;QL do valor&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;</span></span>
+<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>t<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">40</span>)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> <span class="fu">html</span><span class="vs">`&lt;tr&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">mun</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">valor</span> <span class="op">?</span> <span class="fu">reaisMil</span>(d<span class="op">.</span><span class="at">valor</span>) <span class="op">:</span> <span class="st">"–"</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">qtd</span> <span class="op">?</span> <span class="fu">nf</span>(d<span class="op">.</span><span class="at">qtd</span>) <span class="op">+</span> <span class="st">" "</span> <span class="op">+</span> un <span class="op">:</span> <span class="st">"–"</span><span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;td&gt;</span><span class="sc">${</span>d<span class="op">.</span><span class="at">ql</span> <span class="op">==</span> <span class="kw">null</span> <span class="op">?</span> <span class="st">"–"</span> <span class="op">:</span> <span class="fu">nf</span>(d<span class="op">.</span><span class="at">ql</span><span class="op">,</span> <span class="dv">1</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;&lt;/tr&gt;`</span>)<span class="sc">}</span><span class="vs">&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;`</span><span class="op">;</span></span>
+<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-8" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<p class="fonte">
+Fonte: IBGE, Produção Agrícola Municipal, Pesquisa da Pecuária Municipal e produção da aquicultura, via SIDRA. QL do valor: peso do produto no valor agropecuário do território dividido pelo peso no estado; só com R$ 50 mil ou mais. Rebanhos aparecem em cabeças, sem valor nem QL.
+</p>
+</div>
+</div>
+</div>
+<p class="fonte">
+Fonte: RAIS (MTE), vínculos ativos em 31/12, via Base dos Dados; diretório CNAE 2.0 (IBGE). Elaboração própria. A RAIS só cobre o emprego formal: atividades com muita informalidade ou trabalho por conta própria (como parte da agricultura familiar e da confecção) aparecem menores do que são. Para essas, veja nas páginas das cadeias o QL das empresas (com MEI) e da produção do IBGE.
+</p>
+
+
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlYgPSBGaWxlQXR0YWNobWVudChcImRhZG9zL3ZvY2Fjb2VzLmpzb25cIikuanNvbigpXG5nZW8gPSBGaWxlQXR0YWNobWVudChcImRhZG9zL21hbGhhX3BlLmdlb2pzb25cIikuanNvbigpXG5QUk9EID0gRmlsZUF0dGFjaG1lbnQoXCJkYWRvcy9wcm9kdWNhby5qc29uXCIpLmpzb24oKVxudGFiUHJvZCA9IChsaW5oYXMsIG4gPSAxNSwgdG90YWwgPSBudWxsKSA9PiB7XG4gIGlmICghbGluaGFzIHx8ICFsaW5oYXMubGVuZ3RoKSByZXR1cm4gaHRtbGA8cD5TZW0gcHJvZHXDp8OjbyBhZ3JvcGVjdcOhcmlhIHJlZ2lzdHJhZGEgcGVsbyBJQkdFLjwvcD5gO1xuICBjb25zdCBQUiA9IFBST0QucHJvZHV0b3M7XG4gIGNvbnN0IHQgPSBsaW5oYXMubWFwKChbcCwgdiwgcSwgcWxdKSA9PiAoe3AsIG5vbWU6IFBSLm5vbWVbcF0sIGdydXBvOiBQUi5ncnVwb1twXSwgdiwgcSwgcWwsIHVuOiBQUi51bmlkYWRlW3BdLCBwYXJ0OiBQUi52YWxvcltwXSA/IHYgLyBQUi52YWxvcltwXSA6IG51bGx9KSlcbiAgICAuZmlsdGVyKGQgPT4gZC52ID4gMCkuc29ydCgoYSwgYikgPT4gYi52IC0gYS52KTtcbiAgY29uc3QgdG90ID0gZDMuc3VtKHQsIGQgPT4gZC52KTtcbiAgcmV0dXJuIGh0bWxgPHA+VmFsb3IgZGEgcHJvZHXDp8OjbyBhZ3JvcGVjdcOhcmlhIGUgZGEgYXF1aWN1bHR1cmE6IDxiPiR7cmVhaXNNaWwodG90KX08L2I+JHt0b3RhbCA/IGh0bWxgLCAkeygxMDAgKiB0b3QgLyB0b3RhbCkudG9Mb2NhbGVTdHJpbmcoXCJwdC1CUlwiLCB7bWF4aW11bUZyYWN0aW9uRGlnaXRzOiAxfSl9JSBkbyBlc3RhZG9gIDogXCJcIn0gKElCR0UgJHtQUk9ELmFub3NbUFJPRC5hbm9zLmxlbmd0aCAtIDFdfSkuPC9wPlxuICA8dGFibGUgY2xhc3M9XCJyeC10YWJcIj48dGhlYWQ+PHRyPjx0aD5Qcm9kdXRvPC90aD48dGg+VmFsb3I8L3RoPjx0aD5RdWFudGlkYWRlPC90aD48dGg+UUwgZG8gdmFsb3I8L3RoPjx0aD4lIGRlIFBFPC90aD48L3RyPjwvdGhlYWQ+PHRib2R5PlxuICAke3Quc2xpY2UoMCwgbikubWFwKGQgPT4gaHRtbGA8dHIgY2xhc3M9XCIke2QucWwgPj0gMSA/IFwicngtZXNwXCIgOiBcIlwifVwiPjx0ZD4ke2Qubm9tZX0gPHNwYW4gY2xhc3M9XCJ2b2MtY29kXCI+JHtkLmdydXBvfTwvc3Bhbj48L3RkPjx0ZD4ke3JlYWlzTWlsKGQudil9PC90ZD5cbiAgICA8dGQ+JHtkLnEgPyBkLnEudG9Mb2NhbGVTdHJpbmcoXCJwdC1CUlwiKSArIFwiIFwiICsgKGQudW4gPz8gXCJcIikudG9Mb3dlckNhc2UoKSA6IFwi4oCTXCJ9PC90ZD48dGQ+JHtkLnFsID09IG51bGwgPyBcIuKAk1wiIDogZC5xbC50b0xvY2FsZVN0cmluZyhcInB0LUJSXCIsIHttYXhpbXVtRnJhY3Rpb25EaWdpdHM6IDEsIG1pbmltdW1GcmFjdGlvbkRpZ2l0czogMX0pfTwvdGQ+XG4gICAgPHRkPiR7ZC5wYXJ0ID09IG51bGwgPyBcIuKAk1wiIDogKDEwMCAqIGQucGFydCkudG9Mb2NhbGVTdHJpbmcoXCJwdC1CUlwiLCB7bWF4aW11bUZyYWN0aW9uRGlnaXRzOiAxfSkgKyBcIiVcIn08L3RkPjwvdHI+YCl9PC90Ym9keT48L3RhYmxlPmA7XG59XG5yZWFpc01pbCA9IHYgPT4gdiA9PSBudWxsID8gXCLigJNcIiA6IHYgPj0gMWU2ID8gXCJSJCBcIiArICh2IC8gMWU2KS50b0xvY2FsZVN0cmluZyhcInB0LUJSXCIsIHttYXhpbXVtRnJhY3Rpb25EaWdpdHM6IDJ9KSArIFwiIGJpXCIgOiB2ID49IDFlMyA/IFwiUiQgXCIgKyAodiAvIDFlMykudG9Mb2NhbGVTdHJpbmcoXCJwdC1CUlwiLCB7bWF4aW11bUZyYWN0aW9uRGlnaXRzOiAxfSkgKyBcIiBtaVwiIDogXCJSJCBcIiArIHYudG9Mb2NhbGVTdHJpbmcoXCJwdC1CUlwiKSArIFwiIG1pbFwiXG5uZiA9ICh4LCBkID0gMCkgPT4geCA9PSBudWxsIHx8IGlzTmFOKHgpID8gXCLigJNcIiA6IHgudG9Mb2NhbGVTdHJpbmcoXCJwdC1CUlwiLCB7bWF4aW11bUZyYWN0aW9uRGlnaXRzOiBkLCBtaW5pbXVtRnJhY3Rpb25EaWdpdHM6IGR9KVxuQSA9IFYuYXRpdmlkYWRlc1xubm9tZU11biA9IG5ldyBNYXAoZ2VvLmZlYXR1cmVzLm1hcChmID0+IFtmLnByb3BlcnRpZXMuaWRfbXVuaWNpcGlvLCBmLnByb3BlcnRpZXMubmFtZV9tdW5pXSkpXG5saXN0YU11biA9IFsuLi5PYmplY3Qua2V5cyhWLm11bmljaXBpb3MpXS5tYXAoaWQgPT4gKHtpZCwgbm9tZTogbm9tZU11bi5nZXQoaWQpID8/IGlkLCB0aXBvOiBcIk11bmljw61waW9cIn0pKS5zb3J0KChhLCBiKSA9PiBhLm5vbWUubG9jYWxlQ29tcGFyZShiLm5vbWUsIFwicHQtQlJcIikpXG5saXN0YVJkID0gT2JqZWN0LmtleXMoVi5yZWdpb2VzKS5zb3J0KCkubWFwKHIgPT4gKHtpZDogciwgbm9tZTogciwgdGlwbzogXCJSZWdpw6NvIGRlIERlc2Vudm9sdmltZW50b1wifSkpXG50YWdDYWQgPSBpID0+IChBLmNhZGVpYXNbaV0gfHwgXCJcIikuc3BsaXQoXCI7XCIpLmZpbHRlcihCb29sZWFuKS5tYXAoYyA9PiBodG1sYDxhIGNsYXNzPVwidm9jLWNhZFwiIGhyZWY9XCJjYWRlaWFzLyR7Y30uaHRtbFwiPiR7Vi5jYWRlaWFzW2NdID8/IGN9PC9hPmApXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2YgdGVyciA9IElucHV0cy5zZWxlY3QoWy4uLmxpc3RhUmQsIC4uLmxpc3RhTXVuXSwge2xhYmVsOiBcIk11bmljw61waW8gb3UgUkRcIiwgZm9ybWF0OiBkID0+IGQudGlwbyA9PT0gXCJNdW5pY8OtcGlvXCIgPyBkLm5vbWUgOiBcIlJEIFwiICsgZC5ub21lLFxuICB2YWx1ZTogbGlzdGFNdW4uZmluZChkID0+IGQubm9tZSA9PT0gXCJDYXJ1YXJ1XCIpfSlcbnZpZXdvZiBzb0VzcCA9IElucHV0cy50b2dnbGUoe2xhYmVsOiBcIlPDsyBhdGl2aWRhZGVzIGNvbSBRTCDiiaUgMVwiLCB2YWx1ZTogdHJ1ZX0pXG52aWV3b2Ygb3JkZW0gPSBJbnB1dHMucmFkaW8oW1wiRW1wcmVnb3NcIiwgXCJRTFwiXSwge2xhYmVsOiBcIk9yZGVuYXIgcG9yXCIsIHZhbHVlOiBcIkVtcHJlZ29zXCJ9KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoie1xuICBjb25zdCBsaW5oYXMgPSAodGVyci50aXBvID09PSBcIk11bmljw61waW9cIiA/IFYubXVuaWNpcGlvcyA6IFYucmVnaW9lcylbdGVyci5pZF0gPz8gW107XG4gIGNvbnN0IHRvdCA9IGQzLnN1bShsaW5oYXMsIGwgPT4gbFsxXSk7XG4gIGNvbnN0IHQgPSBsaW5oYXMubWFwKChbaSwgZSwgcywgcV0pID0+ICh7aSwgYXRpdmlkYWRlOiBBLm5vbWVbaV0sIGNvZDogQS5jb2RbaV0sIGVtcHJlZ286IGUsIGVzdGFiOiBzLCBxbDogcSwgcGFydDogZSAvIEEuZW1wcmVnb1tpXX0pKVxuICAgIC5maWx0ZXIoZCA9PiBkLmVtcHJlZ28gPj0gVi5lbXByZWdvX21pbmltbyAmJiAoIXNvRXNwIHx8IGQucWwgPj0gMSkpLnNvcnQoKGEsIGIpID0+IG9yZGVtID09PSBcIlFMXCIgPyBiLnFsIC0gYS5xbCA6IGIuZW1wcmVnbyAtIGEuZW1wcmVnbyk7XG4gIHJldHVybiBodG1sYDxwPjxiPiR7dGVyci50aXBvID09PSBcIk11bmljw61waW9cIiA/IHRlcnIubm9tZSA6IFwiUkQgXCIgKyB0ZXJyLm5vbWV9PC9iPjogJHtuZih0b3QpfSBlbXByZWdvcyBmb3JtYWlzIGVtICR7bmYobGluaGFzLmxlbmd0aCl9IGF0aXZpZGFkZXMgKFJBSVMgJHtWLmFub30pLiAke25mKHQubGVuZ3RoKX0gYXRpdmlkYWRlcyAke3NvRXNwID8gXCJjb20gUUwg4omlIDEgZVwiIDogXCJjb21cIn0gcGVsbyBtZW5vcyAke1YuZW1wcmVnb19taW5pbW99IGVtcHJlZ29zLjwvcD5cbiAgPGRpdiBjbGFzcz1cInZvYy10YWJcIj48dGFibGUgY2xhc3M9XCJ0YWJsZSB0YWJsZS1zbVwiPjx0aGVhZD48dHI+PHRoPkF0aXZpZGFkZSAoc3ViY2xhc3NlIENOQUUpPC90aD48dGg+RW1wcmVnb3M8L3RoPjx0aD5Fc3RhYi48L3RoPjx0aD5RTDwvdGg+PHRoPiUgZGUgUEU8L3RoPjx0aD5DYWRlaWEgb3UgbmljaG88L3RoPjwvdHI+PC90aGVhZD48dGJvZHk+XG4gICR7dC5zbGljZSgwLCAxNTApLm1hcChkID0+IGh0bWxgPHRyPjx0ZD4ke2QuYXRpdmlkYWRlfSA8c3BhbiBjbGFzcz1cInZvYy1jb2RcIj4ke2QuY29kfTwvc3Bhbj48L3RkPjx0ZD4ke25mKGQuZW1wcmVnbyl9PC90ZD48dGQ+JHtuZihkLmVzdGFiKX08L3RkPlxuICAgIDx0ZD48Yj4ke25mKGQucWwsIDEpfTwvYj48L3RkPjx0ZD4ke25mKDEwMCAqIGQucGFydCwgMSl9JTwvdGQ+PHRkPiR7dGFnQ2FkKGQuaSl9PC90ZD48L3RyPmApfTwvdGJvZHk+PC90YWJsZT48L2Rpdj5cbiAgJHt0Lmxlbmd0aCA+IDE1MCA/IGh0bWxgPHAgY2xhc3M9XCJmb250ZVwiPk1vc3RyYW5kbyBhcyAxNTAgcHJpbWVpcmFzIGRlICR7bmYodC5sZW5ndGgpfS48L3A+YCA6IFwiXCJ9YDtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Imh0bWxgPGg0PlByb2R1w6fDo28gYWdyb3BlY3XDoXJpYTwvaDQ+JHt0YWJQcm9kKCgodGVyci50aXBvID09PSBcIk11bmljw61waW9cIiA/IFBST0QubXVuaWNpcGlvcyA6IFBST0QucmVnaW9lcykgPz8ge30pW3RlcnIuaWRdLCAyMCwgZDMuc3VtKFBST0QucHJvZHV0b3MudmFsb3IpKX1gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTUiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJvcGNvZXMgPSBBLm5vbWUubWFwKChuLCBpKSA9PiAoe2ksIG5vbWU6IG4sIGNvZDogQS5jb2RbaV0sIGVtcHJlZ286IEEuZW1wcmVnb1tpXSwgbl9tdW46IEEubl9tdW5baV0sIHNlY2FvOiBBLm5vbWVfc2VjYW9baV19KSlcbnZpZXdvZiBidXNjYSA9IElucHV0cy5zZWFyY2gob3Bjb2VzLCB7cGxhY2Vob2xkZXI6IFwiQnVzcXVlIHVtYSBhdGl2aWRhZGU6IGNhZsOpLCB1dmEsIGNlcsOibWljYSwgc29mdHdhcmUsIGhvdGVsLi4uXCIsIGNvbHVtbnM6IFtcIm5vbWVcIiwgXCJjb2RcIiwgXCJzZWNhb1wiXX0pXG52aWV3b2YgZXNjb2xoYSA9IElucHV0cy50YWJsZShidXNjYSwge2NvbHVtbnM6IFtcIm5vbWVcIiwgXCJjb2RcIiwgXCJlbXByZWdvXCIsIFwibl9tdW5cIl0sIGhlYWRlcjoge25vbWU6IFwiQXRpdmlkYWRlXCIsIGNvZDogXCJTdWJjbGFzc2VcIiwgZW1wcmVnbzogXCJFbXByZWdvcyBlbSBQRVwiLCBuX211bjogXCJNdW5pY8OtcGlvc1wifSxcbiAgZm9ybWF0OiB7ZW1wcmVnbzogZCA9PiBuZihkKX0sIG11bHRpcGxlOiBmYWxzZSwgcmVxdWlyZWQ6IGZhbHNlLCByb3dzOiA4LCB2YWx1ZTogb3Bjb2VzLmZpbmQoZCA9PiAvY3VsdGl2byBkZSBjYWbDqS9pLnRlc3QoZC5ub21lKSkgPz8gb3Bjb2VzWzBdfSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IntcbiAgY29uc3Qgc2VsID0gZXNjb2xoYSA/PyBvcGNvZXNbMF07XG4gIGNvbnN0IHBvciA9IG5ldyBNYXAoKTtcbiAgZm9yIChjb25zdCBbaWQsIGxpbmhhc10gb2YgT2JqZWN0LmVudHJpZXMoVi5tdW5pY2lwaW9zKSkgZm9yIChjb25zdCBsIG9mIGxpbmhhcykgaWYgKGxbMF0gPT09IHNlbC5pKSBwb3Iuc2V0KGlkLCB7ZW1wcmVnbzogbFsxXSwgZXN0YWI6IGxbMl0sIHFsOiBsWzNdfSk7XG4gIGNvbnN0IGZlYXRzID0gZ2VvLmZlYXR1cmVzLm1hcChmID0+ICh7Li4uZiwgcHJvcGVydGllczogey4uLmYucHJvcGVydGllcywgLi4uKHBvci5nZXQoZi5wcm9wZXJ0aWVzLmlkX211bmljaXBpbykgPz8ge30pfX0pKTtcbiAgY29uc3QgZmFpeGEgPSBxID0+IHEgPT0gbnVsbCA/IFwiU2VtIGVtcHJlZ28gZm9ybWFsXCIgOiBxIDwgMSA/IFwiQWJhaXhvIGRlIDFcIiA6IHEgPCAyID8gXCIxIGEgMlwiIDogcSA8IDUgPyBcIjIgYSA1XCIgOiBcIjUgb3UgbWFpc1wiO1xuICBjb25zdCBkb20gPSBbXCJTZW0gZW1wcmVnbyBmb3JtYWxcIiwgXCJBYmFpeG8gZGUgMVwiLCBcIjEgYSAyXCIsIFwiMiBhIDVcIiwgXCI1IG91IG1haXNcIl07XG4gIGNvbnN0IG1hcGEgPSBQbG90LnBsb3Qoe1xuICAgIHByb2plY3Rpb246IHt0eXBlOiBcIm1lcmNhdG9yXCIsIGRvbWFpbjoge3R5cGU6IFwiRmVhdHVyZUNvbGxlY3Rpb25cIiwgZmVhdHVyZXM6IGZlYXRzfX0sIHdpZHRoOiAxMDAwLCBoZWlnaHQ6IDM0MCxcbiAgICBjb2xvcjoge2RvbWFpbjogZG9tLCByYW5nZTogW1wiI0VFRjFGNFwiLCBcIiNDOURDRUNcIiwgXCIjN0ZCMUQ4XCIsIFwiIzJFNzhCN1wiLCBcIiMwMjM0NzFcIl0sIGxlZ2VuZDogdHJ1ZX0sXG4gICAgbWFya3M6IFtQbG90LmdlbyhmZWF0cywge2ZpbGw6IGQgPT4gZmFpeGEoZC5wcm9wZXJ0aWVzLmVtcHJlZ28gPj0gVi5lbXByZWdvX21pbmltbyA/IGQucHJvcGVydGllcy5xbCA6IChkLnByb3BlcnRpZXMuZW1wcmVnbyA/IDAuNSA6IG51bGwpKSxcbiAgICAgIHN0cm9rZTogXCJ3aGl0ZVwiLCBzdHJva2VXaWR0aDogMC40LFxuICAgICAgdGl0bGU6IGQgPT4gYCR7ZC5wcm9wZXJ0aWVzLm5hbWVfbXVuaX1cXG4ke2QucHJvcGVydGllcy5lbXByZWdvID8gbmYoZC5wcm9wZXJ0aWVzLmVtcHJlZ28pICsgXCIgZW1wcmVnb3MgwrcgUUwgXCIgKyBuZihkLnByb3BlcnRpZXMucWwsIDEpIDogXCJzZW0gZW1wcmVnbyBmb3JtYWxcIn1gfSldfSk7XG4gIGNvbnN0IHQgPSBbLi4ucG9yLmVudHJpZXMoKV0ubWFwKChbaWQsIGRdKSA9PiAoe211bjogbm9tZU11bi5nZXQoaWQpID8/IGlkLCAuLi5kfSkpLnNvcnQoKGEsIGIpID0+IGIuZW1wcmVnbyAtIGEuZW1wcmVnbyk7XG4gIHJldHVybiBodG1sYDxoND4ke3NlbC5ub21lfSA8c3BhbiBjbGFzcz1cInZvYy1jb2RcIj4ke3NlbC5jb2R9PC9zcGFuPjwvaDQ+XG4gICAgPHA+JHtuZihBLmVtcHJlZ29bc2VsLmldKX0gZW1wcmVnb3MgZm9ybWFpcyBlICR7bmYoQS5lc3RhYltzZWwuaV0pfSBlc3RhYmVsZWNpbWVudG9zIGVtICR7bmYoQS5uX211bltzZWwuaV0pfSBtdW5pY8OtcGlvcyAoUkFJUyAke1YuYW5vfSkuICR7dGFnQ2FkKHNlbC5pKS5sZW5ndGggPyBodG1sYEZheiBwYXJ0ZSBkZTogJHt0YWdDYWQoc2VsLmkpfWAgOiBcIlwifTwvcD5cbiAgICAke21hcGF9XG4gICAgPGRpdiBjbGFzcz1cInZvYy10YWJcIj48dGFibGUgY2xhc3M9XCJ0YWJsZSB0YWJsZS1zbVwiPjx0aGVhZD48dHI+PHRoPk11bmljw61waW88L3RoPjx0aD5FbXByZWdvczwvdGg+PHRoPkVzdGFiLjwvdGg+PHRoPlFMPC90aD48L3RyPjwvdGhlYWQ+PHRib2R5PlxuICAgICR7dC5zbGljZSgwLCA0MCkubWFwKGQgPT4gaHRtbGA8dHI+PHRkPiR7ZC5tdW59PC90ZD48dGQ+JHtuZihkLmVtcHJlZ28pfTwvdGQ+PHRkPiR7bmYoZC5lc3RhYil9PC90ZD48dGQ+JHtkLmVtcHJlZ28gPj0gVi5lbXByZWdvX21pbmltbyA/IG5mKGQucWwsIDEpIDogXCLigJNcIn08L3RkPjwvdHI+YCl9PC90Ym9keT48L3RhYmxlPjwvZGl2PlxuICAgIDxwIGNsYXNzPVwiZm9udGVcIj5NdW5pY8OtcGlvcyBjb20gbWVub3MgZGUgJHtWLmVtcHJlZ29fbWluaW1vfSBlbXByZWdvcyBuYSBhdGl2aWRhZGUgYXBhcmVjZW0gY29tbyBcImFiYWl4byBkZSAxXCIgbm8gbWFwYSBlIHNlbSBRTCBuYSB0YWJlbGEsIHBhcmEgZXZpdGFyIFFMIGFsdG8gY29tIHBvdWNvcyB2w61uY3Vsb3MuPC9wPmA7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJwcm9kT3AgPSBQUk9ELnByb2R1dG9zLm5vbWUubWFwKChuLCBpKSA9PiAoe2ksIG5vbWU6IG4sIGdydXBvOiBQUk9ELnByb2R1dG9zLmdydXBvW2ldLCB2YWxvcjogUFJPRC5wcm9kdXRvcy52YWxvcltpXSwgbl9tdW46IFBST0QucHJvZHV0b3Mubl9tdW5baV19KSlcbnZpZXdvZiBidXNjYVAgPSBJbnB1dHMuc2VhcmNoKHByb2RPcCwge3BsYWNlaG9sZGVyOiBcIkJ1c3F1ZSB1bSBwcm9kdXRvOiB1dmEsIGxlaXRlLCBjYWbDqSwgdGlsw6FwaWEsIG1hbmRpb2NhLi4uXCIsIGNvbHVtbnM6IFtcIm5vbWVcIiwgXCJncnVwb1wiXX0pXG52aWV3b2YgZXNjUCA9IElucHV0cy50YWJsZShidXNjYVAsIHtjb2x1bW5zOiBbXCJub21lXCIsIFwiZ3J1cG9cIiwgXCJ2YWxvclwiLCBcIm5fbXVuXCJdLCBoZWFkZXI6IHtub21lOiBcIlByb2R1dG9cIiwgZ3J1cG86IFwiUGVzcXVpc2FcIiwgdmFsb3I6IFwiVmFsb3IgZW0gUEUgKFIkIG1pbClcIiwgbl9tdW46IFwiTXVuaWPDrXBpb3NcIn0sXG4gIGZvcm1hdDoge3ZhbG9yOiBkID0+IG5mKGQpfSwgbXVsdGlwbGU6IGZhbHNlLCByZXF1aXJlZDogZmFsc2UsIHJvd3M6IDgsIHZhbHVlOiBwcm9kT3BbMF19KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC04IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoie1xuICBjb25zdCBzZWwgPSBlc2NQID8/IHByb2RPcFswXTtcbiAgY29uc3QgcG9yID0gbmV3IE1hcCgpO1xuICBmb3IgKGNvbnN0IFtpZCwgbHNdIG9mIE9iamVjdC5lbnRyaWVzKFBST0QubXVuaWNpcGlvcykpIGZvciAoY29uc3QgbCBvZiBscykgaWYgKGxbMF0gPT09IHNlbC5pKSBwb3Iuc2V0KGlkLCB7dmFsb3I6IGxbMV0sIHF0ZDogbFsyXSwgcWw6IGxbM119KTtcbiAgY29uc3QgZmVhdHMgPSBnZW8uZmVhdHVyZXMubWFwKGYgPT4gKHsuLi5mLCBwcm9wZXJ0aWVzOiB7Li4uZi5wcm9wZXJ0aWVzLCAuLi4ocG9yLmdldChmLnByb3BlcnRpZXMuaWRfbXVuaWNpcGlvKSA/PyB7fSl9fSkpO1xuICBjb25zdCByZWJhbmhvID0gL1JlYmFuaG9zLy50ZXN0KHNlbC5ncnVwbyk7XG4gIGNvbnN0IGZhaXhhID0gZCA9PiByZWJhbmhvID8gKGQucXRkID8gXCJDb20gcmViYW5ob1wiIDogXCJTZW0gcmVnaXN0cm9cIikgOiBkLnFsID09IG51bGwgPyAoZC52YWxvciA/IFwiQWJhaXhvIGRlIFIkIDUwIG1pbFwiIDogXCJTZW0gcmVnaXN0cm9cIikgOiBkLnFsIDwgMSA/IFwiUUwgYWJhaXhvIGRlIDFcIiA6IGQucWwgPCAyID8gXCJRTCAxIGEgMlwiIDogZC5xbCA8IDUgPyBcIlFMIDIgYSA1XCIgOiBcIlFMIDUgb3UgbWFpc1wiO1xuICBjb25zdCBkb20gPSByZWJhbmhvID8gW1wiU2VtIHJlZ2lzdHJvXCIsIFwiQ29tIHJlYmFuaG9cIl0gOiBbXCJTZW0gcmVnaXN0cm9cIiwgXCJBYmFpeG8gZGUgUiQgNTAgbWlsXCIsIFwiUUwgYWJhaXhvIGRlIDFcIiwgXCJRTCAxIGEgMlwiLCBcIlFMIDIgYSA1XCIsIFwiUUwgNSBvdSBtYWlzXCJdO1xuICBjb25zdCBjb3JlcyA9IHJlYmFuaG8gPyBbXCIjRUVGMUY0XCIsIFwiIzJFOUU1QlwiXSA6IFtcIiNFRUYxRjRcIiwgXCIjRTNFREU1XCIsIFwiI0MzREZDOVwiLCBcIiM3Q0MwOEVcIiwgXCIjMkU5RTVCXCIsIFwiIzE0NUEzMlwiXTtcbiAgY29uc3QgdCA9IFsuLi5wb3IuZW50cmllcygpXS5tYXAoKFtpZCwgZF0pID0+ICh7bXVuOiBub21lTXVuLmdldChpZCkgPz8gaWQsIC4uLmR9KSkuc29ydCgoYSwgYikgPT4gKGIudmFsb3IgfHwgYi5xdGQpIC0gKGEudmFsb3IgfHwgYS5xdGQpKTtcbiAgY29uc3QgdW4gPSAoUFJPRC5wcm9kdXRvcy51bmlkYWRlW3NlbC5pXSA/PyBcIlwiKS50b0xvd2VyQ2FzZSgpO1xuICByZXR1cm4gaHRtbGA8aDQ+JHtzZWwubm9tZX0gPHNwYW4gY2xhc3M9XCJ2b2MtY29kXCI+JHtzZWwuZ3J1cG99PC9zcGFuPjwvaDQ+XG4gICAgPHA+JHtzZWwudmFsb3IgPyBodG1sYCR7cmVhaXNNaWwoc2VsLnZhbG9yKX0gZGUgdmFsb3IgZGEgcHJvZHXDp8OjbyBlbSBgIDogXCJcIn0ke25mKHNlbC5uX211bil9IG11bmljw61waW9zIChJQkdFICR7UFJPRC5wcm9kdXRvcy5hbm9bc2VsLmldID8/IFwiXCJ9KS48L3A+XG4gICAgJHtQbG90LnBsb3Qoe3Byb2plY3Rpb246IHt0eXBlOiBcIm1lcmNhdG9yXCIsIGRvbWFpbjoge3R5cGU6IFwiRmVhdHVyZUNvbGxlY3Rpb25cIiwgZmVhdHVyZXM6IGZlYXRzfX0sIHdpZHRoOiAxMDAwLCBoZWlnaHQ6IDM0MCxcbiAgICAgIGNvbG9yOiB7ZG9tYWluOiBkb20sIHJhbmdlOiBjb3JlcywgbGVnZW5kOiB0cnVlfSxcbiAgICAgIG1hcmtzOiBbUGxvdC5nZW8oZmVhdHMsIHtmaWxsOiBkID0+IGZhaXhhKGQucHJvcGVydGllcyksIHN0cm9rZTogXCJ3aGl0ZVwiLCBzdHJva2VXaWR0aDogMC40LFxuICAgICAgICB0aXRsZTogZCA9PiBgJHtkLnByb3BlcnRpZXMubmFtZV9tdW5pfVxcbiR7ZC5wcm9wZXJ0aWVzLnZhbG9yID8gcmVhaXNNaWwoZC5wcm9wZXJ0aWVzLnZhbG9yKSA6IFwiXCJ9ICR7ZC5wcm9wZXJ0aWVzLnF0ZCA/IG5mKGQucHJvcGVydGllcy5xdGQpICsgXCIgXCIgKyB1biA6IFwic2VtIHJlZ2lzdHJvXCJ9JHtkLnByb3BlcnRpZXMucWwgIT0gbnVsbCA/IFwiIMK3IFFMIFwiICsgbmYoZC5wcm9wZXJ0aWVzLnFsLCAxKSA6IFwiXCJ9YH0pXX0pfVxuICAgIDxkaXYgY2xhc3M9XCJ2b2MtdGFiXCI+PHRhYmxlIGNsYXNzPVwidGFibGUgdGFibGUtc21cIj48dGhlYWQ+PHRyPjx0aD5NdW5pY8OtcGlvPC90aD48dGg+VmFsb3I8L3RoPjx0aD5RdWFudGlkYWRlPC90aD48dGg+UUwgZG8gdmFsb3I8L3RoPjwvdHI+PC90aGVhZD48dGJvZHk+XG4gICAgJHt0LnNsaWNlKDAsIDQwKS5tYXAoZCA9PiBodG1sYDx0cj48dGQ+JHtkLm11bn08L3RkPjx0ZD4ke2QudmFsb3IgPyByZWFpc01pbChkLnZhbG9yKSA6IFwi4oCTXCJ9PC90ZD48dGQ+JHtkLnF0ZCA/IG5mKGQucXRkKSArIFwiIFwiICsgdW4gOiBcIuKAk1wifTwvdGQ+PHRkPiR7ZC5xbCA9PSBudWxsID8gXCLigJNcIiA6IG5mKGQucWwsIDEpfTwvdGQ+PC90cj5gKX08L3Rib2R5PjwvdGFibGU+PC9kaXY+YDtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgndGVycicpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdzb0VzcCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdvcmRlbScpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdidXNjYScpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdlc2NvbGhhJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2J1c2NhUCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdlc2NQJykifV19
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiada");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiada");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jrsvf\.github\.io\/portfolio");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>José Roberto Verçosa · Economista</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Dados públicos: RAIS, CAGED, CNPJ, INEP, SICONFI, ComexStat, IBGE e Banco Central · via Base dos Dados, SIDRA e SGS</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

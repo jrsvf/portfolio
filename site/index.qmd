@@ -344,7 +344,8 @@ cap("territorio", "5", "Território",
       div(class = "rd-meta", paste0(r$municipios, " municípios · ", fmt_num(r$pop / 1000), " mil habitantes")),
       if (!is.na(r$cadeia)) div(class = "rd-cad", "Mais especializada em ", tags$b(r$cadeia), paste0(" (QL ", fmt_num(r$ql, 1), ")")))
   })),
-  a(class = "bol-link", href = "regioes.html", "Ver as regiões →"), a(class = "bol-link", href = "municipios.html", "Ver os municípios →"))
+  a(class = "bol-link", href = "regioes.html", "Ver as regiões →"), a(class = "bol-link", href = "municipios.html", "Ver os municípios →"),
+  a(class = "bol-link", href = "vocacoes.html", "Vocações: todas as atividades por território →"))
 ```
 
 ```{=html}

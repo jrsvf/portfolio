@@ -7,6 +7,21 @@ toc: false
 ```{ojs}
 //| echo: false
 dados = FileAttachment("dados/raiox_municipios.json").json()
+PROD = FileAttachment("dados/producao.json").json()
+tabProd = (linhas, n = 15, total = null) => {
+  if (!linhas || !linhas.length) return html`<p>Sem produção agropecuária registrada pelo IBGE.</p>`;
+  const PR = PROD.produtos;
+  const t = linhas.map(([p, v, q, ql]) => ({p, nome: PR.nome[p], grupo: PR.grupo[p], v, q, ql, un: PR.unidade[p], part: PR.valor[p] ? v / PR.valor[p] : null}))
+    .filter(d => d.v > 0).sort((a, b) => b.v - a.v);
+  const tot = d3.sum(t, d => d.v);
+  return html`<p>Valor da produção agropecuária e da aquicultura: <b>${reaisMil(tot)}</b>${total ? html`, ${(100 * tot / total).toLocaleString("pt-BR", {maximumFractionDigits: 1})}% do estado` : ""} (IBGE ${PROD.anos[PROD.anos.length - 1]}).</p>
+  <table class="rx-tab"><thead><tr><th>Produto</th><th>Valor</th><th>Quantidade</th><th>QL do valor</th><th>% de PE</th></tr></thead><tbody>
+  ${t.slice(0, n).map(d => html`<tr class="${d.ql >= 1 ? "rx-esp" : ""}"><td>${d.nome} <span class="voc-cod">${d.grupo}</span></td><td>${reaisMil(d.v)}</td>
+    <td>${d.q ? d.q.toLocaleString("pt-BR") + " " + (d.un ?? "").toLowerCase() : "–"}</td><td>${d.ql == null ? "–" : d.ql.toLocaleString("pt-BR", {maximumFractionDigits: 1, minimumFractionDigits: 1})}</td>
+    <td>${d.part == null ? "–" : (100 * d.part).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + "%"}</td></tr>`)}</tbody></table>`;
+}
+reaisMil = v => v == null ? "–" : v >= 1e6 ? "R$ " + (v / 1e6).toLocaleString("pt-BR", {maximumFractionDigits: 2}) + " bi" : v >= 1e3 ? "R$ " + (v / 1e3).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " mi" : "R$ " + v.toLocaleString("pt-BR") + " mil"
+geo0 = FileAttachment("dados/malha_pe.geojson").json()
 geo0 = FileAttachment("dados/malha_pe.geojson").json()
 // o d3 espera anéis no sentido horário; inverte os que vierem ao contrário
 geo = ({type: "FeatureCollection", features: geo0.features.map(f => {
@@ -146,6 +161,15 @@ ${Plot.plot({
   ]})}`
 ```
 
+### Especialização agropecuária
+
+```{ojs}
+//| echo: false
+tabProd((PROD.municipios ?? {})[m.id], 20, d3.sum(PROD.produtos.valor))
+```
+
+<p class="fonte">Fonte: IBGE, Produção Agrícola Municipal, Pesquisa da Pecuária Municipal e produção da aquicultura, via SIDRA. QL do valor: peso do produto no valor agropecuário do território dividido pelo peso no estado; só com R$ 50 mil ou mais. Rebanhos aparecem em cabeças, sem valor nem QL.</p>
+
 ### Pecuária e aquicultura
 
 ```{ojs}
@@ -201,7 +225,7 @@ cardCadeia = d => {
     ${x.destinos.length ? html`<div class="rx-cc-bloco"><h5>Principais destinos</h5><p>${x.destinos.map(p => `${p.pais} (${usd(p.v)})`).join(" · ")}</p></div>` : ""}
   </div>`;
 }
-m.cadeias.length === 0 ? html`<p>Nenhuma das 21 cadeias acompanhadas tem emprego formal ou produção registrada aqui.</p>` :
+m.cadeias.length === 0 ? html`<p>Nenhuma das cadeias e nichos acompanhados tem emprego formal ou produção registrada aqui.</p>` :
 html`<p>Cada cartão junta o que o município tem em cada cadeia e nicho acompanhados: emprego formal por elo, produção do IBGE, exportações e as maiores empresas ativas. O QL aparece medido de até quatro jeitos (emprego formal, empresas ativas com MEI, exportações e valor da produção); em verde, os que passam de 1. Os cartões vão do maior para o menor quociente locacional; em destaque, as cadeias em que ${m.nome} é especializado (QL ≥ 1). O nome leva à página da cadeia.</p>
 <div class="rx-ccs">${m.cadeias.slice().sort((a, b) => (b.ql ?? -1) - (a.ql ?? -1)).map(cardCadeia)}</div>`
 ```

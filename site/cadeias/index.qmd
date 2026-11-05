@@ -11,6 +11,36 @@ listing:
 toc: false
 ---
 
-Cada cadeia é dividida em **elos** (insumos, produção primária, processamento, distribuição), definidos por classes da CNAE 2.0 e ligados às posições do comércio exterior e aos produtos das pesquisas agropecuárias do IBGE. A definição de cada cadeia está em um arquivo de configuração aberto: incluir uma nova cadeia é escrever um bloco de texto.
+```{r}
+#| include: false
+source("../_setup.R")
+carregar("locais_cadeia", "concentracao")
+ult <- max(locais_cadeia$ano)
+emp <- locais_cadeia %>% filter(ano == ult) %>% group_by(cadeia_id = atividade) %>%
+  summarise(emprego = sum(emprego), estab = sum(estabelecimentos), .groups = "drop")
+esp <- concentracao %>% filter(ano == ult) %>% transmute(cadeia_id = atividade, especializados = n_especializados)
+tab <- cad$meta %>% left_join(emp, by = "cadeia_id") %>% left_join(esp, by = "cadeia_id") %>%
+  mutate(tipo = ifelse(grupo == "nicho", "Nicho", "Cadeia")) %>% arrange(match(macrossetor, unique(cad$meta$macrossetor)), desc(emprego))
+lista <- function(k) paste(tolower(tab$cadeia[tab$macrossetor == k]), collapse = ", ")
+```
 
-Os **nichos transversais** (economia criativa, economia do mar, bioeconomia e energias renováveis e complexo da saúde) seguem a mesma mecânica, mas atravessam setores e podem repetir códigos de outras cadeias. Use a categoria "Nichos transversais" para filtrá-los. A **[agricultura familiar](../agricultura-familiar.qmd)** tem página própria, porque não se define por atividade econômica e sim pelo tipo de estabelecimento rural.
+O painel acompanha **`r sum(tab$grupo == "cadeia")` cadeias produtivas** e **`r sum(tab$grupo == "nicho")` nichos**. Cada um é dividido em **elos** (insumos, produção primária, processamento, distribuição), definidos por códigos da CNAE 2.0 e ligados às posições do comércio exterior e aos produtos das pesquisas agropecuárias do IBGE. A definição está em um arquivo de configuração aberto: incluir uma nova cadeia ou nicho é escrever um bloco de texto, e a página dele aparece aqui automaticamente.
+
+- **Nichos transversais** (`r lista("Nichos transversais")`): atravessam setores e podem repetir códigos de outras cadeias.
+- **Nichos produtivos** (`r lista("Nichos produtivos")`): atividades específicas, algumas já contidas em cadeias maiores, destacadas para leitura própria.
+- A **[agricultura familiar](../agricultura-familiar.qmd)** tem página própria, porque não se define por atividade econômica e sim pelo tipo de estabelecimento rural.
+- Para qualquer outra atividade da CNAE, use a página **[Vocações](../vocacoes.qmd)**.
+
+::: {.callout-note collapse="true"}
+## Tabela com todas as cadeias e nichos
+
+```{r}
+htmltools::HTML(knitr::kable(tab %>% transmute(`Cadeia ou nicho` = sprintf('<a href="%s.html">%s</a>', cadeia_id, cadeia), Tipo = tipo, Grupo = macrossetor,
+  `Empregos formais` = fmt_num(emprego), Estabelecimentos = fmt_num(estab), `Municípios especializados` = especializados),
+  format = "html", escape = FALSE, table.attr = "class='table table-sm'"))
+```
+
+<p class="fonte">RAIS `r ult`. Municípios especializados: QL do emprego formal maior ou igual a `r par$indicadores$ql_minimo`, com ao menos `r par$indicadores$emprego_minimo` vínculos.</p>
+:::
+
+Use as categorias abaixo para filtrar por grupo.
