@@ -22,7 +22,6 @@ tabProd = (linhas, n = 15, total = null) => {
 }
 reaisMil = v => v == null ? "–" : v >= 1e6 ? "R$ " + (v / 1e6).toLocaleString("pt-BR", {maximumFractionDigits: 2}) + " bi" : v >= 1e3 ? "R$ " + (v / 1e3).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " mi" : "R$ " + v.toLocaleString("pt-BR") + " mil"
 geo0 = FileAttachment("dados/malha_pe.geojson").json()
-geo0 = FileAttachment("dados/malha_pe.geojson").json()
 // o d3 espera anéis no sentido horário; inverte os que vierem ao contrário
 geo = ({type: "FeatureCollection", features: geo0.features.map(f => {
   if (d3.geoArea(f) <= 2 * Math.PI) return f;

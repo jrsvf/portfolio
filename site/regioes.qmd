@@ -44,21 +44,6 @@ ids = new Set(r.municipios.map(d => d.id))
 nf = (x, d = 0) => x == null || isNaN(x) ? "–" : x.toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d})
 pct = (x, d = 1) => x == null || isNaN(x) ? "–" : (100 * x).toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d}) + "%"
 reais = x => x == null ? "–" : x >= 1e9 ? "R$ " + nf(x / 1e9, 2) + " bi" : x >= 1e6 ? "R$ " + nf(x / 1e6, 1) + " mi" : "R$ " + nf(x / 1e3, 0) + " mil"
-AZUL = "#023471"; LAR = "#E07A1F"
-nomesR = regs.map(r => r.rd).sort((a, b) => a.localeCompare(b, "pt-BR"))
-inicialR = {
-  const q = new URLSearchParams(window.location.search).get("r");
-  return q && nomesR.includes(q) ? q : "Metropolitana";
-}
-viewof rsel = Inputs.select(nomesR, {label: "Região de Desenvolvimento", value: inicialR})
-r = {
-  try { history.replaceState(null, "", "?r=" + encodeURIComponent(rsel)); } catch (e) {}
-  return regs.find(x => x.rd === rsel);
-}
-ids = new Set(r.municipios.map(d => d.id))
-nf = (x, d = 0) => x == null || isNaN(x) ? "–" : x.toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d})
-pct = (x, d = 1) => x == null || isNaN(x) ? "–" : (100 * x).toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d}) + "%"
-reais = x => x == null ? "–" : x >= 1e9 ? "R$ " + nf(x / 1e9, 2) + " bi" : x >= 1e6 ? "R$ " + nf(x / 1e6, 1) + " mi" : "R$ " + nf(x / 1e3, 0) + " mil"
 AZUL = "#1F4E79"; LAR = "#E07A1F"
 ```
 

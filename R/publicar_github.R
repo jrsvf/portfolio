@@ -36,8 +36,9 @@ publicar_github <- function(repo = "portfolio", descricao = "Portfólio de anál
       st <- if (is.null(resp)) 0 else httr2::resp_status(resp)
       if (st > 0 && st < 300) break
       if (ok404 && st == 404) return(NULL)
-      if (st %in% c(401, 403, 404, 422) || k == tentativas) break
-      Sys.sleep(3 * k)  # 400 "malformed", 5xx ou queda de conexão: espera e tenta de novo
+      if (st %in% c(404, 422) || k == tentativas) break
+      # 400 "malformed", 401/403 passageiros (limite de envios), 5xx ou queda de conexão: espera e tenta de novo
+      Sys.sleep(if (st %in% c(401, 403)) 20 * k else 3 * k)
     }
     if (st == 0) stop("Sem resposta do GitHub em ", metodo, " ", caminho, " (conexão caiu).")
     if (st >= 300) stop("GitHub ", st, " em ", metodo, " ", caminho, ": ", httr2::resp_body_string(resp))
