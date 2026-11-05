@@ -25,3 +25,6 @@ saidas/
 # análise de impacto dos programas da ADEPE (uso interno, não publicar)
 R/09_impacto_programas.R
 config/impacto_*.csv
+
+*.rar
+dados_externos/nereus/*.xlsx

@@ -184,3 +184,60 @@ ul.rx-emp li span { display: block; font-size: .72rem; color: #7F8C8D; margin-to
 .hero-serie { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: .9; }
 .hero-palavra { z-index: 2; mix-blend-mode: multiply; }
 .rx-infra td { text-align: left !important; } .rx-infra td:first-child { width: 110px; }
+
+// ---------------------------------------------------------------------------
+// Página inicial como boletim de economia regional
+// ---------------------------------------------------------------------------
+$azul: #1F4E79; $lar: #E07A1F; $cinza: #5D6D7E; $fio: #DCE3EA;
+.bol-mast { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-family: $mono; font-size: .74rem;
+  letter-spacing: .05em; text-transform: uppercase; color: $cinza; border-top: 3px solid $azul; border-bottom: 1px solid $fio;
+  padding: .55rem 0; margin-top: 1.2rem; }
+.bol-mast-c { color: $azul; }
+.bol-capa { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 3rem; padding: 2.8rem 0 2.2rem 0; align-items: start; }
+@media (max-width: 900px) { .bol-capa { grid-template-columns: 1fr; gap: 1.6rem; } }
+.bol-kicker { font-family: $mono; font-size: .8rem; color: $lar; letter-spacing: .05em; text-transform: uppercase; margin-bottom: .8rem; }
+.bol-titulo { font-size: clamp(2rem, 4vw, 3.1rem); font-weight: 800; line-height: 1.06; letter-spacing: -0.025em; color: #1E2B38; margin: 0 0 1.2rem 0; }
+.bol-lead { font-size: 1.12rem; line-height: 1.55; color: #34495E; margin-bottom: 1.6rem; }
+.bol-fig { font-size: .86rem; color: #34495E; margin: .2rem 0 .4rem 0; }
+.bol-fig-nota { font-size: .95rem; color: #1E2B38; border-left: 3px solid $lar; padding-left: .8rem; margin: .6rem 0; }
+.cap-graf { width: 100%; height: auto; display: block; }
+.cap-graf .g { stroke: $fio; stroke-width: 1; } .cap-graf .g100 { stroke: #9AA7B4; stroke-dasharray: 3 3; }
+.cap-graf line { stroke: $fio; } .cap-graf line.g100 { stroke: #9AA7B4; stroke-dasharray: 3 3; }
+.cap-graf .ey, .cap-graf .ex { font-family: $mono; font-size: 11px; fill: #7F8C8D; text-anchor: end; }
+.cap-graf .ex { text-anchor: middle; }
+.cap-graf .l { fill: none; stroke-width: 2; stroke-linejoin: round; } .cap-graf .l-pe { stroke-width: 3.2; }
+.cap-graf .rl { font-family: "Inter", sans-serif; font-size: 12px; font-weight: 700; }
+.bol-sumario { display: flex; flex-wrap: wrap; gap: .4rem 1.6rem; border-top: 1px solid $fio; border-bottom: 1px solid $fio; padding: .8rem 0; margin-bottom: 1rem; }
+.bol-sumario a { text-decoration: none; color: #1E2B38; font-weight: 600; font-size: .95rem; }
+.bol-sumario a span { font-family: $mono; color: $lar; margin-right: .45rem; }
+.bol-sumario a:hover { color: $azul; }
+.bol-cap { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: 1.4rem; row-gap: 0; padding: 3.2rem 0 2.6rem 0; border-top: 1px solid $fio; }
+/* tudo o que não é o número vai para a coluna do texto, mesmo se o Pandoc quebrar o bloco em vários filhos */
+.bol-cap > :not(.bol-cap-num) { grid-column: 2; min-width: 0; }
+.bol-cap > .bol-cap-num { grid-column: 1; grid-row: 1 / span 40; }
+.bol-cap-corpo { min-width: 0; }
+@media (max-width: 700px) { .bol-cap { grid-template-columns: 1fr; } .bol-cap > :not(.bol-cap-num), .bol-cap > .bol-cap-num { grid-column: 1; grid-row: auto; } .bol-cap-num { margin-bottom: .4rem; } }
+.bol-cap-num { font-family: $mono; font-size: 2.6rem; font-weight: 500; color: $lar; line-height: 1; }
+.bol-cap-tit { font-size: 1rem; font-family: $mono; text-transform: uppercase; letter-spacing: .06em; color: $cinza; margin: 0 0 .9rem 0; }
+.bol-tese { font-size: clamp(1.3rem, 2.4vw, 1.85rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.015em; color: #1E2B38; max-width: 900px; margin-bottom: 1.6rem; }
+.bol-sub { font-family: $mono; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: $cinza; margin: 1.6rem 0 .2rem 0; }
+.bol-link { display: inline-block; margin: 1rem 1.6rem 0 0; font-weight: 600; color: $azul; text-decoration: none; border-bottom: 2px solid $lar; }
+.bol-barras { max-width: 860px; margin-bottom: 1rem; }
+.bol-barra { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) 4rem 8rem; gap: .8rem; align-items: center; padding: .45rem 0; border-bottom: 1px solid #EEF2F5; font-size: .95rem; }
+.bol-barra-nome { font-weight: 600; color: #1E2B38; }
+.bol-barra-trilho { background: #EEF2F5; height: 12px; border-radius: 2px; }
+.bol-barra-fill { display: block; height: 12px; background: $azul; border-radius: 2px; }
+.bol-barra-val { font-variant-numeric: tabular-nums; text-align: right; font-weight: 700; }
+.bol-barra-var { font-size: .85rem; font-variant-numeric: tabular-nums; }
+@media (max-width: 600px) { .bol-barra { grid-template-columns: 6.5rem minmax(0, 1fr) 3.4rem; } .bol-barra-var { grid-column: 2 / 4; } }
+.bol-lista { max-width: 860px; padding-left: 1.2rem; } .bol-lista li { padding: .3rem 0; } .bol-lista li span { color: $cinza; font-size: .88rem; font-variant-numeric: tabular-nums; }
+.bol-passos { max-width: 900px; padding-left: 1.2rem; } .bol-passos li { margin-bottom: .6rem; line-height: 1.5; }
+.bol-contato { display: flex; justify-content: space-between; align-items: end; gap: 2rem; flex-wrap: wrap; background: $azul; color: #fff; padding: 2.4rem 2rem; margin: 2rem 0 1rem 0; border-radius: 4px; }
+.bol-contato h2 { color: #fff; font-size: 1.4rem; margin: 0 0 .6rem 0; } .bol-contato p { max-width: 640px; margin: 0; color: #DCE6F0; }
+.bol-contato .cortina-links a { color: #fff; margin-left: 1.2rem; font-weight: 600; }
+
+/* QL por vários indicadores */
+.rx-cc-qls { display: flex; flex-wrap: wrap; gap: 6px; margin: .4rem 0 .6rem 0; font-size: .8rem; }
+.rx-cc-qls span { background: #F2F5F8; border-radius: 10px; padding: 2px 9px; color: #34495E; }
+.rx-cc-qls span.rx-ql-alto { background: #E3F2E8; color: #1E6B3A; }
+.rx-ql-va { margin-bottom: .8rem; }

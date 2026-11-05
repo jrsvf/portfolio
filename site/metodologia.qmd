@@ -49,6 +49,19 @@ Notação: $E_{ij}$ é o emprego formal da atividade $j$ no município $i$; o po
 - **Índice de Krugman:** $\sum_j \left| E_{ij}/E_{i\cdot} - E_{\cdot j}/E_{\cdot\cdot} \right|$, entre 0 (estrutura igual à do estado) e 2.
 - **Shift-share:** decompõe a variação do emprego da cadeia em PE em crescimento nacional, composição e desempenho próprio (diferencial), tendo o Brasil como referência.
 
+### O QL medido de outros jeitos
+
+O emprego formal não vê a informalidade e não mede produção. Por isso o mesmo quociente é calculado, por cadeia e município, com outras variáveis no lugar de $E$:
+
+- **Empresas ativas (CNPJ, Receita Federal), contando MEI:** estabelecimentos ativos nos códigos CNAE da cadeia. Capta o pequeno negócio e parte do que a RAIS não vê, como a confecção do Agreste. Só com 5 empresas ou mais.
+- **Exportações (ComexStat):** valor exportado pelos produtos SH4 da cadeia, pelo município do exportador. Fica de fora o município que exporta menos de US$ 1 milhão no total ou menos de US$ 100 mil na cadeia.
+- **Valor da produção (IBGE: PAM, PPM, PEVS):** só nas cadeias do campo. O total do município é o valor de toda a produção agropecuária e extrativa das tabelas usadas. Só com R$ 100 mil ou mais na cadeia.
+- **Valor adicionado (PIB dos Municípios):** QL de agropecuária, indústria, serviços e administração pública em cada município, no raio-X.
+
+Quando vários QLs passam de 1, a especialização é robusta. Quando só o de empresas passa, a atividade tende a ser pequena ou informal. Na comparação de Pernambuco com o Brasil, o QL da produção vem da matriz NEREUS (abaixo), nos 68 setores.
+
+Indústria e serviços não têm valor da produção por município em fonte pública: a PIA e as pesquisas de serviços do IBGE saem só por estado. O consumo de energia por município e por classe também não é aberto para Pernambuco; na matriz NEREUS ele aparece por setor no estado, estimado com a intensidade energética nacional.
+
 ## Encadeamentos
 
 A matriz de coeficientes técnicos nacional $A^n$ (68 atividades) é ligada à RAIS pela correspondência oficial do IBGE entre atividades da MIP e a CNAE 2.0 (educação e saúde públicas e privadas somadas) e regionalizada pelo **FLQ** (Flegg e Webber, 1997):
@@ -60,6 +73,18 @@ com $\delta$ = `r par$mip$flq_delta`. Os índices de ligação de Rasmussen-Hirs
 $$BL_j = \frac{\frac{1}{n}\sum_i b_{ij}}{\frac{1}{n^2}\sum_{ij} b_{ij}}, \qquad FL_i = \frac{\frac{1}{n}\sum_j b_{ij}}{\frac{1}{n^2}\sum_{ij} b_{ij}}$$
 
 **Limitações:** a tecnologia é a nacional e o ajuste regional usa apenas emprego formal. Quando houver uma matriz estadual oficial, ela substitui esta estimativa (basta trocar o arquivo de entrada).
+
+### Matriz interestadual NEREUS
+
+A segunda estimativa é a **Matriz Interestadual de Insumo-Produto para o Brasil, 2019** (Haddad, Araújo, Rocha e Vale, 2025, NEREUS/USP), com 68 setores em cada uma das 27 UFs, estimada pelo método IIOAS. Com ela, a inversa de Leontief é calculada para o sistema inteiro ($1.836 \times 1.836$):
+
+- **Multiplicador da produção** de um setor de PE: soma da coluna da inversa, efeito em todo o Brasil de R$ 1 a mais de demanda final pelo setor.
+- **Vazamento:** parte desse efeito que acontece em outros estados, $1 - \sum_{i \in PE} b_{ij} / \sum_i b_{ij}$.
+- **Origem dos insumos e destino das vendas:** fatias de PE, das outras UFs e do exterior nas compras e nas vendas de cada setor.
+- **Ligações de Rasmussen-Hirschman** com o bloco intraestadual de PE, na mesma agregação de setores da MIP do IBGE, para comparar com o FLQ.
+- **QL da produção, do valor adicionado e das ocupações** de PE contra o Brasil.
+
+As contas de energia, água e emissões da matriz são estimadas com coeficientes nacionais por setor: servem para comparar o tamanho dos setores, não a eficiência de PE.
 
 ## Detecção de lacunas
 

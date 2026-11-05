@@ -206,6 +206,20 @@ list(
       left_join(mip$regional %>% select(grupo, grupo_nome, bl, fl, mult_producao, classificacao, slq, presenca), by = "grupo")
   }),
 
+  # ------------------------------------------- matriz interestadual NEREUS 2019
+  tar_target(arq_nereus, { f <- list.files("dados_externos/nereus", pattern = "\\.(rds|xlsx|rar|zip)$", full.names = TRUE)
+                           if (length(f)) f else "config/sem_arquivo.txt" }, format = "file"),
+  tar_target(nereus, { arq_nereus; arq_mip_ativ; tryCatch(analisar_nereus(obter_nereus(), ler_mip_atividades()), error = function(e) { msg("NEREUS falhou: ", conditionMessage(e)); NULL }) }),
+  tar_target(nereus_cad, nereus_cadeia(nereus, mip_cadeia)),
+
+  # ------------------------------------------- QL por emprego, empresas, exportação e produção
+  tar_target(bq_cnpj_cadeias, { bq_esquema; tentar("CNPJ por cadeia", extrair_cnpj_cadeias(projeto, uf, cad$elos)) }),
+  tar_target(ql_emp, ql_empresas(bq_cnpj_cadeias)),
+  tar_target(ql_exp, ql_exportacoes(comex_anos_completos, comex_cad)),
+  tar_target(ql_prod, ql_producao_agro(sidra_bruto, sidra_cad)),
+  tar_target(ql_mult, montar_ql_multiplo(locais_cadeia, ql_emp, ql_exp, ql_prod)),
+  tar_target(ql_vab, ql_vab_municipios(bq_pib_pop)),
+
   # --------------------------------------------------------- lacunas/destaques
   tar_target(ultimos_anos, tibble::tibble(
     fonte = c("RAIS", "Novo CAGED", "ComexStat", "PIB dos Municípios", "Produção agropecuária (SIDRA)"),
@@ -247,6 +261,7 @@ list(
                  educacao = educacao, icms = icms, credito_rural = credito_rural, agro_familiar = agro_familiar,
                  infraestrutura = infraestrutura, corte_atual = corte_atual, bq_dic = bq_dic,
                  cursos_cad = cursos_cad, escoamento_cad = escoamento_cad,
+                 nereus = nereus, nereus_cad = nereus_cad, ql_mult = ql_mult, ql_vab = ql_vab,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),
@@ -266,7 +281,7 @@ list(
   tar_target(raiox,
              montar_raiox(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, bq_perfil_pe, bq_caged_pe,
                           comex_anos_completos, bq_sh4_nomes, sidra_bruto, locais_cadeia, sidra_cad,
-                          comex_cad, cad$meta, krugman, ipca, locais_elo)),
+                          comex_cad, cad$meta, krugman, ipca, locais_elo) %>% adicionar_ql_raiox(ql_mult, ql_vab)),
   tar_target(saida_raiox, exportar_raiox(raiox, malha), format = "file"),
   tar_target(territorio,
              montar_territorio(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, cad_mun, cad$meta, empresas,

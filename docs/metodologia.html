@@ -47,7 +47,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c92cc52ec47623789d697d67e293409a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-367b194b17f465bc2f993dd280d746a1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -191,8 +191,14 @@ window.Quarto = {
   </ul></li>
   <li><a href="#comparações-no-tempo-e-com-o-nordeste" id="toc-comparações-no-tempo-e-com-o-nordeste" class="nav-link" data-scroll-target="#comparações-no-tempo-e-com-o-nordeste">Comparações no tempo e com o Nordeste</a></li>
   <li><a href="#cadeias-e-elos" id="toc-cadeias-e-elos" class="nav-link" data-scroll-target="#cadeias-e-elos">Cadeias e elos</a></li>
-  <li><a href="#indicadores" id="toc-indicadores" class="nav-link" data-scroll-target="#indicadores">Indicadores</a></li>
-  <li><a href="#encadeamentos" id="toc-encadeamentos" class="nav-link" data-scroll-target="#encadeamentos">Encadeamentos</a></li>
+  <li><a href="#indicadores" id="toc-indicadores" class="nav-link" data-scroll-target="#indicadores">Indicadores</a>
+  <ul class="collapse">
+  <li><a href="#o-ql-medido-de-outros-jeitos" id="toc-o-ql-medido-de-outros-jeitos" class="nav-link" data-scroll-target="#o-ql-medido-de-outros-jeitos">O QL medido de outros jeitos</a></li>
+  </ul></li>
+  <li><a href="#encadeamentos" id="toc-encadeamentos" class="nav-link" data-scroll-target="#encadeamentos">Encadeamentos</a>
+  <ul class="collapse">
+  <li><a href="#matriz-interestadual-nereus" id="toc-matriz-interestadual-nereus" class="nav-link" data-scroll-target="#matriz-interestadual-nereus">Matriz interestadual NEREUS</a></li>
+  </ul></li>
   <li><a href="#detecção-de-lacunas" id="toc-detecção-de-lacunas" class="nav-link" data-scroll-target="#detecção-de-lacunas">Detecção de lacunas</a></li>
   <li><a href="#reprodutibilidade" id="toc-reprodutibilidade" class="nav-link" data-scroll-target="#reprodutibilidade">Reprodutibilidade</a></li>
   </ul>
@@ -445,6 +451,18 @@ window.Quarto = {
 <li><strong>Índice de Krugman:</strong> <span class="math inline">\(\sum_j \left| E_{ij}/E_{i\cdot} - E_{\cdot j}/E_{\cdot\cdot} \right|\)</span>, entre 0 (estrutura igual à do estado) e 2.</li>
 <li><strong>Shift-share:</strong> decompõe a variação do emprego da cadeia em PE em crescimento nacional, composição e desempenho próprio (diferencial), tendo o Brasil como referência.</li>
 </ul>
+<section id="o-ql-medido-de-outros-jeitos" class="level3">
+<h3 class="anchored" data-anchor-id="o-ql-medido-de-outros-jeitos">O QL medido de outros jeitos</h3>
+<p>O emprego formal não vê a informalidade e não mede produção. Por isso o mesmo quociente é calculado, por cadeia e município, com outras variáveis no lugar de <span class="math inline">\(E\)</span>:</p>
+<ul>
+<li><strong>Empresas ativas (CNPJ, Receita Federal), contando MEI:</strong> estabelecimentos ativos nos códigos CNAE da cadeia. Capta o pequeno negócio e parte do que a RAIS não vê, como a confecção do Agreste. Só com 5 empresas ou mais.</li>
+<li><strong>Exportações (ComexStat):</strong> valor exportado pelos produtos SH4 da cadeia, pelo município do exportador. Fica de fora o município que exporta menos de US$ 1 milhão no total ou menos de US$ 100 mil na cadeia.</li>
+<li><strong>Valor da produção (IBGE: PAM, PPM, PEVS):</strong> só nas cadeias do campo. O total do município é o valor de toda a produção agropecuária e extrativa das tabelas usadas. Só com R$ 100 mil ou mais na cadeia.</li>
+<li><strong>Valor adicionado (PIB dos Municípios):</strong> QL de agropecuária, indústria, serviços e administração pública em cada município, no raio-X.</li>
+</ul>
+<p>Quando vários QLs passam de 1, a especialização é robusta. Quando só o de empresas passa, a atividade tende a ser pequena ou informal. Na comparação de Pernambuco com o Brasil, o QL da produção vem da matriz NEREUS (abaixo), nos 68 setores.</p>
+<p>Indústria e serviços não têm valor da produção por município em fonte pública: a PIA e as pesquisas de serviços do IBGE saem só por estado. O consumo de energia por município e por classe também não é aberto para Pernambuco; na matriz NEREUS ele aparece por setor no estado, estimado com a intensidade energética nacional.</p>
+</section>
 </section>
 <section id="encadeamentos" class="level2">
 <h2 class="anchored" data-anchor-id="encadeamentos">Encadeamentos</h2>
@@ -453,6 +471,18 @@ window.Quarto = {
 <p>com <span class="math inline">\(\delta\)</span> = 0.3. Os índices de ligação de Rasmussen-Hirschman vêm da inversa de Leontief <span class="math inline">\(B=(I-A^r)^{-1}\)</span>:</p>
 <p><span class="math display">\[BL_j = \frac{\frac{1}{n}\sum_i b_{ij}}{\frac{1}{n^2}\sum_{ij} b_{ij}}, \qquad FL_i = \frac{\frac{1}{n}\sum_j b_{ij}}{\frac{1}{n^2}\sum_{ij} b_{ij}}\]</span></p>
 <p><strong>Limitações:</strong> a tecnologia é a nacional e o ajuste regional usa apenas emprego formal. Quando houver uma matriz estadual oficial, ela substitui esta estimativa (basta trocar o arquivo de entrada).</p>
+<section id="matriz-interestadual-nereus" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-interestadual-nereus">Matriz interestadual NEREUS</h3>
+<p>A segunda estimativa é a <strong>Matriz Interestadual de Insumo-Produto para o Brasil, 2019</strong> (Haddad, Araújo, Rocha e Vale, 2025, NEREUS/USP), com 68 setores em cada uma das 27 UFs, estimada pelo método IIOAS. Com ela, a inversa de Leontief é calculada para o sistema inteiro (<span class="math inline">\(1.836 \times 1.836\)</span>):</p>
+<ul>
+<li><strong>Multiplicador da produção</strong> de um setor de PE: soma da coluna da inversa, efeito em todo o Brasil de R$ 1 a mais de demanda final pelo setor.</li>
+<li><strong>Vazamento:</strong> parte desse efeito que acontece em outros estados, <span class="math inline">\(1 - \sum_{i \in PE} b_{ij} / \sum_i b_{ij}\)</span>.</li>
+<li><strong>Origem dos insumos e destino das vendas:</strong> fatias de PE, das outras UFs e do exterior nas compras e nas vendas de cada setor.</li>
+<li><strong>Ligações de Rasmussen-Hirschman</strong> com o bloco intraestadual de PE, na mesma agregação de setores da MIP do IBGE, para comparar com o FLQ.</li>
+<li><strong>QL da produção, do valor adicionado e das ocupações</strong> de PE contra o Brasil.</li>
+</ul>
+<p>As contas de energia, água e emissões da matriz são estimadas com coeficientes nacionais por setor: servem para comparar o tamanho dos setores, não a eficiência de PE.</p>
+</section>
 </section>
 <section id="detecção-de-lacunas" class="level2">
 <h2 class="anchored" data-anchor-id="detecção-de-lacunas">Detecção de lacunas</h2>

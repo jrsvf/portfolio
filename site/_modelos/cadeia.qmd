@@ -112,6 +112,63 @@ lc %>% arrange(desc(emprego)) %>%
   tabela()
 ```
 
+
+```{r}
+qm <- tryCatch(ler_base("ql_mult", ""), error = function(e) NULL)
+qm <- if (!is.null(qm)) qm %>% filter(cadeia_id == CADEIA) else NULL
+tem <- function(k) !is.null(qm) && k %in% names(qm) && any(!is.na(qm[[k]]))
+mapa_ql <- function(k, rot) mapa_municipios(malha, qm %>% select(id_municipio, v = all_of(k)), "v", rot, municipios,
+                                            quebras = c(0, 0.5, 1, 2, 5, Inf), paleta = "YlGnBu")
+```
+
+```{r}
+#| results: asis
+if (tem("ql_empresas")) cat("### QL das empresas (CNPJ)\n\n")
+```
+
+```{r}
+if (tem("ql_empresas")) htmltools::tagList(mapa_ql("ql_empresas", "QL empresas"),
+  rodape_fonte("Receita Federal, CNPJ: estabelecimentos ativos nos códigos CNAE da cadeia, contando MEI. Municípios com menos de 5 empresas ficam sem cor"))
+```
+
+```{r}
+#| results: asis
+if (tem("ql_exportacoes")) cat("### QL das exportações\n\n")
+```
+
+```{r}
+if (tem("ql_exportacoes")) htmltools::tagList(mapa_ql("ql_exportacoes", "QL exportações"),
+  rodape_fonte(paste0("ComexStat ", max(qm$ano_exportacoes, na.rm = TRUE), ", pelo município do exportador. Ficam sem cor os municípios que exportam menos de US$ 1 milhão no total ou menos de US$ 100 mil na cadeia")))
+```
+
+```{r}
+#| results: asis
+if (tem("ql_producao")) cat("### QL da produção (IBGE)\n\n")
+```
+
+```{r}
+if (tem("ql_producao")) htmltools::tagList(mapa_ql("ql_producao", "QL produção"),
+  rodape_fonte(paste0("IBGE (PAM, PPM e PEVS) ", max(qm$ano_producao, na.rm = TRUE), ": valor da produção dos produtos da cadeia sobre o valor de toda a produção agropecuária do município. Ficam sem cor os municípios com menos de R$ 100 mil na cadeia")))
+```
+
+```{r}
+#| results: asis
+if (!is.null(qm) && nrow(qm)) cat("### Todos os indicadores\n\n")
+```
+
+```{r}
+if (!is.null(qm) && nrow(qm)) {
+  t <- qm %>% filter(n_ql_medidos > 0) %>% arrange(desc(n_ql_acima_1), desc(coalesce(ql_emprego, 0))) %>%
+    transmute(Município = nome_mun(id_municipio), `QL emprego` = round(ql_emprego, 2),
+              `QL empresas` = if (tem("ql_empresas")) round(ql_empresas, 2) else NULL,
+              `% MEI` = if (tem("pct_mei")) round(100 * pct_mei) else NULL,
+              `QL exportações` = if (tem("ql_exportacoes")) round(ql_exportacoes, 2) else NULL,
+              `QL produção` = if (tem("ql_producao")) round(ql_producao, 2) else NULL,
+              `Indicadores com QL ≥ 1` = paste(n_ql_acima_1, "de", n_ql_medidos))
+  htmltools::tagList(tabela(t), htmltools::p(class = "fonte", "Cada QL compara o peso da cadeia no município com o peso dela em Pernambuco, medido de um jeito diferente: emprego formal (RAIS), empresas ativas com MEI (CNPJ), exportações (ComexStat) e valor da produção (IBGE, só cadeias do campo). Quando vários apontam acima de 1, a especialização é mais robusta; quando só o de empresas aponta, é sinal de atividade pequena ou informal."))
+}
+```
+
 :::
 
 ```{r}
@@ -121,6 +178,22 @@ cc <- concentracao %>% filter(atividade == CADEIA) %>% arrange(ano)
 Concentração espacial (HHI): `r fmt_num(cc$hhi[cc$ano == ini], 3)` em `r ini` e `r fmt_num(cc$hhi[cc$ano == ult], 3)` em `r ult`. Municípios especializados (QL ≥ `r par$indicadores$ql_minimo` e ao menos `r par$indicadores$emprego_minimo` vínculos): `r cc$n_especializados[cc$ano == ult]`.
 
 ## Pernambuco frente ao Nordeste e ao Brasil
+
+```{r}
+nc <- tryCatch(ler_base("nereus_cad", ""), error = function(e) NULL)
+nc <- if (!is.null(nc)) nc %>% filter(cadeia_id == CADEIA) else NULL
+if (NROW(nc)) htmltools::tagList(
+  htmltools::h4("Produção, encadeamento e vazamento (matriz NEREUS 2019)"),
+  htmltools::HTML(knitr::kable(nc %>% transmute(Elo = elo, `Setor da matriz` = grupo_nome,
+      `QL da produção PE/BR` = fmt_num(ql_producao, 2), `% da produção do Brasil` = fmt_pct(part_br_vp),
+      `Multiplicador` = fmt_num(mult_producao, 2), `Vaza para outras UFs` = fmt_pct(vazamento, 0),
+      `Insumos de outras UFs` = fmt_pct(insumos_outras_uf, 0), `Insumos importados` = fmt_pct(insumos_exterior, 0),
+      `Vendas para fora de PE` = fmt_pct(vendas_outras_uf + vendas_exterior, 0),
+      `Energia (mil tep)` = fmt_num(energia_mil_tep, 1)),
+    format = "html", table.attr = "class='table table-sm'")),
+  htmltools::p(class = "fonte", "Fonte: Haddad, Araújo, Rocha e Vale (2025), Matriz Interestadual de Insumo-Produto para o Brasil, 2019 (NEREUS/USP). Setores da matriz (68) ligados aos elos pela CNAE. O multiplicador soma o efeito em todo o Brasil de R$ 1 a mais de demanda pelo setor em PE; 'vaza' é a parte desse efeito que acontece em outros estados. O consumo de energia da matriz é estimado com a intensidade energética nacional de cada setor."))
+```
+
 
 ```{r}
 rn <- cmp_ne$resumo %>% filter(cadeia_id == CADEIA)

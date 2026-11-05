@@ -90,7 +90,10 @@ va = [
   {setor: "Administração pública", v: m.pib.va.adm}
 ]
 vatot = d3.sum(va, d => d.v)
-html`<p>Composição do valor adicionado de ${m.nome} em ${m.pib.ano_va} (o IBGE divulga a divisão por setor com defasagem). Corrigido pelo IPCA, o PIB até ${m.pib.ano} variou <b>${pct(m.pib.var_real.a10)}</b> em 10 anos, <b>${pct(m.pib.var_real.a5)}</b> em 5 anos e <b>${pct(m.pib.var_real.a2)}</b> em 2 anos.</p>`
+html`${m.pib.ql_va ? html`<div class="rx-cc-qls rx-ql-va" title="Quociente locacional do valor adicionado: peso do setor no município dividido pelo peso em Pernambuco">
+  ${[["Agropecuária", m.pib.ql_va.agro], ["Indústria", m.pib.ql_va.ind], ["Serviços", m.pib.ql_va.serv], ["Administração pública", m.pib.ql_va.adm]]
+    .map(q => html`<span class="${q[1] >= 1 ? "rx-ql-alto" : ""}">QL ${q[0]} <b>${nf(q[1], 2)}</b></span>`)}</div>` : ""}
+<p>Composição do valor adicionado de ${m.nome} em ${m.pib.ano_va} (o IBGE divulga a divisão por setor com defasagem). Corrigido pelo IPCA, o PIB até ${m.pib.ano} variou <b>${pct(m.pib.var_real.a10)}</b> em 10 anos, <b>${pct(m.pib.var_real.a5)}</b> em 5 anos e <b>${pct(m.pib.var_real.a2)}</b> em 2 anos.</p>`
 ```
 
 ::: {.panel-tabset}
@@ -184,6 +187,10 @@ cardCadeia = d => {
       ${d.vp_mil ? html`<div><b>${reais(1000 * d.vp_mil)}</b><span>valor da produção</span></div>` : ""}
       ${d.ex_usd ? html`<div><b>${usd(d.ex_usd)}</b><span>exportado em ${m.comex.ano}</span></div>` : ""}
     </div>
+    ${[d.ql_empresas, d.ql_exportacoes, d.ql_producao].some(v => v != null) ? html`<div class="rx-cc-qls" title="Quociente locacional medido de quatro jeitos: emprego formal, empresas ativas com MEI, exportações e valor da produção do IBGE">
+      ${[["emprego", d.ql], ["empresas", d.ql_empresas], ["exportações", d.ql_exportacoes], ["produção", d.ql_producao]].filter(q => q[1] != null)
+        .map(q => html`<span class="${q[1] >= 1 ? "rx-ql-alto" : ""}">QL ${q[0]} <b>${nf(q[1], 2)}</b></span>`)}
+      ${d.pct_mei != null && d.empresas ? html`<span>${nf(d.empresas)} empresas, ${nf(100 * d.pct_mei, 0)}% MEI</span>` : ""}</div>` : ""}
     ${x.producao.length ? html`<div class="rx-cc-bloco"><h5>Produção (IBGE)</h5><table class="rx-tab"><tbody>
       ${x.producao.slice(0, 6).map(p => html`<tr><td>${p.produto.replace("*", "")}</td><td>${p.qtd ? nf(p.qtd) + " " + um(p.unidade) : "–"}</td><td>${p.valor_mil ? reais(1000 * p.valor_mil) : ""}</td></tr>`)}
     </tbody></table></div>` : ""}
@@ -195,7 +202,7 @@ cardCadeia = d => {
   </div>`;
 }
 m.cadeias.length === 0 ? html`<p>Nenhuma das 21 cadeias acompanhadas tem emprego formal ou produção registrada aqui.</p>` :
-html`<p>Cada cartão junta o que o município tem em cada cadeia e nicho acompanhados: emprego formal por elo, produção do IBGE, exportações e as maiores empresas ativas. Os cartões vão do maior para o menor quociente locacional; em destaque, as cadeias em que ${m.nome} é especializado (QL ≥ 1). O nome leva à página da cadeia.</p>
+html`<p>Cada cartão junta o que o município tem em cada cadeia e nicho acompanhados: emprego formal por elo, produção do IBGE, exportações e as maiores empresas ativas. O QL aparece medido de até quatro jeitos (emprego formal, empresas ativas com MEI, exportações e valor da produção); em verde, os que passam de 1. Os cartões vão do maior para o menor quociente locacional; em destaque, as cadeias em que ${m.nome} é especializado (QL ≥ 1). O nome leva à página da cadeia.</p>
 <div class="rx-ccs">${m.cadeias.slice().sort((a, b) => (b.ql ?? -1) - (a.ql ?? -1)).map(cardCadeia)}</div>`
 ```
 

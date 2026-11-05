@@ -1,12 +1,13 @@
 ---
 title: "Encadeamentos produtivos"
-description: "Ligações para trás e para frente dos setores da economia pernambucana, estimadas a partir da matriz insumo-produto nacional regionalizada."
+description: "Ligações para trás e para frente dos setores da economia pernambucana: a matriz nacional regionalizada (FLQ) e a matriz interestadual do NEREUS/USP, lado a lado."
 ---
 
 ```{r}
 #| include: false
 source("_setup.R")
 carregar("mip", "mip_cadeia")
+nereus <- tryCatch(ler_base("nereus", ""), error = function(e) NULL)
 ```
 
 ::: {.aviso}
@@ -61,5 +62,67 @@ if (!is.null(mip_cadeia)) {
   tabela(mip_cadeia %>% left_join(cad$meta %>% select(cadeia_id, cadeia), by = "cadeia_id") %>%
            transmute(Cadeia = cadeia, Elo = elo, `Setor da MIP` = grupo_nome,
                      `Para trás` = round(bl, 2), `Para frente` = round(fl, 2), Classificação = classificacao))
+}
+```
+
+## Matriz interestadual do NEREUS (2019)
+
+```{r}
+#| results: asis
+if (is.null(nereus)) cat("A matriz do NEREUS não está nesta atualização. Coloque o arquivo em dados_externos/nereus/ e rode o painel de novo.\n")
+```
+
+```{r}
+if (!is.null(nereus)) {
+  r <- nereus$resumo
+  htmltools::tagList(
+    htmltools::p("A matriz interestadual do NEREUS/USP estima, para 2019, quanto cada setor de cada estado compra e vende de cada setor dos outros estados. Ela mede direto o que o FLQ só aproxima: quanto dos insumos de Pernambuco vem de fora e quanto do efeito multiplicador fica no estado."),
+    cartoes(list(
+      list(rotulo = "PE no valor adicionado do Brasil", valor = fmt_pct(r$part_br_vab), nota = paste0("R$ ", fmt_num(r$vab / 1e3, 1), " bi em 2019")),
+      list(rotulo = "Insumos comprados de outros estados", valor = fmt_pct(r$insumos_outras_uf, 0), nota = paste("e", fmt_pct(r$insumos_exterior, 0), "importados do exterior")),
+      list(rotulo = "Efeito multiplicador que vaza", valor = fmt_pct(r$vazamento_medio, 0), nota = "média ponderada pela produção: parte do efeito que ocorre em outros estados"),
+      list(rotulo = "Consumo de energia", valor = paste(fmt_num(r$energia_mil_tep, 0), "mil tep"), nota = paste(fmt_pct(r$part_br_energia, 1), "do Brasil")))))
+}
+```
+
+### FLQ e NEREUS lado a lado
+
+```{r}
+if (!is.null(nereus)) {
+  comp2 <- mip$regional %>% select(grupo, grupo_nome, bl_flq = bl, fl_flq = fl, class_flq = classificacao, presenca) %>%
+    inner_join(nereus$rh, by = "grupo") %>% arrange(desc(bl_nereus))
+  htmltools::tagList(
+    tabela(comp2 %>% transmute(Setor = grupo_nome, `Para trás FLQ` = round(bl_flq, 2), `Para trás NEREUS` = round(bl_nereus, 2),
+                               `Para frente FLQ` = round(fl_flq, 2), `Para frente NEREUS` = round(fl_nereus, 2),
+                               `Classe FLQ` = class_flq, `Classe NEREUS` = class_nereus)),
+    htmltools::p(paste0("As duas estimativas concordam na classificação de ", sum(comp2$class_flq == comp2$class_nereus), " dos ", nrow(comp2),
+                        " setores. A NEREUS usa os fluxos entre estados estimados para 2019; o FLQ parte da tecnologia média nacional (IBGE ", mip$ano_mip,
+                        ") e reduz as compras locais pelo tamanho de cada setor em PE. Onde divergem, a NEREUS tende a ser a referência para fluxos, e o FLQ acompanha o emprego mais recente.")))
+}
+```
+
+### Produção, vazamento e comércio com outros estados, por setor
+
+```{r}
+if (!is.null(nereus)) {
+  tabela(nereus$setores %>% arrange(desc(vp)) %>% transmute(Setor = setor_nome, `Produção (R$ mi)` = round(vp),
+    `QL produção PE/BR` = round(ql_producao, 2), `QL ocupações PE/BR` = round(ql_ocupacoes, 2), `% do Brasil` = round(100 * part_br_vp, 1),
+    Multiplicador = round(mult_producao, 2), `Vazamento (%)` = round(100 * vazamento), `Empregos por R$ mi` = round(mult_emprego, 1),
+    `Insumos de outras UFs (%)` = round(100 * insumos_outras_uf), `Insumos importados (%)` = round(100 * insumos_exterior),
+    `Principal UF fornecedora` = unname(NOMES_UF_BR[principal_uf_insumos]), `Vendas para outras UFs (%)` = round(100 * vendas_outras_uf),
+    `Exportação (%)` = round(100 * vendas_exterior), `Energia (mil tep)` = round(energia_mil_tep, 1)))
+}
+```
+
+<p class="fonte">QL da produção: peso do setor na produção de PE dividido pelo peso no Brasil. Empregos por R$ mi: ocupações geradas em todo o país por R$ 1 milhão a mais de demanda final pelo setor em PE. O consumo de energia e as emissões da matriz são estimados com a intensidade nacional de cada setor; servem para comparar setores, não a eficiência de PE.</p>
+
+### Com quem Pernambuco troca
+
+```{r}
+if (!is.null(nereus)) {
+  pa <- nereus$parceiros %>% head(12) %>% mutate(estado = unname(NOMES_UF_BR[sigla_uf]))
+  htmltools::tagList(
+    tabela(pa %>% transmute(Estado = estado, `PE vende (R$ mi)` = round(vendas_pe), `PE compra (R$ mi)` = round(compras_pe), `Saldo (R$ mi)` = round(saldo))),
+    rodape_fonte(paste0(nereus$fonte, ". Vendas e compras de insumos e de bens e serviços finais entre PE e cada estado")))
 }
 ```

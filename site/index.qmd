@@ -4,7 +4,7 @@ page-layout: full
 toc: false
 include-in-header:
   text: |
-    <style>body{background:#F3EEE6;} .quarto-title-block{display:none;}</style>
+    <style>.quarto-title-block{display:none;}</style>
 ---
 
 ```{r}
@@ -128,82 +128,102 @@ rd_res <- rd_res %>% left_join(ql_rd %>% select(rd, cadeia, ql), by = "rd") %>% 
 
 # corte do ano corrente
 corte <- tryCatch(ler_base("corte_atual", ""), error = function(e) NULL)
+
+# achados novos: escoamento das exportações e formação ligada às cadeias
+esc_cad <- tryCatch(ler_base("escoamento_cad", ""), error = function(e) NULL)
+cur_cad <- tryCatch(ler_base("cursos_cad", ""), error = function(e) NULL)
+ach_esc <- if (!is.null(esc_cad) && NROW(esc_cad$urf)) esc_cad$urf %>% filter(cadeia_id %in% cads$cadeia_id) %>%
+  group_by(cadeia_id, ano) %>%
+  summarise(total = sum(valor_fob), fora = sum(valor_fob[!grepl("recife|suape|petrolina|pernambuco|ipojuca|caruaru|guararapes", nome, ignore.case = TRUE)]),
+            saida = nome[which.max(valor_fob)], p_saida = max(valor_fob) / sum(valor_fob), .groups = "drop") %>%
+  mutate(p_fora = fora / total) %>% filter(total >= 5e7, p_fora >= 0.5) %>% slice_max(total, n = 1) else NULL
+ach_cur <- if (NROW(cur_cad)) cur_cad %>% filter(cadeia_id %in% cads$cadeia_id) %>% group_by(cadeia_id) %>%
+  summarise(mat = sum(matriculas, na.rm = TRUE), ano = max(ano), .groups = "drop") %>%
+  inner_join(cads %>% select(cadeia_id, cadeia, emp), by = "cadeia_id") %>% filter(emp >= 20000) %>%
+  mutate(por_mil = 1000 * mat / emp) %>% slice_min(por_mil, n = 1) else NULL
+# série do IBCR (2015 = 100) para PE, NE e BR, média móvel de 12 meses
+ib <- if (NROW(macro_ibcr)) macro_ibcr %>% filter(!is.na(valor), data >= as.Date("2015-01-01")) %>% group_by(recorte) %>% arrange(data) %>%
+  mutate(v = 100 * valor / mean(valor[format(data, "%Y") == "2015"]), mm = as.numeric(stats::filter(v, rep(1/12, 12), sides = 1))) %>%
+  filter(!is.na(mm)) %>% ungroup() else NULL
+
+# estrutura produtiva: emprego formal por grande setor
+GS <- c(A = "Agropecuária", B = "Indústria", C = "Indústria", D = "Indústria", E = "Indústria", F = "Construção", G = "Comércio")
+setores_gs <- rais_secao %>% filter(ano %in% c(a10, ult), !secao %in% c("?", NA)) %>%
+  mutate(gs = coalesce(unname(GS[secao]), "Serviços")) %>% group_by(gs, ano) %>% summarise(e = sum(emprego), .groups = "drop") %>%
+  tidyr::pivot_wider(names_from = ano, values_from = e, names_prefix = "a") %>%
+  transmute(gs, e = .data[[paste0("a", ult)]], var = e / .data[[paste0("a", a10)]] - 1,
+            p = e / sum(e), p0 = .data[[paste0("a", a10)]] / sum(.data[[paste0("a", a10)]])) %>% arrange(desc(e))
+
+# encadeamentos: setores-chave da matriz regionalizada
+mip <- tryCatch(ler_base("mip", ""), error = function(e) NULL)
+chave <- if (!is.null(mip)) mip$regional %>% filter(classificacao == "Setor-chave") %>% arrange(desc(bl + fl)) else NULL
+atualizado <- tryCatch(atualizado_em, error = function(e) Sys.time())
+MESES_L <- c("janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro")
 MESES <- c("jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez")
 ```
 
 ```{r}
 #| echo: false
-# abertura: a palavra "Pernambuco" sobre a série do IBCR-PE, com as guias do gráfico
-# no lugar das linhas de altura de uma fonte (teto, base 100, mínimo)
-guia <- function(y, txt) div(class = "guia", style = sprintf("top:%.1f%%", y), span(txt))
-hero_linha <- NULL; guias <- list(guia(38, "QL = 1 · MÉDIA DO ESTADO"))
-if (NROW(macro_ibcr)) {
-  s <- macro_ibcr %>% filter(grepl("pernambuco|^pe", recorte, ignore.case = TRUE), !is.na(valor), data >= as.Date("2015-01-01")) %>% arrange(data)
-  if (nrow(s) > 24) {
-    s$v <- 100 * s$valor / mean(s$valor[format(s$data, "%Y") == "2015"])
-    vmax <- max(s$v); vmin <- min(s$v); y_base <- 62; y_top <- 20
-    esc <- function(v) y_base - (v - 100) / (vmax - 100) * (y_base - y_top)
-    x <- seq(0, 1000, length.out = nrow(s))
-    pts <- paste(sprintf("%.1f,%.2f", x, esc(s$v)), collapse = " ")
-    hero_linha <- HTML(sprintf('<svg class="hero-serie" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="%s" fill="none" stroke="#E07A1F" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>', pts))
-    mes <- function(d) paste0(c("jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez")[as.numeric(format(d, "%m"))], "/", format(d, "%Y"))
-    guias <- list(guia(y_top, paste0("TETO · ", fmt_num(vmax, 1), " EM ", toupper(mes(s$data[which.max(s$v)])))),
-                  guia(y_base, "BASE · 2015 = 100"),
-                  guia(esc(vmin), paste0("PISO · ", fmt_num(vmin, 1), " EM ", toupper(mes(s$data[which.min(s$v)])))))
-  }
+# ---- capa: cabeçalho de boletim + gráfico de abertura (IBCR PE x NE x BR) ----
+grafico_ibcr <- NULL; lead <- NULL
+if (NROW(ib)) {
+  W <- 820; H <- 300; ml <- 40; mr <- 120; mt <- 14; mb <- 30
+  x0 <- min(ib$data); x1 <- max(ib$data)
+  y0 <- floor(min(ib$mm) / 5) * 5; y1 <- ceiling(max(ib$mm) / 5) * 5
+  sx <- function(d) ml + as.numeric(d - x0) / as.numeric(x1 - x0) * (W - ml - mr)
+  sy <- function(v) mt + (y1 - v) / (y1 - y0) * (H - mt - mb)
+  cores <- c(Pernambuco = "#E07A1F", Nordeste = "#1F4E79", Brasil = "#9AA7B4")
+  grade <- paste0(sapply(seq(y0, y1, by = 5), function(v) sprintf(
+    '<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="g%s"/><text x="%d" y="%.1f" class="ey">%d</text>',
+    ml, W - mr, sy(v), sy(v), if (v == 100) " g100" else "", ml - 8, sy(v) + 4, v)), collapse = "")
+  anos <- seq(as.numeric(format(x0, "%Y")) + 1, as.numeric(format(x1, "%Y")), by = 2)
+  eixo_x <- paste0(sapply(anos, function(a) sprintf('<text x="%.1f" y="%d" class="ex">%d</text>', sx(as.Date(paste0(a, "-01-01"))), H - 8, a)), collapse = "")
+  linhas <- paste0(sapply(c("Brasil", "Nordeste", "Pernambuco"), function(r) {
+    d <- ib %>% filter(recorte == r); if (!nrow(d)) return("")
+    u <- d[nrow(d), ]
+    sprintf('<polyline points="%s" class="l l-%s" stroke="%s"/><circle cx="%.1f" cy="%.1f" r="3.5" fill="%s"/><text x="%.1f" y="%.1f" class="rl" fill="%s">%s %s</text>',
+            paste(sprintf("%.1f,%.1f", sx(d$data), sy(d$mm)), collapse = " "), tolower(substr(r, 1, 2)), cores[r],
+            sx(u$data), sy(u$mm), cores[r], sx(u$data) + 8, sy(u$mm) + 4 + c(Pernambuco = 0, Nordeste = 0, Brasil = 0)[r], cores[r],
+            r, fmt_num(u$mm, 1))
+  }), collapse = "")
+  grafico_ibcr <- HTML(sprintf('<svg class="cap-graf" viewBox="0 0 %d %d" role="img" aria-label="Índice de atividade econômica do Banco Central, Pernambuco, Nordeste e Brasil, 2015 = 100">%s%s%s</svg>', W, H, grade, eixo_x, linhas))
+  ult_pe <- ib %>% filter(recorte == "Pernambuco") %>% slice_tail(n = 1)
+  ult_ne <- ib %>% filter(recorte == "Nordeste") %>% slice_tail(n = 1)
+  ult_br <- ib %>% filter(recorte == "Brasil") %>% slice_tail(n = 1)
+  lead <- paste0("Em ", MESES_L[as.numeric(format(ult_pe$data, "%m"))], " de ", format(ult_pe$data, "%Y"), ", a atividade econômica de Pernambuco estava ",
+                 fmt_num(ult_pe$mm - 100, 1), "% acima de 2015, na média de 12 meses. O Nordeste estava ", fmt_num(ult_ne$mm - 100, 1),
+                 "% acima e o Brasil, ", fmt_num(ult_br$mm - 100, 1), "%.")
 }
-tags$section(class = "ato ato-hero",
-  div(class = "hero-canto hero-tl", "PERNAMBUCO"),
-  div(class = "hero-canto hero-tr", "185 MUNICÍPIOS · 12 REGIÕES"),
-  div(class = "hero-guias", `aria-hidden` = "true", guias),
-  hero_linha,
-  div(class = "hero-palavra", "Pernambuco"),
-  div(class = "hero-canto hero-bl", "ATIVIDADE ECONÔMICA · IBCR-PE COM AJUSTE SAZONAL"),
-  div(class = "hero-canto hero-br", "DADOS PÚBLICOS 2006 · 2026"))
-```
-
-```{=html}
-<section class="ato ato-abertura">
-  <p class="rotulo">( EM CARTAZ )</p>
-  <h1 class="ab-nome">José Roberto Verçosa</h1>
-  <p class="ab-tag">Economista que transforma dados públicos em leitura de território.</p>
-  <form class="home-busca" action="municipios.html" method="get" role="search">
-    <i class="bi bi-search"></i>
-    <input name="m" list="home-lista-mun" placeholder="Busque um município (ex.: Caruaru)" aria-label="Buscar município" autocomplete="off">
-    <button type="submit">Ver raio-X</button>
-  </form>
-</section>
-```
-
-```{r}
-#| echo: false
-tags$datalist(id = "home-lista-mun", lapply(sort(municipios$municipio), function(n) tags$option(value = n)))
-```
-
-```{r}
-#| echo: false
-# palavra sublinhada que mostra um número ao passar o mouse
-dica <- function(txt, href, num, leg) tags$a(class = "dica", href = href, txt,
-  tags$span(class = "dica-card", tags$b(num), tags$span(leg)))
-emp_pe <- sum(emp_mun$e)
-div(class = "ato ato-texto",
-  p(class = "rotulo", "( PRÓLOGO )"),
-  p(class = "prosa", "Sou economista, mestre em Economia Regional pela UFPE. Trabalho com dados públicos para entender onde a economia de Pernambuco está, como ela cresce e o que ainda falta medir. Cada página aqui é montada a partir das fontes oficiais, por um código aberto que qualquer pessoa pode rodar de novo."),
-  p(class = "rotulo", "( O PROGRAMA )"),
-  p(class = "prosa",
-    "Começo pelo ", dica("nível de atividade", "panorama.html",
-      if (!is.null(ibcr10)) pct(ibcr10$pe, 1) else "", if (!is.null(ibcr10)) paste("IBCR de PE em 10 anos, até", ibcr10$ano) else ""),
-    ", desmonto as ", dica("cadeias e nichos", "cadeias/index.html", fmt_num(emp_total), paste("empregos formais nas cadeias em", ult)),
-    " em elos, comparo os ", dica("185 municípios", "municipios.html", fmt_num(emp_pe), paste("empregos formais no estado em", ult)),
-    " e as ", dica("12 Regiões de Desenvolvimento", "regioes.html", rd_res$rd[1], paste("é a região com mais emprego:", fmt_num(rd_res$emprego[1]))),
-    ", sigo as ", dica("empresas que abrem e fecham", "panorama.html#empresas", "CNPJ", "Receita Federal, por município e setor"),
-    ", a ", dica("qualificação", "panorama.html#qualificacao-e-educacao", "RAIS + INEP", "escolaridade, ocupações e ensino superior"),
-    " de quem trabalha e o ", dica("ICMS", "panorama.html#icms", "SICONFI", "cota-parte de cada município"), " que circula."),
-  p(class = "dica-aviso", "PASSE O MOUSE NAS PALAVRAS SUBLINHADAS"))
+edicao <- paste(MESES_L[as.numeric(format(atualizado, "%m"))], "de", format(atualizado, "%Y"))
+tagList(
+  div(class = "bol-mast",
+    span("Economia regional de Pernambuco"), span(class = "bol-mast-c", "Dados públicos, atualizados por código aberto"),
+    span(paste("Edição de", edicao))),
+  tags$section(class = "bol-capa",
+    div(class = "bol-capa-txt",
+      p(class = "bol-kicker", "Por José Roberto Verçosa, economista"),
+      h1(class = "bol-titulo", "Onde a economia de Pernambuco produz, emprega e cresce."),
+      p(class = "bol-lead", "Mestre em Economia Regional pela UFPE. Este site lê o estado como um economista lê um território: do nível de atividade para os setores, dos setores para as cadeias, das cadeias para os encadeamentos e, por fim, para cada região e município."),
+      tags$form(class = "home-busca", action = "municipios.html", method = "get", role = "search",
+        tags$i(class = "bi bi-search"),
+        tags$input(name = "m", list = "home-lista-mun", placeholder = "Busque um município (ex.: Caruaru)", `aria-label` = "Buscar município", autocomplete = "off"),
+        tags$button(type = "submit", "Ver raio-X")),
+      tags$datalist(id = "home-lista-mun", lapply(sort(municipios$municipio), function(n) tags$option(value = n)))),
+    div(class = "bol-capa-graf",
+      p(class = "bol-fig", tags$b("Gráfico 1."), " Índice de Atividade Econômica Regional (IBC-R), média móvel de 12 meses, 2015 = 100"),
+      grafico_ibcr,
+      if (!is.null(lead)) p(class = "bol-fig-nota", lead),
+      p(class = "fonte", "Fonte: Banco Central do Brasil, SGS. Elaboração própria."))),
+  tags$nav(class = "bol-sumario",
+    a(href = "#atividade", span("1"), "Atividade"), a(href = "#setores", span("2"), "Estrutura produtiva"),
+    a(href = "#cadeias", span("3"), "Cadeias e nichos"), a(href = "#encadeamentos", span("4"), "Encadeamentos"),
+    a(href = "#territorio", span("5"), "Território"), a(href = "#metodo", span("N"), "Nota técnica")))
 ```
 
 ```{r}
 #| echo: false
+cap <- function(id, n, titulo, tese, ...) tags$section(class = "bol-cap", id = id,
+  div(class = "bol-cap-num", n), div(class = "bol-cap-corpo", h2(class = "bol-cap-tit", titulo), if (!is.null(tese)) p(class = "bol-tese", tese), ...))
 cartao_corte <- NULL
 if (!is.null(corte) && NROW(corte$indicadores)) {
   pe <- corte$indicadores %>% filter(recorte == "Pernambuco")
@@ -218,17 +238,38 @@ if (!is.null(corte) && NROW(corte$indicadores)) {
     valor = paste0(ifelse(corte$caged$saldo > 0, "+", ""), fmt_num(corte$caged$saldo)), nota = paste0("Novo CAGED · ", corte$ano - 1, ": ", fmt_num(corte$caged$anterior)))))
   cartao_corte <- cartoes(itens)
 }
-div(class = "ato",
-  p(class = "rotulo", "( ATO I · O PANORAMA )"),
-  h2(class = "ato-titulo", "O estado inteiro, em séries longas e no ano que está correndo."),
+tese_at <- if (!is.null(ibcr10)) paste0("Em dez anos, a atividade de Pernambuco variou ", pct(ibcr10$pe, 1),
+  if (!is.na(ibcr10$ne)) paste0(", contra ", pct(ibcr10$ne, 1), " do Nordeste"), ". ",
+  if (!is.null(pim10)) paste0("A indústria variou ", pct(pim10$pe, 1), ", ") else "",
+  if (!is.null(pmc10)) paste0("o varejo ", pct(pmc10$pe, 1)) else "",
+  if (!is.null(pms10)) paste0(" e os serviços ", pct(pms10$pe, 1)) else "", ".") else NULL
+cap("atividade", "1", "Atividade", tese_at,
   cartoes(list(
     if (!is.null(ibcr10)) list(rotulo = "Atividade econômica em 10 anos", valor = pct(ibcr10$pe, 1), nota = nota_cmp(ibcr10, "IBCR")),
     if (!is.null(pim10)) list(rotulo = "Produção industrial em 10 anos", valor = pct(pim10$pe, 1), nota = nota_cmp(pim10, "PIM-PF")),
     if (!is.null(pmc10)) list(rotulo = "Vendas do varejo em 10 anos", valor = pct(pmc10$pe, 1), nota = nota_cmp(pmc10, "PMC")),
     if (!is.null(pms10)) list(rotulo = "Volume de serviços em 10 anos", valor = pct(pms10$pe, 1), nota = nota_cmp(pms10, "PMS"))
   ) |> Filter(f = Negate(is.null))),
-  if (!is.null(cartao_corte)) tagList(p(class = "rotulo rotulo-sub", paste("EM", corte$ano, "ATÉ AGORA")), cartao_corte),
-  a(class = "ato-link", href = "panorama.html", "Ver o panorama →"))
+  if (!is.null(cartao_corte)) tagList(p(class = "bol-sub", paste(corte$ano, "até agora")), cartao_corte),
+  a(class = "bol-link", href = "panorama.html", "Ler o panorama completo →"))
+```
+
+```{r}
+#| echo: false
+s1 <- setores_gs[1, ]; ind <- setores_gs %>% filter(gs == "Indústria")
+cap("setores", "2", "Estrutura produtiva",
+  paste0(s1$gs, " concentra ", fmt_num(100 * s1$p, 0), "% do emprego formal do estado em ", ult,
+         if (nrow(ind)) paste0("; a indústria, ", fmt_num(100 * ind$p, 0), "% (eram ", fmt_num(100 * ind$p0, 0), "% em ", a10, ")") else "", "."),
+  div(class = "bol-barras", lapply(seq_len(nrow(setores_gs)), function(i) {
+    r <- setores_gs[i, ]
+    div(class = "bol-barra",
+      span(class = "bol-barra-nome", r$gs),
+      span(class = "bol-barra-trilho", span(class = "bol-barra-fill", style = sprintf("width:%.1f%%", 100 * r$p / max(setores_gs$p)))),
+      span(class = "bol-barra-val", paste0(fmt_num(100 * r$p, 1), "%")),
+      span(class = paste("bol-barra-var", if (isTRUE(r$var >= 0)) "home-pos" else "home-neg"), paste(pct(r$var), "em 10 anos")))
+  })),
+  p(class = "fonte", paste0("Tabela 1. Participação no emprego formal e variação ", a10, "-", ult, ". Fonte: RAIS (MTE), via Base dos Dados. Elaboração própria.")),
+  a(class = "bol-link", href = "panorama.html#setores", "Agregar e desagregar setores →"))
 ```
 
 ```{r}
@@ -246,17 +287,24 @@ card_cad <- function(r, nicho = FALSE) a(class = paste("home-cad", if (nicho) "h
   if (!is.na(r$txt)) div(class = "home-cad-extra", tags$i(class = "bi bi-basket"), r$txt),
   lapply(names(r$conj[[1]]), function(k) div(class = "home-cad-extra",
     tags$i(class = paste("bi", c(PIM = "bi-gear", PMC = "bi-cart", PMS = "bi-briefcase")[k])), r$conj[[1]][[k]])))
-div(class = "ato",
-  p(class = "rotulo", "( ATO II · AS CADEIAS )"),
-  h2(class = "ato-titulo", "Cadeias e nichos: a economia desmontada em elos, do insumo ao consumidor."),
+cap("cadeias", "3", "Cadeias e nichos",
+  paste0(n_cad, " cadeias produtivas e ", nrow(nichos) + 1, " nichos, cada um dividido em elos, do insumo ao consumidor. Juntas, as cadeias somam ",
+         fmt_num(emp_total), " empregos formais em ", ult, ", e Pernambuco lidera o Nordeste em ", nrow(lider), " delas."),
   div(class = "home-achados",
     achado("bi-trophy", paste("Líder do Nordeste em", nrow(lider), "cadeias"),
-           paste0("Pernambuco tem o maior emprego formal do Nordeste em ", paste(lider$cadeia, collapse = "; "),
-                  ". Em outras ", sum(cads$posicao == 2, na.rm = TRUE), " cadeias, fica em segundo."), "panorama.html", "Ver o panorama"),
-    achado("bi-graph-up-arrow", paste(cresce$cadeia, pct(cresce$var10), "em 10 anos"),
-           paste0("Entre as cadeias com mais de 5 mil empregos, foi a que mais cresceu desde ", a10, ", chegando a ",
-                  fmt_num(cresce$emp), " vínculos formais em ", ult, "."), paste0("cadeias/", cresce$cadeia_id, ".html"), "Ver a cadeia"),
-    achado("bi-geo-alt", paste0(fmt_num(100 * conc$part3, 0), "% em três municípios"),
+           paste0("Maior emprego formal da região em ", paste(lider$cadeia, collapse = "; "),
+                  ". Em outras ", sum(cads$posicao == 2, na.rm = TRUE), ", fica em segundo."), "panorama.html", "Ver a comparação"),
+    if (NROW(ach_esc)) achado("bi-truck", paste0(fmt_num(100 * ach_esc$p_fora, 0), "% da exportação sai por outros estados"),
+           paste0(nomes_cad[ach_esc$cadeia_id], ": dos ", fmt_usd(ach_esc$total), " exportados em ", ach_esc$ano,
+                  ", a maior parte foi despachada fora de Pernambuco. Principal saída: ", ach_esc$saida, " (", fmt_num(100 * ach_esc$p_saida, 0), "%)."),
+           paste0("cadeias/", ach_esc$cadeia_id, ".html#escoamento-das-exportações"), "Ver o escoamento")
+    else achado("bi-graph-up-arrow", paste(cresce$cadeia, pct(cresce$var10), "em 10 anos"),
+           paste0("Entre as cadeias com mais de 5 mil empregos, foi a que mais cresceu desde ", a10, "."), paste0("cadeias/", cresce$cadeia_id, ".html"), "Ver a cadeia"),
+    if (NROW(ach_cur)) achado("bi-mortarboard", paste0(fmt_num(ach_cur$por_mil, 0), " matrículas a cada mil empregos"),
+           paste0(ach_cur$cadeia, " tem ", fmt_num(ach_cur$emp), " empregos formais e só ", fmt_num(ach_cur$mat),
+                  " matrículas em cursos superiores presenciais ligados a ela (", ach_cur$ano, "). É a cadeia grande com menos formação local."),
+           paste0("cadeias/", ach_cur$cadeia_id, ".html#formação-cursos-ligados-à-cadeia"), "Ver os cursos")
+    else achado("bi-geo-alt", paste0(fmt_num(100 * conc$part3, 0), "% em três municípios"),
            paste0(nomes_cad[conc$cadeia_id], ": ", conc$lideres, " concentram a maior parte do emprego formal da cadeia."),
            paste0("cadeias/", conc$cadeia_id, ".html"), "Ver o mapa")),
   div(class = "home-cads",
@@ -267,14 +315,27 @@ div(class = "ato",
       div(class = "home-cad-extra", tags$i(class = "bi bi-basket"), "Censo Agropecuário 2017 e crédito do PRONAF por município"))),
   p(class = "fonte", "Fonte: RAIS e ComexStat (via Base dos Dados), IBGE e Banco Central. Posição no Nordeste pelo emprego formal da cadeia em ", ult,
     ". PIM-PF, PMC e PMS são atividades mais amplas que a cadeia, usadas como termo de comparação."),
-  a(class = "ato-link", href = "cadeias/index.html", "Ver todas as cadeias e nichos →"))
+  a(class = "bol-link", href = "cadeias/index.html", "Ver todas as cadeias e nichos →"))
 ```
 
 ```{r}
 #| echo: false
-div(class = "ato",
-  p(class = "rotulo", "( ATO III · O TERRITÓRIO )"),
-  h2(class = "ato-titulo", "Doze regiões, 185 municípios. Cada um com seu raio-X."),
+cap("encadeamentos", "4", "Encadeamentos",
+  if (NROW(chave)) paste0("Na matriz insumo-produto regionalizada, ", nrow(chave), " setores são chave em Pernambuco: compram muito de outros setores e também vendem muito para eles. ",
+                          "Quando crescem, puxam o resto da economia.") else
+    "Quem compra de quem: as ligações para trás e para frente de cada setor.",
+  if (NROW(chave)) tags$ol(class = "bol-lista", lapply(seq_len(nrow(chave)), function(i)
+    tags$li(tags$b(chave$grupo_nome[i]), span(sprintf(" para trás %s · para frente %s", fmt_num(chave$bl[i], 2), fmt_num(chave$fl[i], 2)))))),
+  p(class = "fonte", paste0("Índices de ligação de Rasmussen-Hirschman (média = 1). Matriz nacional do IBGE", if (!is.null(mip)) paste0(" (", mip$ano_mip, ")") else "",
+                            " regionalizada pelo método FLQ. Elaboração própria.")),
+  a(class = "bol-link", href = "encadeamentos.html", "Ver os encadeamentos →"))
+```
+
+```{r}
+#| echo: false
+cap("territorio", "5", "Território",
+  paste0("Doze Regiões de Desenvolvimento e 185 municípios. A ", rd_res$rd[1], " reúne ", fmt_num(100 * rd_res$emprego[1] / sum(rd_res$emprego), 0),
+         "% do emprego formal; cada região tem uma cadeia em que é mais especializada que o estado."),
   div(class = "rd-grid", lapply(seq_len(nrow(rd_res)), function(i) {
     r <- rd_res[i, ]
     a(class = "rd-card", href = paste0("regioes.html?r=", utils::URLencode(r$rd, reserved = TRUE)),
@@ -283,34 +344,29 @@ div(class = "ato",
       div(class = "rd-meta", paste0(r$municipios, " municípios · ", fmt_num(r$pop / 1000), " mil habitantes")),
       if (!is.na(r$cadeia)) div(class = "rd-cad", "Mais especializada em ", tags$b(r$cadeia), paste0(" (QL ", fmt_num(r$ql, 1), ")")))
   })),
-  a(class = "ato-link", href = "regioes.html", "Ver as regiões →"), " ", a(class = "ato-link", href = "municipios.html", "Ver os municípios →"))
+  a(class = "bol-link", href = "regioes.html", "Ver as regiões →"), a(class = "bol-link", href = "municipios.html", "Ver os municípios →"))
 ```
 
 ```{=html}
-<section class="ato">
-  <p class="rotulo">( ATO IV · OS ENCADEAMENTOS )</p>
-  <h2 class="ato-titulo">Quem compra de quem: as ligações para trás e para frente de cada setor.</h2>
-  <p class="prosa">A matriz insumo-produto nacional, regionalizada para Pernambuco, mostra quais setores puxam o resto da economia quando crescem e quais dependem de insumos de fora do estado.</p>
-  <a class="ato-link" href="encadeamentos.html">Ver os encadeamentos →</a>
-</section>
-
-<section class="ato">
-  <p class="rotulo">( BASTIDORES · O MÉTODO )</p>
-  <h2 class="ato-titulo">O mesmo caminho para cada número do site.</h2>
-  <div class="passos">
-    <div class="passo"><span>01</span><h4>Coletar</h4><p>Consultas à Base dos Dados (RAIS, CAGED, CNPJ, ComexStat, INEP, SICONFI), ao SIDRA do IBGE e ao Banco Central.</p></div>
-    <div class="passo"><span>02</span><h4>Classificar</h4><p>Cada cadeia é dividida em elos por códigos CNAE, conferidos contra o diretório oficial.</p></div>
-    <div class="passo"><span>03</span><h4>Medir</h4><p>Quociente locacional, participação, concentração, shift-share e variações em 10, 5 e 2 anos.</p></div>
-    <div class="passo"><span>04</span><h4>Comparar</h4><p>Pernambuco frente ao Nordeste e ao Brasil, e cada município frente à sua região.</p></div>
-    <div class="passo"><span>05</span><h4>Publicar</h4><p>Um pipeline em R (targets e Quarto) refaz tudo a partir das fontes. O código é aberto.</p></div>
+<section class="bol-cap bol-nota" id="metodo">
+  <div class="bol-cap-num">N</div>
+  <div class="bol-cap-corpo">
+    <h2 class="bol-cap-tit">Nota técnica</h2>
+    <ol class="bol-passos">
+      <li><b>Fontes.</b> RAIS, Novo CAGED, CNPJ, ComexStat, INEP e SICONFI pela Base dos Dados; PIB, PAM, PPM, PIM, PMC, PMS e Censo Agropecuário pelo SIDRA do IBGE; IBC-R e crédito rural pelo Banco Central.</li>
+      <li><b>Cadeias.</b> Cada cadeia é dividida em elos por códigos CNAE, conferidos contra o diretório oficial, e ligada às posições do comércio exterior e aos produtos do IBGE.</li>
+      <li><b>Indicadores.</b> Quociente locacional, participação, concentração (IHH), índice de Krugman, shift-share e encadeamentos de Rasmussen-Hirschman, em janelas de 10, 5 e 2 anos.</li>
+      <li><b>Reprodutibilidade.</b> Um pipeline em R (targets e Quarto) refaz tudo a partir das fontes. O código é aberto.</li>
+    </ol>
+    <a class="bol-link" href="metodologia.html">Ler a metodologia →</a><a class="bol-link" href="lacunas.html">O que os dados não mostram →</a>
   </div>
-  <a class="ato-link" href="metodologia.html">Ver a metodologia →</a> <a class="ato-link" href="lacunas.html">O que os dados não mostram →</a>
 </section>
 
-<section class="ato ato-cortina">
-  <p class="rotulo">( CORTINA )</p>
-  <h2 class="cortina-titulo">Vamos conversar sobre<br>o seu território.</h2>
-  <p class="prosa">Avaliação de impacto (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais (QL, IHH, shift-share), comércio exterior e painéis em R/Shiny e Power BI.</p>
+<section class="bol-contato">
+  <div>
+    <h2>Trabalho com</h2>
+    <p>Avaliação de impacto de políticas (DiD, PSM, TWFE, controle sintético), estudos setoriais e de arranjos produtivos locais, comércio exterior e painéis em R/Shiny e Power BI.</p>
+  </div>
   <p class="cortina-links"><a href="https://www.linkedin.com/in/jrsvf">LinkedIn ↗</a> <a href="https://github.com/jrsvf">GitHub ↗</a> <a href="https://lattes.cnpq.br/1066993955257243">Lattes ↗</a></p>
 </section>
 ```

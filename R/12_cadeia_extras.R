@@ -92,7 +92,8 @@ escoamento_cadeia <- function(esc, sh4_map, nomes_urf) {
   urf <- base %>% group_by(cadeia_id, ano, urf) %>% summarise(via = via[which.max(valor_fob)], valor_fob = sum(valor_fob, na.rm = TRUE),
                                                              kg = sum(kg, na.rm = TRUE), .groups = "drop") %>%
     left_join(nomes_urf, by = "urf") %>%
-    mutate(nome = coalesce(nome, paste("URF", urf)), via_nome = coalesce(unname(VIAS_COMEX[via]), "")) %>%
+    mutate(nome = coalesce(nome, paste("URF", urf)),
+           nome = sub("^Alf - ", "Alfândega de ", sub("^Irf - ", "", nome)), nome = sub(" De ", " de ", nome), via_nome = coalesce(unname(VIAS_COMEX[via]), "")) %>%
     group_by(cadeia_id) %>% mutate(part = valor_fob / sum(valor_fob)) %>% arrange(desc(valor_fob), .by_group = TRUE) %>% ungroup()
   list(via = via, urf = urf)
 }
