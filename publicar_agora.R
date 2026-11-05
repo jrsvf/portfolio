@@ -4,7 +4,10 @@ P <- "C:/Users/jose.vercosa/OneDrive - adepe.pe.gov.br/\u00c1rea de Trabalho/07_
 setwd(P)
 if (!nzchar(Sys.getenv("GITHUB_PAT"))) Sys.setenv(GITHUB_PAT = rstudioapi::askForPassword("Token do GitHub"))
 # rodada completa (sem PORTFOLIO_ALVOS): entram a matriz NEREUS e os QLs de empresas, exportações e produção
-Sys.setenv(PORTFOLIO_PROJETO = normalizePath(P, winslash = "/"), PORTFOLIO_ALVOS = "")
+Sys.setenv(PORTFOLIO_PROJETO = normalizePath(P, winslash = "/"), PASTA_PROJETO = normalizePath(P, winslash = "/"), PORTFOLIO_ALVOS = "")
+# refaz sempre as saídas em arquivo (páginas das cadeias, bases e JSON do site): são rápidas e
+# garantem que nada fique apontando para outra pasta
+targets::tar_invalidate(tidyselect::any_of(c("saida_rds", "saida_diag", "saida_csv", "paginas_cadeias", "saida_raiox", "saida_territorio")))
 log <- file.path(P, "log_publicar.log")
 system2(file.path(R.home("bin"), "Rscript.exe"),
         c("-e", shQuote(paste0(
