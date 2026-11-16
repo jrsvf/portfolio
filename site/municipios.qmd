@@ -107,7 +107,7 @@ vatot = d3.sum(va, d => d.v)
 html`${m.pib.ql_va ? html`<div class="rx-cc-qls rx-ql-va" title="Quociente locacional do valor adicionado: peso do setor no município dividido pelo peso em Pernambuco">
   ${[["Agropecuária", m.pib.ql_va.agro], ["Indústria", m.pib.ql_va.ind], ["Serviços", m.pib.ql_va.serv], ["Administração pública", m.pib.ql_va.adm]]
     .map(q => html`<span class="${q[1] >= 1 ? "rx-ql-alto" : ""}">QL ${q[0]} <b>${nf(q[1], 2)}</b></span>`)}</div>` : ""}
-<p>Composição do valor adicionado de ${m.nome} em ${m.pib.ano_va} (o IBGE divulga a divisão por setor com defasagem). Corrigido pelo IPCA, o PIB até ${m.pib.ano} variou <b>${pct(m.pib.var_real.a10)}</b> em 10 anos, <b>${pct(m.pib.var_real.a5)}</b> em 5 anos e <b>${pct(m.pib.var_real.a2)}</b> em 2 anos.</p>`
+<p>Composição do valor adicionado de ${m.nome} em ${m.pib.ano_va}${m.pib.ano_va < m.pib.ano ? html` (o IBGE ainda não divulgou a divisão por setor dos anos seguintes; o PIB total e o PIB per capita, que existem para os 185 municípios, vão até ${m.pib.ano})` : ""}. Corrigido pelo IPCA, o PIB até ${m.pib.ano} variou <b>${pct(m.pib.var_real.a10)}</b> em 10 anos, <b>${pct(m.pib.var_real.a5)}</b> em 5 anos e <b>${pct(m.pib.var_real.a2)}</b> em 2 anos.</p>`
 ```
 
 ::: {.panel-tabset}

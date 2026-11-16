@@ -9,7 +9,8 @@ local({
   }
   Sys.setenv(PASTA_PROJETO = d)
 })
-for (f in c("00_utils.R", "03_indicadores.R", "05_lacunas_destaques.R", "07_site.R", "08_comparacoes.R", "09_macro_municipios.R", "14_nereus.R")) {
+for (f in c("00_utils.R", "03_indicadores.R", "05_lacunas_destaques.R", "07_site.R", "08_comparacoes.R", "09_macro_municipios.R", "14_nereus.R",
+            "17_vocacao.R", "18_emprego.R", "19_historico.R")) {
   source(file.path(Sys.getenv("PASTA_PROJETO"), "R", f), encoding = "UTF-8")
 }
 local({

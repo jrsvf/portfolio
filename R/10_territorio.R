@@ -60,7 +60,11 @@ extrair_cnpj_fluxos <- function(projeto, uf, ano_ini = 2010) {
   consultar(sql, projeto) %>% mutate(across(c(mei, ano, n), as.numeric), id_municipio = as.character(id_municipio))
 }
 
-# Maiores empresas (por capital social) de cada cadeia em cada município
+# Maiores empresas (por capital social) de cada cadeia em cada município.
+# O capital social é da empresa inteira e se repete em cada filial. Por isso
+# cada empresa (raiz do CNPJ) entra uma vez só por cadeia e município, e uma vez
+# só no ranking estadual: fica a matriz, se houver, ou a unidade mais antiga, e
+# `n_unidades` guarda quantos estabelecimentos ativos ela tem ali.
 extrair_cnpj_maiores <- function(projeto, uf, elos, top = 5) {
   cods <- elos %>% distinct(cadeia_id, codigo)
   linhas <- paste0("STRUCT('", cods$cadeia_id, "' AS cadeia_id, '", cods$codigo, "' AS cod)", collapse = ", ")
@@ -83,13 +87,28 @@ extrair_cnpj_maiores <- function(projeto, uf, elos, top = 5) {
       JOIN emp USING (cnpj_basico)
       LEFT JOIN s USING (cnpj_basico)
       WHERE IFNULL(s.mei, 0) != 1 AND emp.natureza_juridica NOT IN ('2135', '4014', '4080', '4090', '4120')),
-    r AS (
-      SELECT j.*, ROW_NUMBER() OVER (PARTITION BY cadeia_id, id_municipio ORDER BY capital_social DESC, data_inicio_atividade) AS rk_mun,
-             ROW_NUMBER() OVER (PARTITION BY cadeia_id ORDER BY capital_social DESC, data_inicio_atividade) AS rk_uf
-      FROM j)
-    SELECT * FROM r WHERE rk_mun <= {top} OR rk_uf <= 15")
+    u AS (
+      SELECT j.*,
+             COUNT(*) OVER (PARTITION BY cadeia_id, id_municipio, cnpj_basico) AS n_unidades,
+             COUNT(*) OVER (PARTITION BY cadeia_id, cnpj_basico) AS n_unidades_uf,
+             ROW_NUMBER() OVER (PARTITION BY cadeia_id, id_municipio, cnpj_basico
+                                ORDER BY IF(matriz_filial IN ('1', '01'), 0, 1), data_inicio_atividade, cnpj) AS ord_mun,
+             ROW_NUMBER() OVER (PARTITION BY cadeia_id, cnpj_basico
+                                ORDER BY IF(matriz_filial IN ('1', '01'), 0, 1), data_inicio_atividade, cnpj) AS ord_uf
+      FROM j),
+    rm AS (
+      SELECT cadeia_id, cnpj, ROW_NUMBER() OVER (PARTITION BY cadeia_id, id_municipio ORDER BY capital_social DESC, data_inicio_atividade, cnpj) AS rk_mun
+      FROM u WHERE ord_mun = 1),
+    ru AS (
+      SELECT cadeia_id, cnpj, ROW_NUMBER() OVER (PARTITION BY cadeia_id ORDER BY capital_social DESC, data_inicio_atividade, cnpj) AS rk_uf
+      FROM u WHERE ord_uf = 1)
+    SELECT u.* EXCEPT (ord_mun, ord_uf), rm.rk_mun, ru.rk_uf
+    FROM u
+    LEFT JOIN rm ON rm.cadeia_id = u.cadeia_id AND rm.cnpj = u.cnpj
+    LEFT JOIN ru ON ru.cadeia_id = u.cadeia_id AND ru.cnpj = u.cnpj
+    WHERE rm.rk_mun <= {top} OR ru.rk_uf <= 15")
   consultar(sql, projeto) %>%
-    mutate(across(c(capital_social, rk_mun, rk_uf), as.numeric), id_municipio = as.character(id_municipio)) %>%
+    mutate(across(c(capital_social, rk_mun, rk_uf, n_unidades, n_unidades_uf), as.numeric), id_municipio = as.character(id_municipio)) %>%
     # nada que pareça nome de pessoa com CPF
     filter(!grepl("[0-9]{11}|[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-?[0-9]{2}", razao_social))
 }
@@ -124,6 +143,7 @@ montar_maiores <- function(maiores, dic, dir_cnae) {
            "05" = "Demais", "5" = "Demais", "00" = "Não informado", "0" = "Não informado")
   }
   maiores %>%
+    uma_por_empresa() %>%
     mutate(atividade = dir_cnae$descricao_subclasse[match(cnae, dir_cnae$subclasse)],
            porte = porte_txt(porte),
            matriz_filial = ifelse(matriz_filial %in% c("1", "01"), "Matriz", "Filial"),
@@ -131,7 +151,30 @@ montar_maiores <- function(maiores, dic, dir_cnae) {
            razao_social = stringr::str_squish(razao_social),
            nome_fantasia = na_if(stringr::str_squish(nome_fantasia), "")) %>%
     select(cadeia_id, id_municipio, cnpj, razao_social, nome_fantasia, cnae, atividade, porte, matriz_filial,
-           abertura, capital_social, rk_mun, rk_uf)
+           abertura, capital_social, n_unidades, n_unidades_uf, rk_mun, rk_uf)
+}
+
+# Rede de segurança contra empresas repetidas: uma linha por empresa (raiz do
+# CNPJ) em cada cadeia e município, e uma por cadeia no ranking estadual. A
+# consulta nova já entrega assim; isto cobre a base antiga, ainda em cache, em
+# que cada filial vinha em uma linha (a contagem de unidades, nesse caso, é só
+# a das que estavam entre as primeiras).
+uma_por_empresa <- function(m) {
+  if ("n_unidades" %in% names(m)) return(m)
+  filial <- function(x) !x %in% c("1", "01")
+  m <- m %>% mutate(cnpj_basico = substr(cnpj, 1, 8)) %>%
+    group_by(cadeia_id, id_municipio, cnpj_basico) %>% mutate(n_unidades = n()) %>%
+    group_by(cadeia_id, cnpj_basico) %>% mutate(n_unidades_uf = n()) %>% ungroup()
+  mun <- m %>% filter(!is.na(rk_mun)) %>% arrange(filial(matriz_filial), data_inicio_atividade, cnpj) %>%
+    distinct(cadeia_id, id_municipio, cnpj_basico, .keep_all = TRUE) %>%
+    group_by(cadeia_id, id_municipio) %>% arrange(desc(capital_social), data_inicio_atividade, cnpj, .by_group = TRUE) %>%
+    mutate(rk_mun = row_number()) %>% ungroup() %>% select(cadeia_id, cnpj, rk_mun)
+  uf <- m %>% filter(!is.na(rk_uf)) %>% arrange(filial(matriz_filial), data_inicio_atividade, cnpj) %>%
+    distinct(cadeia_id, cnpj_basico, .keep_all = TRUE) %>%
+    group_by(cadeia_id) %>% arrange(desc(capital_social), data_inicio_atividade, cnpj, .by_group = TRUE) %>%
+    mutate(rk_uf = row_number()) %>% ungroup() %>% select(cadeia_id, cnpj, rk_uf)
+  m %>% select(-rk_mun, -rk_uf) %>% left_join(mun, by = c("cadeia_id", "cnpj")) %>% left_join(uf, by = c("cadeia_id", "cnpj")) %>%
+    filter(!is.na(rk_mun) | !is.na(rk_uf))
 }
 
 # ---------------------------------------------------------------------------

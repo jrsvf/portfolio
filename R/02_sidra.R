@@ -126,3 +126,44 @@ sidra_por_cadeia <- function(sidra, cadeias_sidra) {
       mutate(cadeia_id = cadeia_id)
   })
 }
+
+# ---------------------------------------------------------------------------
+# PIB dos Municípios: valor adicionado por setor direto do IBGE (tabela 5938)
+# ---------------------------------------------------------------------------
+# Nos anos em que a divisão por setor está vazia na Base dos Dados, tenta o
+# SIDRA. Se o IBGE também não divulgou (valor "..."), nada muda: o PIB total e
+# o per capita seguem até o último ano e as páginas dizem até que ano existe a
+# divisão por setor. Em novembro de 2026 era o caso de 2022 e 2023.
+completar_va_sidra <- function(pib_pop, uf_codigo = 26) {
+  cols <- c("va_agropecuaria", "va_industria", "va_servicos", "va_adespss")
+  anos <- pib_pop %>% group_by(ano) %>% summarise(falta = all(is.na(va_industria)), .groups = "drop") %>% filter(falta) %>% pull(ano)
+  if (!length(anos)) return(pib_pop)
+  url <- sprintf("https://apisidra.ibge.gov.br/values/t/5938/n6/in%%20n3%%20%s/v/513,517,6575,525/p/%s", uf_codigo, paste(anos, collapse = ","))
+  raw <- tryCatch(sidra_baixar(url, tentativas = 2), error = function(e) { msg("PIB por setor no SIDRA: ", conditionMessage(e)); NULL })
+  novo <- va_sidra_arrumar(raw, n_mun = n_distinct(pib_pop$id_municipio))
+  if (!nrow(novo)) { msg("PIB por setor: o IBGE ainda não divulgou ", paste(anos, collapse = " e "), "."); return(pib_pop) }
+  msg("PIB por setor completado pelo SIDRA: ", paste(sort(unique(novo$ano)), collapse = ", "))
+  j <- pib_pop %>% left_join(novo, by = c("ano", "id_municipio"), suffix = c("", ".sidra"))
+  for (k in cols) if (paste0(k, ".sidra") %in% names(j)) j[[k]] <- coalesce(j[[k]], j[[paste0(k, ".sidra")]])
+  j %>% select(-ends_with(".sidra"))
+}
+
+# Resposta da tabela 5938 (primeira linha = cabeçalho) em uma linha por ano e
+# município, em reais. Só entram os anos com os quatro setores em quase todos
+# os municípios.
+va_sidra_arrumar <- function(raw, n_mun = 185) {
+  vazio <- tibble(ano = numeric(), id_municipio = character())
+  if (is.null(raw) || NROW(raw) < 2) return(vazio)
+  cab <- as.character(raw[1, ]); df <- raw[-1, , drop = FALSE]
+  col <- function(rotulo) as.character(df[[which(cab == rotulo)[1]]])
+  t <- tibble(id_municipio = col("Município (Código)"), ano = as.numeric(col("Ano")), variavel = col("Variável"),
+              unidade = col("Unidade de Medida"), valor = suppressWarnings(as.numeric(col("Valor")))) %>%
+    filter(!is.na(valor)) %>%
+    mutate(valor = valor * ifelse(grepl("^Mil", unidade), 1000, 1),
+           campo = case_when(grepl("agropecuária", variavel) ~ "va_agropecuaria", grepl("da indústria", variavel) ~ "va_industria",
+                             grepl("dos serviços", variavel) ~ "va_servicos", grepl("administração", variavel) ~ "va_adespss")) %>%
+    filter(!is.na(campo))
+  if (!nrow(t)) return(vazio)
+  completos <- t %>% count(ano, campo) %>% group_by(ano) %>% summarise(ok = n() == 4 && all(n >= 0.9 * n_mun), .groups = "drop") %>% filter(ok) %>% pull(ano)
+  t %>% filter(ano %in% completos) %>% select(ano, id_municipio, campo, valor) %>% tidyr::pivot_wider(names_from = campo, values_from = valor)
+}

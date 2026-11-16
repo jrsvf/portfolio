@@ -28,6 +28,14 @@
 #          74   = PPM produção origem animal 3940 = PPM aquicultura
 #          289  = PEVS extração vegetal     291  = PEVS silvicultura
 # nota:  ressalvas conhecidas de cobertura (aparecem na página de lacunas).
+# nucleo: em um elo, `nucleo: false` tira o elo do núcleo produtivo da cadeia e
+#        `nucleo: true` o mantém. Sem a chave, vale a regra pelo nome do elo:
+#        comércio, varejo, distribuição, ração e alimentação ficam fora. O
+#        núcleo é a base das vocações, do saldo do CAGED "sem comércio" e do
+#        estoque de emprego por cadeia.
+# contido_em: em um nicho, o id da cadeia de que ele é um recorte (ex.:
+#        vitivinicultura está dentro de fruticultura). Evita contar a mesma
+#        atividade duas vezes quando se escolhe a vocação de um município.
 #
 # Para incluir uma cadeia nova basta copiar um bloco, ajustar e rodar o
 # pipeline. A página da cadeia é gerada automaticamente.
@@ -45,6 +53,7 @@ cadeias:
     elos:
       - nome: Insumos (ração)
         cnae: ["10660"]
+        nucleo: true   # em PE a ração é sobretudo avícola; nas demais cadeias fica fora
       - nome: Produção de frangos e pintos
         cnae: ["0155501", "0155502", "0155503", "0155504"]
       - nome: Produção de ovos
@@ -582,6 +591,7 @@ cadeias:
   - id: vitivinicultura
     nome: Vitivinicultura
     grupo: nicho
+    contido_em: fruticultura
     macrossetor: Nichos produtivos
     descricao: >
       Uva de mesa e vinhos tropicais do Vale do São Francisco (Petrolina,
@@ -639,6 +649,7 @@ cadeias:
   - id: carcinicultura
     nome: Carcinicultura
     grupo: nicho
+    contido_em: aquicultura
     macrossetor: Nichos produtivos
     descricao: >
       Criação de camarão no litoral e no interior, com beneficiamento de
@@ -656,6 +667,7 @@ cadeias:
   - id: cachaca
     nome: Cachaça e destilados
     grupo: nicho
+    contido_em: bebidas
     macrossetor: Nichos produtivos
     descricao: >
       Aguardente de cana e outros destilados, com engenhos e alambiques na Mata
@@ -671,6 +683,7 @@ cadeias:
   - id: cajucultura
     nome: Cajucultura
     grupo: nicho
+    contido_em: fruticultura
     macrossetor: Nichos produtivos
     descricao: >
       Caju e castanha de caju no Sertão e no Agreste, em boa parte da
@@ -690,6 +703,7 @@ cadeias:
   - id: coco
     nome: Coco-da-baía
     grupo: nicho
+    contido_em: fruticultura
     macrossetor: Nichos produtivos
     descricao: >
       Coqueirais do litoral e do Vale do São Francisco, para coco verde e
@@ -739,6 +753,7 @@ cadeias:
   - id: ceramica_vermelha
     nome: Cerâmica vermelha
     grupo: nicho
+    contido_em: construcao_civil
     macrossetor: Nichos produtivos
     descricao: >
       Olarias de tijolos e telhas, com polos no Agreste e na Mata, ligadas à

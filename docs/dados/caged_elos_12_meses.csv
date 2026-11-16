@@ -1,0 +1,117 @@
+cadeia_id;elo_ordem;elo;nucleo;salario_admissao;admissoes;desligamentos;saldo;desde;ate
+apicultura;1;Produção primária;TRUE;1603,53333333333;3;3;0;2025-04-01;2026-03-01
+apicultura;2;Beneficiamento;TRUE;1826,08446726573;779;611;168;2025-04-01;2026-03-01
+aquicultura;1;Insumos (ração);FALSE;2053,82183800623;963;952;11;2025-04-01;2026-03-01
+aquicultura;2;Cultivo (piscicultura e carcinicultura);TRUE;1802,67676806084;263;299;-36;2025-04-01;2026-03-01
+aquicultura;3;Pesca;TRUE;1714,93960784314;51;64;-13;2025-04-01;2026-03-01
+aquicultura;4;Processamento;TRUE;1724,13610827375;979;911;68;2025-04-01;2026-03-01
+aquicultura;5;Distribuição de pescado;FALSE;2030,72152941176;85;84;1;2025-04-01;2026-03-01
+audiovisual;1;Produção e pós-produção;TRUE;2143,06069767442;86;80;6;2025-04-01;2026-03-01
+audiovisual;2;Distribuição e exibição;TRUE;1533,67596412556;223;215;8;2025-04-01;2026-03-01
+audiovisual;3;Televisão;TRUE;2732,64731092437;119;113;6;2025-04-01;2026-03-01
+automotivo;1;Montagem de veículos;TRUE;2080,94832436070;1486;1098;388;2025-04-01;2026-03-01
+automotivo;2;Autopeças;TRUE;2733,83087719298;2109;2101;8;2025-04-01;2026-03-01
+automotivo;3;Comércio de veículos e peças;FALSE;1844,73655513827;8787;7638;1149;2025-04-01;2026-03-01
+avicultura;1;Insumos (ração);TRUE;2053,82183800623;963;952;11;2025-04-01;2026-03-01
+avicultura;2;Produção de frangos e pintos;TRUE;1659,34584894946;1761;1611;150;2025-04-01;2026-03-01
+avicultura;3;Produção de ovos;TRUE;1638,49262541194;2731;2636;95;2025-04-01;2026-03-01
+avicultura;4;Abate e processamento;TRUE;1637,31405976676;1372;1063;309;2025-04-01;2026-03-01
+avicultura;5;Distribuição;FALSE;2427,80257028112;249;222;27;2025-04-01;2026-03-01
+bebidas;1;Destilados;TRUE;2116,83156976744;344;320;24;2025-04-01;2026-03-01
+bebidas;2;Vinhos;TRUE;1787,26680851064;235;221;14;2025-04-01;2026-03-01
+bebidas;3;Cervejas;TRUE;2318,21221864952;311;388;-77;2025-04-01;2026-03-01
+bebidas;4;Águas e refrigerantes;TRUE;1849,12709817550;1151;978;173;2025-04-01;2026-03-01
+bebidas;5;Distribuição;FALSE;1905,95717808219;1460;1384;76;2025-04-01;2026-03-01
+bioeconomia_renovaveis;1;Energia elétrica (geração, transmissão, comércio e distribuição);TRUE;3562,10552238806;737;701;36;2025-04-01;2026-03-01
+bioeconomia_renovaveis;2;Biocombustíveis;TRUE;1685,55692041523;2312;2675;-363;2025-04-01;2026-03-01
+bioeconomia_renovaveis;3;Produção florestal;TRUE;1622,63717948718;78;90;-12;2025-04-01;2026-03-01
+bioeconomia_renovaveis;4;Resíduos e reciclagem;TRUE;1842,84854368932;824;863;-39;2025-04-01;2026-03-01
+bovinocultura;1;Insumos (ração);FALSE;2053,82183800623;963;952;11;2025-04-01;2026-03-01
+bovinocultura;2;Pecuária de corte;TRUE;1687,32448324022;716;760;-44;2025-04-01;2026-03-01
+bovinocultura;3;Pecuária de leite;TRUE;1728,23894117647;170;172;-2;2025-04-01;2026-03-01
+bovinocultura;4;Laticínios;TRUE;1905,16609800363;551;575;-24;2025-04-01;2026-03-01
+bovinocultura;5;Abate e frigoríficos;TRUE;1791,31406926407;231;149;82;2025-04-01;2026-03-01
+bovinocultura;6;Couro;TRUE;1534,36126984127;63;73;-10;2025-04-01;2026-03-01
+bovinocultura;7;Distribuição de carnes;FALSE;2516,65968085106;1034;960;74;2025-04-01;2026-03-01
+cacau_chocolate;1;Cultivo de cacau;TRUE;;0;0;0;2025-04-01;2026-03-01
+cacau_chocolate;2;Chocolates e derivados;TRUE;1606,82571428571;14;13;1;2025-04-01;2026-03-01
+cacau_chocolate;3;Comércio atacadista;FALSE;1850,98840909091;132;101;31;2025-04-01;2026-03-01
+cachaca;1;Aguardente de cana;TRUE;2022,72201277955;313;291;22;2025-04-01;2026-03-01
+cachaca;2;Outros destilados;TRUE;3067,03451612903;31;29;2;2025-04-01;2026-03-01
+cafeicultura;1;Cultivo;TRUE;1625,51000000000;1;1;0;2025-04-01;2026-03-01
+cafeicultura;2;Beneficiamento e torrefação;TRUE;1852,04791666667;120;101;19;2025-04-01;2026-03-01
+cafeicultura;3;Comércio atacadista;FALSE;1771,20666666667;3;1;2;2025-04-01;2026-03-01
+cajucultura;1;Cultivo;TRUE;1381,18181818182;11;14;-3;2025-04-01;2026-03-01
+calcados;1;Curtimento;TRUE;1534,36126984127;63;73;-10;2025-04-01;2026-03-01
+calcados;2;Calçados;TRUE;1629,26982248521;169;304;-135;2025-04-01;2026-03-01
+calcados;3;Comércio;FALSE;1360,13018514337;4429;4480;-51;2025-04-01;2026-03-01
+carcinicultura;1;Criação de camarão;TRUE;1969,49697183099;142;140;2;2025-04-01;2026-03-01
+carcinicultura;2;Beneficiamento;TRUE;1724,13610827375;979;911;68;2025-04-01;2026-03-01
+ceramica_vermelha;1;Tijolos, telhas e artefatos;TRUE;1997,41320743034;1615;1608;7;2025-04-01;2026-03-01
+coco;1;Cultivo;TRUE;1721,53017094017;117;109;8;2025-04-01;2026-03-01
+construcao_civil;1;Materiais;TRUE;2083,93734235323;4139;4055;84;2025-04-01;2026-03-01
+construcao_civil;2;Edificações;TRUE;2156,48600647777;39211;31679;7532;2025-04-01;2026-03-01
+construcao_civil;3;Infraestrutura;TRUE;2455,41835051546;8439;5335;3104;2025-04-01;2026-03-01
+construcao_civil;4;Serviços especializados;TRUE;3788,98463184499;5935;5589;346;2025-04-01;2026-03-01
+construcao_civil;5;Varejo de materiais;FALSE;2338,16708137126;10618;10463;155;2025-04-01;2026-03-01
+cotonicultura;1;Cultivo;TRUE;;0;0;0;2025-04-01;2026-03-01
+cotonicultura;2;Preparação e fiação;TRUE;1534,94937704918;305;309;-4;2025-04-01;2026-03-01
+economia_criativa;1;Consumo (publicidade, arquitetura, design, fotografia);TRUE;3442,78782309457;3923;3795;128;2025-04-01;2026-03-01
+economia_criativa;2;Cultura (artes, patrimônio, música);TRUE;6763,39100806452;744;617;127;2025-04-01;2026-03-01
+economia_criativa;3;Mídias (editorial, audiovisual, rádio e TV);TRUE;2056,62801692866;827;796;31;2025-04-01;2026-03-01
+economia_criativa;4;Tecnologia (software, dados, P&D);TRUE;4177,48111366385;8270;5805;2465;2025-04-01;2026-03-01
+economia_do_mar;1;Pesca e aquicultura marinha;TRUE;1754,26179640719;1169;1116;53;2025-04-01;2026-03-01
+economia_do_mar;2;Indústria naval;TRUE;4105,70929861849;1882;1467;415;2025-04-01;2026-03-01
+economia_do_mar;3;Transporte aquaviário;TRUE;2495,13990000000;100;97;3;2025-04-01;2026-03-01
+economia_do_mar;4;Portos e serviços portuários;TRUE;2814,14711316397;433;290;143;2025-04-01;2026-03-01
+floricultura;1;Cultivo;TRUE;1680,13787878788;66;72;-6;2025-04-01;2026-03-01
+floricultura;2;Comércio;FALSE;1800,37390663391;407;388;19;2025-04-01;2026-03-01
+fruticultura;1;Cultivo;TRUE;1626,81574222519;26946;26186;760;2025-04-01;2026-03-01
+fruticultura;2;Pós-colheita e packing houses;TRUE;1909,42242424242;66;59;7;2025-04-01;2026-03-01
+fruticultura;3;Processamento (sucos, polpas e vinhos);TRUE;1682,06859343603;1493;1549;-56;2025-04-01;2026-03-01
+fruticultura;4;Distribuição;FALSE;1801,31282015395;1429;1357;72;2025-04-01;2026-03-01
+gesso;1;Mineração de gipsita;TRUE;1804,92468531469;143;130;13;2025-04-01;2026-03-01
+gesso;2;Calcinação;TRUE;1665,03143216080;398;374;24;2025-04-01;2026-03-01
+gesso;3;Pré-moldados e artefatos;TRUE;1746,68710382514;366;338;28;2025-04-01;2026-03-01
+gesso;4;Aplicação na construção;TRUE;1956,86328395062;405;319;86;2025-04-01;2026-03-01
+higiene_limpeza;1;Sabões e detergentes;TRUE;2339,34734251968;508;539;-31;2025-04-01;2026-03-01
+higiene_limpeza;2;Produtos de limpeza;TRUE;1889,60786842105;760;725;35;2025-04-01;2026-03-01
+higiene_limpeza;3;Cosméticos e higiene pessoal;TRUE;1917,04869090909;275;272;3;2025-04-01;2026-03-01
+joias;1;Fabricação;TRUE;2499,23684210526;19;26;-7;2025-04-01;2026-03-01
+joias;2;Comércio atacadista;FALSE;1619,03846153846;26;28;-2;2025-04-01;2026-03-01
+logistica;1;Transporte de cargas;TRUE;2267,71678195275;14052;13126;926;2025-04-01;2026-03-01
+logistica;2;Armazenagem e movimentação;TRUE;1833,06028755869;3408;3230;178;2025-04-01;2026-03-01
+logistica;3;Portos e agenciamento;TRUE;2138,96784925276;1539;1341;198;2025-04-01;2026-03-01
+logistica;4;Entregas;TRUE;1783,44685962373;1382;1384;-2;2025-04-01;2026-03-01
+mandiocultura;1;Cultivo;TRUE;2523,60000000000;5;6;-1;2025-04-01;2026-03-01
+mandiocultura;2;Farinha e derivados;TRUE;1498,61166666667;24;41;-17;2025-04-01;2026-03-01
+moveleiro;1;Madeira;TRUE;2088,23044776119;67;58;9;2025-04-01;2026-03-01
+moveleiro;2;Fabricação de móveis e colchões;TRUE;1742,86437500000;2560;2256;304;2025-04-01;2026-03-01
+moveleiro;3;Varejo;FALSE;1999,95750518027;2413;2358;55;2025-04-01;2026-03-01
+ovinocaprinocultura;1;Caprinocultura;TRUE;1867,23076923077;13;15;-2;2025-04-01;2026-03-01
+ovinocaprinocultura;2;Ovinocultura;TRUE;1778,38428571429;14;12;2;2025-04-01;2026-03-01
+ovinocaprinocultura;3;Abate;TRUE;1628,35294117647;17;6;11;2025-04-01;2026-03-01
+petroquimica_plasticos;1;Refino;TRUE;3592,35000000000;89;18;71;2025-04-01;2026-03-01
+petroquimica_plasticos;2;Química de base (PTA, resinas, fibras);TRUE;2121,01000000000;65;170;-105;2025-04-01;2026-03-01
+petroquimica_plasticos;3;Transformação de plásticos;TRUE;2222,62244678564;4651;4226;425;2025-04-01;2026-03-01
+saude;1;Indústria farmacêutica e de equipamentos;TRUE;3416,16537396122;722;571;151;2025-04-01;2026-03-01
+saude;2;Comércio de produtos de saúde;FALSE;2123,63955507325;9215;8302;913;2025-04-01;2026-03-01
+saude;3;Hospitais e clínicas;TRUE;2095,51953124270;21397;19992;1405;2025-04-01;2026-03-01
+saude;4;Diagnóstico e outros serviços de saúde;TRUE;2267,63400898652;6009;5248;761;2025-04-01;2026-03-01
+sucroenergetico;1;Cultivo;TRUE;1793,75072904483;5130;5443;-313;2025-04-01;2026-03-01
+sucroenergetico;2;Açúcar;TRUE;1626,76473443958;16211;16872;-661;2025-04-01;2026-03-01
+sucroenergetico;3;Etanol e biocombustíveis;TRUE;1685,55692041523;2312;2675;-363;2025-04-01;2026-03-01
+suinocultura;1;Produção primária;TRUE;2822,09090909091;22;23;-1;2025-04-01;2026-03-01
+suinocultura;2;Abate e frigoríficos;TRUE;;0;0;0;2025-04-01;2026-03-01
+suinocultura;3;Produtos de carne;TRUE;1721,41304843305;702;593;109;2025-04-01;2026-03-01
+textil_confeccoes;1;Têxtil (tecelagem e artefatos);TRUE;1800,18360986547;892;840;52;2025-04-01;2026-03-01
+textil_confeccoes;2;Lavanderias e acabamento;TRUE;1713,56552238806;134;97;37;2025-04-01;2026-03-01
+textil_confeccoes;3;Confecção e facção;TRUE;1694,20970888114;7454;6913;541;2025-04-01;2026-03-01
+textil_confeccoes;4;Comércio;FALSE;1627,61806278256;11723;11495;228;2025-04-01;2026-03-01
+ti_software;1;Desenvolvimento de software;TRUE;5157,89057518248;3425;2459;966;2025-04-01;2026-03-01
+ti_software;2;Serviços de TI e dados;TRUE;3721,88704849747;3361;2202;1159;2025-04-01;2026-03-01
+turismo;1;Hospedagem;TRUE;2045,51826325821;8919;8125;794;2025-04-01;2026-03-01
+turismo;2;Alimentação;FALSE;1837,90862511551;29217;26869;2348;2025-04-01;2026-03-01
+turismo;3;Agências e operadoras;TRUE;2063,66266426643;1111;993;118;2025-04-01;2026-03-01
+vitivinicultura;1;Cultivo de uva;TRUE;1624,23268145554;20556;20258;298;2025-04-01;2026-03-01
+vitivinicultura;2;Vinhos;TRUE;1787,26680851064;235;221;14;2025-04-01;2026-03-01

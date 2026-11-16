@@ -134,7 +134,7 @@ montar_territorio <- function(municipios, rd, pib_pop, pop, rais_secao, cad_mun,
   mun <- lapply(municipios$id_municipio, function(id) {
     x <- um(id)
     mm <- maiores %>% filter(id_municipio == id, rk_mun <= 5)
-    x$maiores <- if (nrow(mm)) split(mm %>% arrange(rk_mun) %>% select(razao_social, nome_fantasia, atividade, porte, matriz_filial, abertura), mm$cadeia_id[order(mm$rk_mun)]) else NULL
+    x$maiores <- if (nrow(mm)) split(mm %>% arrange(rk_mun) %>% select(razao_social, nome_fantasia, atividade, porte, matriz_filial, abertura, any_of("n_unidades")), mm$cadeia_id[order(mm$rk_mun)]) else NULL
     c(list(id = id), x)
   })
   names(mun) <- municipios$id_municipio

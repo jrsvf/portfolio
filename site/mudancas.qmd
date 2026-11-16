@@ -1,0 +1,145 @@
+---
+title: "O que mudou"
+description: "Um retrato do painel a cada mês: o que entrou de novo nas fontes e como os principais números andaram desde a atualização anterior."
+toc: true
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+h <- tryCatch(ler_base("historico", ""), error = function(e) NULL)
+tem <- !is.null(h) && length(h$refs) > 0
+refs <- if (tem) sort(h$refs) else character()
+atual <- if (tem) tail(refs, 1) else NA_character_
+antes <- if (length(refs) >= 2) refs[length(refs) - 1] else NA_character_
+comp <- !is.na(antes)
+interno <- !(exists("modo_publico") && modo_publico())
+nome_cad <- setNames(cad$meta$cadeia, cad$meta$cadeia_id)
+fmt_valor <- function(x, unidade = "número") { unidade <- rep_len(unidade, length(x)); ifelse(is.na(x), "–",
+  ifelse(unidade == "R$", ifelse(abs(x) >= 1e9, paste0("R$ ", fmt_num(x / 1e9, 1), " bi"), paste0("R$ ", fmt_num(x / 1e6, 1), " mi")),
+  ifelse(unidade == "US$", fmt_usd(x), fmt_num(x)))) }
+# diferença com sinal e cor: verde sobe, vermelho desce
+dif_html <- function(d, unidade = "número") {
+  unidade <- rep_len(unidade, length(d))
+  ifelse(is.na(d), "–", ifelse(d == 0, '<span class="mud-igual">igual</span>',
+    sprintf('<span class="%s">%s%s</span>', ifelse(d > 0, "mud-sobe", "mud-desce"), ifelse(d > 0, "+", "−"), fmt_valor(abs(d), unidade))))
+}
+kb <- function(df, align = NULL) htmltools::HTML(knitr::kable(df, format = "html", escape = FALSE, align = align, table.attr = "class='table table-sm'"))
+```
+
+```{r}
+if (!tem) {
+  htmltools::p(class = "aviso", "Ainda não há retrato gravado. Ele é criado na próxima vez que o pipeline rodar (targets::tar_make()).")
+} else if (!comp) {
+  htmltools::p(class = "aviso", paste0("Primeiro retrato gravado: ", rotulo_ref(atual), ". A comparação aparece a partir da próxima atualização, em outro mês. Por enquanto a página mostra só os números atuais."))
+} else {
+  htmltools::p(htmltools::HTML(paste0("Comparação entre o retrato de <b>", rotulo_ref(atual), "</b> e o de <b>", rotulo_ref(antes), "</b>. Há ", length(refs),
+                                      " retratos guardados, de ", rotulo_ref(refs[1]), " em diante.")))
+}
+```
+
+A cada atualização o painel guarda um retrato do mês: até onde vai cada fonte e os números que não têm série própria ou que mudam quando uma base é revista. Rodar de novo no mesmo mês substitui o retrato daquele mês.
+
+## Fontes
+
+```{r}
+if (tem) {
+  f <- h$fontes %>% filter(ref == atual) %>% select(fonte, referencia)
+  if (comp) {
+    f <- f %>% left_join(h$fontes %>% filter(ref == antes) %>% select(fonte, antes = referencia), by = "fonte") %>%
+      mutate(mudou = ifelse(is.na(antes) | antes != referencia, '<span class="mud-sobe">atualizada</span>', '<span class="mud-igual">igual</span>'))
+    kb(f %>% transmute(Fonte = fonte, `Vai até` = referencia, `No retrato anterior` = coalesce(antes, "–"), ` ` = mudou))
+  } else kb(f %>% transmute(Fonte = fonte, `Vai até` = referencia))
+}
+```
+
+## Pernambuco
+
+```{r}
+if (tem) {
+  p <- h$pe %>% filter(ref == atual) %>% select(indicador, valor, unidade, referencia)
+  if (comp) {
+    p <- p %>% left_join(h$pe %>% filter(ref == antes) %>% select(indicador, valor_antes = valor, ref_antes = referencia), by = "indicador")
+    kb(p %>% transmute(Indicador = indicador, `Referência` = referencia, Agora = fmt_valor(valor, unidade), Antes = fmt_valor(valor_antes, unidade),
+                       `Diferença` = dif_html(valor - valor_antes, unidade),
+                       ` ` = ifelse(!is.na(ref_antes) & ref_antes != referencia, paste0("antes: ", ref_antes), "")), align = "llrrrl")
+  } else kb(p %>% transmute(Indicador = indicador, `Referência` = referencia, Valor = fmt_valor(valor, unidade)), align = "llr")
+}
+```
+
+<p class="fonte">Quando a referência muda (por exemplo, a RAIS passa de um ano para o seguinte), a diferença mistura o período novo com o antigo; a última coluna avisa.</p>
+
+## Cadeias e nichos
+
+```{r}
+if (tem) {
+  cols <- intersect(c("estoque", "saldo_12m", "empresas", "exportacoes", "emprego"), names(h$cadeia))
+  a <- h$cadeia %>% filter(ref == atual) %>% mutate(cadeia = unname(nome_cad[cadeia_id]))
+  if (comp) {
+    b <- h$cadeia %>% filter(ref == antes) %>% select(cadeia_id, all_of(cols)) %>% rename_with(~ paste0(.x, "_antes"), -cadeia_id)
+    j <- a %>% left_join(b, by = "cadeia_id")
+    d <- function(k) if (all(c(k, paste0(k, "_antes")) %in% names(j))) j[[k]] - j[[paste0(k, "_antes")]] else NA_real_
+    j <- j %>% mutate(d_estoque = d("estoque"), d_empresas = d("empresas"), d_exp = d("exportacoes"))
+    mexeu <- j %>% filter(coalesce(d_estoque, 0) != 0 | coalesce(d_empresas, 0) != 0 | coalesce(d_exp, 0) != 0)
+    if (!nrow(mexeu)) htmltools::p("Nenhuma cadeia mudou de um retrato para o outro: as fontes não trouxeram período novo.")
+    else kb(mexeu %>% arrange(desc(abs(coalesce(d_estoque, 0)))) %>%
+              transmute(`Cadeia ou nicho` = sprintf('<a href="cadeias/%s.html">%s</a>', cadeia_id, cadeia),
+                        `Empregos com carteira` = fmt_valor(estoque), `Diferença` = dif_html(d_estoque),
+                        `Saldo 12 meses` = fmt_valor(saldo_12m), `Empresas ativas` = fmt_valor(empresas), `Dif. empresas` = dif_html(d_empresas),
+                        `Dif. exportações` = dif_html(d_exp, "US$")), align = "lrrrrrr")
+  } else if ("estoque" %in% names(a)) {
+    kb(a %>% arrange(desc(estoque)) %>% transmute(`Cadeia ou nicho` = sprintf('<a href="cadeias/%s.html">%s</a>', cadeia_id, cadeia),
+                                                  `Empregos com carteira (estimativa)` = fmt_valor(estoque),
+                                                  `Só o núcleo produtivo` = fmt_valor(estoque_nucleo), `Saldo 12 meses` = fmt_valor(saldo_12m),
+                                                  `Empresas ativas (com MEI)` = if ("empresas" %in% names(a)) fmt_valor(empresas) else "–"), align = "lrrrr")
+  }
+}
+```
+
+## Vocações que mudaram de estágio
+
+```{r}
+if (tem && NROW(h$vocacao)) {
+  if (comp) {
+    va <- h$vocacao %>% filter(ref == atual) %>% select(rd, cadeia_id, classe, indice)
+    vb <- h$vocacao %>% filter(ref == antes) %>% select(rd, cadeia_id, classe_antes = classe, indice_antes = indice)
+    m <- full_join(va, vb, by = c("rd", "cadeia_id")) %>% filter(is.na(classe) | is.na(classe_antes) | classe != classe_antes)
+    if (!nrow(m)) htmltools::p("Nenhuma vocação mudou de estágio.")
+    else kb(m %>% arrange(rd) %>% transmute(`Região` = rd, `Cadeia ou nicho` = unname(nome_cad[cadeia_id]), Antes = coalesce(classe_antes, "sem vocação"),
+                                           Agora = coalesce(classe, "sem vocação"), `Índice` = ifelse(is.na(indice), "–", fmt_num(indice))))
+  } else {
+    n <- h$vocacao %>% filter(ref == atual) %>% count(classe)
+    htmltools::p(paste0("No retrato atual: ", paste(n$n, paste0(tolower(n$classe), "s"), collapse = ", "), " (combinações de região e cadeia). Veja em "),
+                 htmltools::a(href = "vocacoes-cadeias.html", "Vocações por cadeia"), ".")
+  }
+} else if (tem) htmltools::p("O retrato atual não traz as vocações por cadeia.")
+```
+
+```{r}
+#| results: asis
+if (tem && interno && NROW(h$programas)) {
+  cat("\n## Programas da ADEPE\n\n")
+  pr <- h$programas %>% filter(ref == atual) %>% select(programa, indicador, valor, unidade)
+  if (comp) {
+    pr <- pr %>% left_join(h$programas %>% filter(ref == antes) %>% select(programa, indicador, valor_antes = valor), by = c("programa", "indicador"))
+    print(kb(pr %>% transmute(Programa = programa, Indicador = indicador, Agora = fmt_valor(valor, unidade), Antes = fmt_valor(valor_antes, unidade),
+                              `Diferença` = dif_html(valor - valor_antes, unidade)), align = "llrrr"))
+  } else print(kb(pr %>% transmute(Programa = programa, Indicador = indicador, Valor = fmt_valor(valor, unidade)), align = "llr"))
+  cat('\n<p class="fonte">Totais lidos das planilhas dos programas na data de cada retrato. Uso interno.</p>\n')
+}
+```
+
+```{r}
+#| results: asis
+# série dos retratos, quando já houver três ou mais
+if (tem && length(refs) >= 3) {
+  cat("\n## Série dos retratos\n\n")
+  s <- h$pe %>% filter(indicador %in% c("Empregos com carteira (estimativa)", "Empresas ativas, sem MEI", "MEI ativos")) %>%
+    mutate(mes = as.Date(paste0(ref, "-01")))
+  print(htmltools::tagList(grafico_linhas(s, "mes", "valor", cor = "indicador", titulo_y = "Valor em cada retrato")))
+}
+```
+
+```{r}
+if (tem) rodape_fonte(paste0("retratos gravados pelo pipeline em historico/, um por mês (", length(refs), " até agora)"))
+```

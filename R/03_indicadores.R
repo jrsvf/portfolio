@@ -139,13 +139,18 @@ serie_comparada <- function(rais_br, elos, uf = "PE") {
 }
 
 #' Saldo do CAGED em 12 meses móveis por cadeia
+#' `saldo` soma todos os elos da cadeia; `saldo_nucleo` só os do núcleo
+#' produtivo (sem comércio e distribuição, ver `nucleo` em cad$elos).
 caged_cadeia <- function(caged, elos) {
+  if (!"nucleo" %in% names(elos)) elos$nucleo <- TRUE
   out <- caged %>%
-    ligar_elos(elos, "cadeia_id") %>%
+    ligar_elos(elos, c("cadeia_id", "nucleo")) %>%
     group_by(ano, mes, cadeia_id) %>%
     summarise(salario_admissao = weighted.mean(salario_admissao, admissoes, na.rm = TRUE),
+              saldo_nucleo = sum(saldo[nucleo], na.rm = TRUE),
               saldo = sum(saldo, na.rm = TRUE),
               admissoes = sum(admissoes, na.rm = TRUE),
+              desligamentos = sum(desligamentos, na.rm = TRUE),
               .groups = "drop") %>%
     mutate(data = as.Date(sprintf("%d-%02d-01", ano, mes)))
   if (nrow(out) == 0) return(out)
@@ -153,11 +158,12 @@ caged_cadeia <- function(caged, elos) {
   meses <- seq(min(out$data), max(out$data), by = "month")
   tidyr::expand_grid(cadeia_id = unique(out$cadeia_id), data = meses) %>%
     left_join(out %>% select(-ano, -mes), by = c("cadeia_id", "data")) %>%
-    mutate(saldo = coalesce(saldo, 0), admissoes = coalesce(admissoes, 0)) %>%
+    mutate(across(c(saldo, saldo_nucleo, admissoes, desligamentos), ~ coalesce(.x, 0))) %>%
     mutate(ano = as.numeric(format(data, "%Y")), mes = as.numeric(format(data, "%m"))) %>%
     group_by(cadeia_id) %>%
     arrange(data, .by_group = TRUE) %>%
-    mutate(saldo_12m = as.numeric(stats::filter(saldo, rep(1, 12), sides = 1))) %>%
+    mutate(saldo_12m = as.numeric(stats::filter(saldo, rep(1, 12), sides = 1)),
+           saldo_nucleo_12m = as.numeric(stats::filter(saldo_nucleo, rep(1, 12), sides = 1))) %>%
     ungroup()
 }
 

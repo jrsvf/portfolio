@@ -25,6 +25,15 @@ cx   <- cx %>% filter(ano >= max(c(ano, 0)) - max(CORTES_PADRAO$janelas))
 sc   <- sidra_cad %>% filter(cadeia_id == CADEIA)
 sc   <- sc %>% filter(ano >= max(c(ano, 0)) - max(CORTES_PADRAO$janelas))
 cg   <- caged_cad %>% filter(cadeia_id == CADEIA)
+# CAGED por elo, estoque mensal estimado e núcleo produtivo (saem do pipeline; se faltarem, a página segue sem eles)
+caged_elo <- tryCatch(ler_base("caged_elo", ""), error = function(e) NULL)
+estoque   <- tryCatch(ler_base("estoque", ""), error = function(e) NULL)
+ce <- if (NROW(caged_elo)) caged_elo %>% filter(cadeia_id == CADEIA) else tibble()
+es <- if (!is.null(estoque)) estoque$cadeia %>% filter(cadeia_id == CADEIA) else tibble()
+if (!"nucleo" %in% names(elos)) elos$nucleo <- TRUE
+elos_fora <- unique(elos$elo[!elos$nucleo])
+tem_fora  <- length(elos_fora) > 0
+fora_txt  <- paste(tolower(elos_fora), collapse = " e ")
 # Pesquisas conjunturais do IBGE (PIM-PF, PMC, PMS) ligadas à cadeia (campos pim, pmc e pms em cadeias.yml)
 conj_c <- tryCatch(ler_base("conj_cadeias", ""), error = function(e) NULL)
 conj_s <- tryCatch(ler_base("conj_setores", ""), error = function(e) NULL)
@@ -50,6 +59,26 @@ if (nrow(cx) > 0) {
                               valor = fmt_usd(sum(cx$valor_fob[cx$ano == ucx & cx$fluxo == "Exportação"])))))
 }
 cartoes(itens)
+```
+
+```{r}
+# Aviso de recorte: diz se a página é cadeia ou nicho e com quem divide códigos da CNAE
+viz <- sobreposicao_cadeias(cad$elos) %>% filter(cadeia_id == CADEIA) %>% left_join(cad$meta %>% select(com = cadeia_id, nome = cadeia, grupo_com = grupo), by = "com")
+elo_link <- function(id, nome) sprintf('<a href="%s.html">%s</a>', id, nome)
+links <- function(v) if (nrow(v)) paste(elo_link(v$com, v$nome), collapse = ", ") else ""
+pai <- if ("contido_em" %in% names(meta) && !is.na(meta$contido_em)) cad$meta %>% filter(cadeia_id == meta$contido_em) else NULL
+txt <- if (NROW(pai)) {
+  paste0("<b>Nicho dentro de uma cadeia.</b> ", meta$cadeia, " é um recorte de ", elo_link(pai$cadeia_id, pai$cadeia),
+         ": os empregos, as empresas e as exportações desta página já estão contados lá. Tem página própria porque seus polos e seu mercado se perdem na média da cadeia.")
+} else if (meta$grupo == "nicho" && grepl("transversa", meta$macrossetor)) {
+  paste0("<b>Nicho transversal.</b> Reúne atividades de vários setores em torno de um tema", if (nrow(viz)) paste0(" e repete códigos de ", links(viz)) else "",
+         ". Serve para ler o tema inteiro e não deve ser somado às cadeias.")
+} else if (meta$grupo == "nicho") {
+  paste0("<b>Nicho produtivo.</b> Atividade específica, com poucos códigos da CNAE e polos bem localizados", if (nrow(viz)) paste0(". Divide códigos com ", links(viz), ", então os números não devem ser somados") else "", ".")
+} else if (nrow(viz)) {
+  paste0("<b>Cadeia.</b> Parte destas atividades também aparece em ", links(viz), ", que usam alguns dos mesmos códigos da CNAE.")
+} else ""
+if (nzchar(txt)) htmltools::div(class = "recorte", htmltools::HTML(txt), htmltools::HTML(' <a href="index.html#cadeia-ou-nicho">Como ler cadeias e nichos</a>.'))
 ```
 
 ## O que os dados já mostram
@@ -252,13 +281,61 @@ Variação total de `r if (nrow(ss)==1) fmt_num(ss$variacao) else "-"` vínculos
 ## Dinâmica recente (Novo CAGED)
 
 ```{r}
+sinal_n <- function(x) paste0(ifelse(x > 0, "+", ""), fmt_num(x))
 if (nrow(cg) > 0) {
-  grafico_saldo_caged(cg)
+  u <- cg %>% filter(data == max(data))
+  m12 <- cg %>% filter(data > seq(max(data), by = "-12 months", length.out = 2)[2])
+  itens_cg <- list(
+    list(rotulo = paste0("Saldo em 12 meses, até ", format(u$data, "%m/%Y")), valor = sinal_n(u$saldo_12m),
+         nota = if (tem_fora) "todos os elos da cadeia" else NULL),
+    if (tem_fora && "saldo_nucleo_12m" %in% names(u)) list(rotulo = "Saldo só do núcleo produtivo", valor = sinal_n(u$saldo_nucleo_12m), nota = paste("sem", fora_txt)),
+    list(rotulo = "Admissões em 12 meses", valor = fmt_num(sum(m12$admissoes)),
+         nota = if ("desligamentos" %in% names(m12)) paste("Desligamentos:", fmt_num(sum(m12$desligamentos))) else NULL),
+    if (nrow(es)) list(rotulo = paste0("Empregos com carteira em ", format(max(es$data), "%m/%Y")), valor = fmt_num(es$estoque[es$data == max(es$data)]),
+                       nota = "estimativa: RAIS mais saldos do CAGED"))
+  cartoes(Filter(Negate(is.null), itens_cg))
+}
+```
+
+::: {.panel-tabset}
+
+### Saldo mensal
+
+```{r}
+if (nrow(cg) > 0) {
+  grafico_saldo_caged(cg, nucleo = tem_fora)
 } else htmltools::p("Sem movimentação registrada no Novo CAGED para as classes da cadeia.")
 ```
 
+### Por elo, em 12 meses
+
 ```{r}
-if (nrow(cg) > 0) rodape_fonte(paste0("Novo CAGED, até ", format(max(cg$data), "%m/%Y")))
+if (nrow(ce) > 0) {
+  htmltools::tagList(
+    htmltools::HTML(knitr::kable(ce %>% transmute(Elo = elo, `Núcleo produtivo` = ifelse(nucleo, "sim", "não"), `Admissões` = fmt_num(admissoes),
+                                                   Desligamentos = fmt_num(desligamentos), Saldo = sinal_n(saldo),
+                                                   `Salário médio de admissão` = ifelse(is.finite(salario_admissao), paste0("R$ ", fmt_num(salario_admissao)), "–")),
+                                 format = "html", align = "llrrrr", table.attr = "class='table table-sm'")),
+    htmltools::p(class = "fonte", paste0("De ", format(ce$desde[1], "%m/%Y"), " a ", format(ce$ate[1], "%m/%Y"), ". Salário de admissão em valores correntes.")))
+} else htmltools::p("Sem o detalhe por elo nesta atualização.")
+```
+
+### Empregos com carteira, mês a mês
+
+```{r}
+if (nrow(es) > 0) {
+  htmltools::tagList(
+    grafico_estoque(es, nucleo = if (tem_fora) "estoque_nucleo" else NULL),
+    htmltools::p(class = "fonte", paste0(estoque_nota(estoque), ". Não é o estoque oficial do MTE.")))
+} else htmltools::p("Sem a estimativa de estoque nesta atualização.")
+```
+
+:::
+
+**O que entra nesta conta.** O Novo CAGED registra admissões e desligamentos de empregos com carteira assinada (CLT). Servidores estatutários, MEI, autônomos e informais ficam de fora. O saldo desta página soma os `r n_distinct(elos$elo)` elos da cadeia. `r if (length(elos_fora) == 1) paste0("O elo de ", fora_txt, " existe em quase todo município e não indica especialização; sem ele fica o saldo do núcleo produtivo. ") else if (tem_fora) paste0("Os elos de ", fora_txt, " existem em quase todo município e não indicam especialização; sem eles fica o saldo do núcleo produtivo. ") else ""`Os números são os declarados no prazo: o MTE ainda os ajusta com as declarações atrasadas, por isso podem diferir um pouco dos divulgados oficialmente.
+
+```{r}
+if (nrow(cg) > 0) rodape_fonte(paste0("Novo CAGED, até ", format(max(cg$data), "%m/%Y"), if (nrow(es)) paste0("; RAIS ", estoque$ano_base) else ""))
 ```
 
 ## Produção física (IBGE)

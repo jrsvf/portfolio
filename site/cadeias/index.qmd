@@ -22,6 +22,14 @@ esp <- concentracao %>% filter(ano == ult) %>% transmute(cadeia_id = atividade, 
 tab <- cad$meta %>% left_join(emp, by = "cadeia_id") %>% left_join(esp, by = "cadeia_id") %>%
   mutate(tipo = ifelse(grupo == "nicho", "Nicho", "Cadeia")) %>% arrange(match(macrossetor, unique(cad$meta$macrossetor)), desc(emprego))
 lista <- function(k) paste(tolower(tab$cadeia[tab$macrossetor == k]), collapse = ", ")
+# para o texto "Cadeia ou nicho?": quem divide códigos com quem e quais elos ficam fora do núcleo produtivo
+nome_de <- setNames(cad$meta$cadeia, cad$meta$cadeia_id)
+e_ou <- function(x) if (length(x) <= 1) x else paste(paste(head(x, -1), collapse = ", "), "e", tail(x, 1))
+viz <- sobreposicao_cadeias(cad$elos)
+so_cadeias <- viz %>% filter(cadeia_id %in% tab$cadeia_id[tab$grupo == "cadeia"], com %in% tab$cadeia_id[tab$grupo == "cadeia"], cadeia_id < com)
+dentro <- if ("contido_em" %in% names(cad$meta)) cad$meta %>% filter(!is.na(contido_em)) else cad$meta[0, ]
+soma <- function(g) fmt_num(sum(tab$emprego[tab$grupo == g], na.rm = TRUE))
+fora <- if ("nucleo" %in% names(cad$elos)) cad$elos %>% filter(!nucleo) %>% distinct(cadeia_id, elo) else tibble(cadeia_id = character(), elo = character())
 ```
 
 O painel acompanha **`r sum(tab$grupo == "cadeia")` cadeias produtivas** e **`r sum(tab$grupo == "nicho")` nichos**. Cada um é dividido em **elos** (insumos, produção primária, processamento, distribuição), definidos por códigos da CNAE 2.0 e ligados às posições do comércio exterior e aos produtos das pesquisas agropecuárias do IBGE. A definição está em um arquivo de configuração aberto: incluir uma nova cadeia ou nicho é escrever um bloco de texto, e a página dele aparece aqui automaticamente.
@@ -30,6 +38,18 @@ O painel acompanha **`r sum(tab$grupo == "cadeia")` cadeias produtivas** e **`r 
 - **Nichos produtivos** (`r lista("Nichos produtivos")`): atividades específicas, algumas já contidas em cadeias maiores, destacadas para leitura própria.
 - A **[agricultura familiar](../agricultura-familiar.qmd)** tem página própria, porque não se define por atividade econômica e sim pelo tipo de estabelecimento rural.
 - Para qualquer outra atividade da CNAE, use a página **[Vocações](../vocacoes.qmd)**.
+
+## Cadeia ou nicho? {#cadeia-ou-nicho}
+
+A diferença é de tamanho e de função, não de importância.
+
+- **Cadeia** é um conjunto amplo de atividades ligadas do insumo à venda, com emprego em muitos municípios. As `r sum(tab$grupo == "cadeia")` cadeias quase não repetem códigos da CNAE entre si`r if (nrow(so_cadeias)) paste0(" (as exceções são ", e_ou(paste(tolower(nome_de[so_cadeias$cadeia_id]), "com", tolower(nome_de[so_cadeias$com]))), ")") else ""`, então dá para comparar uma com a outra.
+- **Nicho produtivo** é uma atividade específica, com poucos códigos e polos bem localizados. `r if (nrow(dentro)) paste0("Alguns estão inteiros dentro de uma cadeia: ", e_ou(paste0(tolower(dentro$cadeia), " (em ", tolower(nome_de[dentro$contido_em]), ")")), ". Têm página própria porque, na média da cadeia, o polo some.") else ""`
+- **Nicho transversal** é um tema que atravessa setores (`r lista("Nichos transversais")`) e repete códigos de cadeias de propósito, para que o tema possa ser lido inteiro.
+
+Na prática, **não some nichos com cadeias**: parte do emprego entraria duas vezes. Em `r ult`, as cadeias reúnem `r soma("cadeia")` empregos formais e os nichos, `r soma("nicho")`, e os dois números se sobrepõem. Na página de cada cadeia ou nicho, um aviso logo abaixo dos números diz com quem ela divide códigos.
+
+**Núcleo produtivo.** `r if (nrow(fora)) paste0("Em ", n_distinct(fora$cadeia_id), " cadeias e nichos há elos de comércio, varejo, distribuição, ração ou alimentação. ") else ""`Esses elos mostram o tamanho do mercado, mas existem em quase todo município: uma loja de roupas não faz de uma cidade um polo de confecções. Por isso as [vocações por cadeia](../vocacoes-cadeias.qmd), o saldo do CAGED "só do núcleo produtivo" e o estoque de emprego do núcleo deixam esses elos de fora. Os totais da cadeia continuam mostrando todos os elos.
 
 ::: {.callout-note collapse="true"}
 ## Tabela com todas as cadeias e nichos

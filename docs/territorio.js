@@ -101,7 +101,11 @@ export function blocoInfra(inf, {html}) {
 const PORTE = {"Micro Empresa": "microempresa", "Empresa De Pequeno Porte": "pequeno porte", "Demais": "médio ou grande porte"};
 export function listaMaiores(lst, {html}) {
   if (!lst || !lst.length) return "";
+  // cada empresa aparece uma vez; o capital social é da empresa inteira, não da unidade local
+  const temFilial = lst.some(e => e.matriz_filial === "Filial");
   return html`<div class="rx-cc-bloco"><h5>Maiores empresas ativas (capital social)</h5><ul class="rx-emp">
     ${lst.map(e => html`<li><b>${e.nome_fantasia || e.razao_social}</b>
-      <span>${[e.atividade, PORTE[e.porte] ?? e.porte, e.abertura ? "desde " + e.abertura : null].filter(Boolean).join(" · ")}</span></li>`)}</ul></div>`;
+      <span>${[e.atividade, PORTE[e.porte] ?? e.porte, e.abertura ? "desde " + e.abertura : null,
+               e.matriz_filial === "Filial" ? "filial" : null, e.n_unidades > 1 ? e.n_unidades + " unidades aqui" : null].filter(Boolean).join(" · ")}</span></li>`)}</ul>
+    ${temFilial ? html`<p class="fonte">Nas filiais, o capital social que ordena a lista é o da empresa inteira, não o da unidade no município.</p>` : ""}</div>`;
 }

@@ -136,7 +136,8 @@ tabela_janelas <- function(jc) {
   htmltools::HTML(knitr::kable(t, format = "html", table.attr = "class='table table-sm'"))
 }
 
-grafico_saldo_caged <- function(df) {
+# `nucleo = TRUE` acrescenta a linha do acumulado só do núcleo produtivo (sem comércio e distribuição)
+grafico_saldo_caged <- function(df, nucleo = FALSE) {
   p <- plotly::plot_ly(df, x = ~data) %>%
     plotly::add_bars(y = ~saldo, name = "Saldo do mês",
                      marker = list(color = ifelse(df$saldo >= 0, PALETA$principal, PALETA$destaque)),
@@ -144,6 +145,11 @@ grafico_saldo_caged <- function(df) {
     plotly::add_lines(y = ~saldo_12m, name = "Acumulado em 12 meses", yaxis = "y2",
                       line = list(color = "#2C3E50", width = 2),
                       hovertemplate = "%{y:,.0f}<extra>12 meses</extra>")
+  if (nucleo && "saldo_nucleo_12m" %in% names(df)) {
+    p <- p %>% plotly::add_lines(y = ~saldo_nucleo_12m, name = "12 meses, só o núcleo produtivo", yaxis = "y2",
+                                 line = list(color = "#2C3E50", width = 2, dash = "dot"),
+                                 hovertemplate = "%{y:,.0f}<extra>12 meses, núcleo</extra>")
+  }
   layout_padrao(p, "Saldo mensal") %>%
     plotly::layout(yaxis2 = list(overlaying = "y", side = "right", title = list(text = "Acumulado 12 meses"),
                                  showgrid = FALSE, automargin = TRUE, separatethousands = TRUE),
@@ -153,6 +159,18 @@ grafico_saldo_caged <- function(df) {
                    annotations = list(list(x = paste0(CORTES_PADRAO$desde, "-01-01"), y = 1, yref = "paper",
                                            text = paste("Desde", CORTES_PADRAO$desde), showarrow = FALSE,
                                            xanchor = "left", yanchor = "bottom", font = list(size = 11, color = "#7F8C8D"))))
+}
+
+# Estoque mensal de emprego com carteira (estimativa). `nucleo` é o nome da
+# coluna com o estoque só do núcleo produtivo, quando houver.
+grafico_estoque <- function(df, nucleo = NULL) {
+  p <- plotly::plot_ly(df, x = ~data) %>%
+    plotly::add_lines(y = ~estoque, name = if (is.null(nucleo)) "Empregos com carteira" else "Todos os elos",
+                      line = list(color = PALETA$principal, width = 2.5), hovertemplate = "%{y:,.0f}<extra>%{fullData.name}</extra>")
+  if (!is.null(nucleo)) p <- p %>% plotly::add_lines(y = df[[nucleo]], name = "Só o núcleo produtivo",
+                                                     line = list(color = PALETA$destaque, width = 2.5), hovertemplate = "%{y:,.0f}<extra>%{fullData.name}</extra>")
+  layout_padrao(p, "Empregos com carteira (estimativa)", legenda = !is.null(nucleo)) %>%
+    plotly::layout(yaxis = list(tickformat = ",.0f"))
 }
 
 grafico_ligacoes <- function(df) {

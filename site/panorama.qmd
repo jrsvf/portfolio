@@ -15,6 +15,7 @@ macro_pms  <- tryCatch(ler_base("macro_pms", ""), error = function(e) NULL)
 conj_resumo <- tryCatch(ler_base("conj_resumo", ""), error = function(e) NULL)
 opcional <- function(n) tryCatch(ler_base(n, ""), error = function(e) NULL)
 corte <- opcional("corte_atual"); empresas <- opcional("empresas"); qualificacao <- opcional("qualificacao")
+estoque <- opcional("estoque")
 educacao <- opcional("educacao"); icms <- opcional("icms"); infraestrutura <- opcional("infraestrutura"); rd <- opcional("rd")
 MESES <- c("janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro")
 ult <- max(rais_secao$ano); ini <- max(min(rais_secao$ano), ult - max(CORTES_PADRAO$janelas))
@@ -215,10 +216,31 @@ if (NROW(conj_resumo) && any(conj_resumo$pesquisa == "PMS")) knitr::kable(tab_at
 
 ::: {.panel-tabset}
 
-### Estoque
+### Estoque em 31/12 (RAIS)
 
 ```{r}
 grafico_linhas(su, "ano", "pe", titulo_y = "Vínculos ativos em 31/12")
+```
+
+### Com carteira, mês a mês (estimativa)
+
+```{r}
+if (!is.null(estoque)) {
+  ep <- estoque$pe; u <- ep %>% filter(data == max(data))
+  sinal_n <- function(x) paste0(ifelse(x > 0, "+", ""), fmt_num(x))
+  sec_e <- estoque$secao %>% filter(data == max(data), estoque > 0) %>% arrange(desc(estoque))
+  htmltools::tagList(
+    cartoes(list(
+      list(rotulo = paste0("Empregos com carteira em ", format(u$data, "%m/%Y")), valor = fmt_num(u$estoque), nota = "estimativa"),
+      list(rotulo = "Variação em 12 meses", valor = sinal_pct(u$var_12m), nota = paste("saldo de", sinal_n(u$saldo_12m))),
+      list(rotulo = "Saldo do mês", valor = sinal_n(u$saldo), nota = paste0(fmt_num(u$admissoes), " admissões e ", fmt_num(u$desligamentos), " desligamentos")))),
+    grafico_estoque(ep),
+    htmltools::h4("Por setor"),
+    htmltools::HTML(knitr::kable(sec_e %>% transmute(Setor = stringr::str_to_sentence(descricao_secao), `Empregos com carteira` = fmt_num(estoque),
+                                                      `Saldo em 12 meses` = sinal_n(saldo_12m), `Variação em 12 meses` = sinal_pct(var_12m)),
+                                 format = "html", align = "lrrr", table.attr = "class='table table-sm'")),
+    htmltools::p(class = "fonte", paste0(estoque_nota(estoque), ". A RAIS conta todos os vínculos formais em 31/12, inclusive servidores estatutários; esta série conta só quem tem carteira assinada, que é o que o CAGED acompanha. Por isso o número é menor que o da aba anterior. Não é o estoque oficial do MTE.")))
+} else htmltools::p(class = "aviso", "A estimativa mensal do estoque de emprego ainda não foi calculada nesta atualização.")
 ```
 
 ### Participação no Brasil

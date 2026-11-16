@@ -248,3 +248,18 @@ $azul: #1F4E79; $lar: #E07A1F; $cinza: #5D6D7E; $fio: #DCE3EA;
 .voc-tab td:nth-child(n+2):not(:last-child), .voc-tab th:nth-child(n+2):not(:last-child) { text-align: right; white-space: nowrap; }
 .voc-cod { font-size: .72rem; color: #7F8C8D; font-family: $mono; }
 .voc-cad { display: inline-block; font-size: .74rem; background: #EAF1F8; color: #023471; border-radius: 10px; padding: 0 8px; margin: 1px 3px 1px 0; text-decoration: none; }
+
+// ---- cadeia ou nicho, vocações por cadeia e histórico
+.recorte { background: #F5F8FB; border-left: 4px solid #9FB3C8; padding: 10px 14px; border-radius: 6px; font-size: .9rem; color: #2C3E50; margin: 0 0 1.4rem 0; }
+.voc-mat { width: auto; border-collapse: separate; border-spacing: 2px; font-size: .8rem; }
+.voc-mat th, .voc-mat td { border: 0 !important; box-shadow: none !important; }
+.voc-mat th { font-weight: 600; color: #5D6D7E; text-align: left; padding: 3px 6px; white-space: nowrap; background: transparent !important; }
+.voc-mat th.cad { font-weight: 500; min-width: 215px; }
+.voc-mat th.rd { writing-mode: vertical-rl; transform: rotate(180deg); text-align: left; vertical-align: bottom; height: 175px; padding: 4px 2px; }
+.voc-mat td { width: 38px; height: 24px; padding: 0; text-align: center; border-radius: 3px; color: #fff; font-size: .72rem; font-weight: 600; }
+.voc-mat td.vazio { background: #F2F4F6 !important; }
+.voc-mat tr.setor th { padding-top: 12px; color: #2C3E50 !important; text-transform: uppercase; font-size: .7rem; letter-spacing: .06em; }
+.voc-leg { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .82rem; color: #5D6D7E; margin: .4rem 0 1rem 0; }
+.voc-leg i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.voc-est { display: inline-block; font-size: .74rem; font-weight: 600; border-radius: 10px; padding: 0 8px; color: #fff; }
+.mud-sobe { color: #1E8449; font-weight: 600; } .mud-desce { color: #B03A2E; font-weight: 600; } .mud-igual { color: #95A5A6; }

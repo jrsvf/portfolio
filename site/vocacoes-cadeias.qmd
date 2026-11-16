@@ -1,0 +1,138 @@
+---
+title: "Vocações por cadeia"
+description: "Em que cadeias cada Região de Desenvolvimento e cada município de Pernambuco já é forte, está crescendo ou tem base para crescer: consolidadas, emergentes e potenciais."
+toc: true
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+v <- tryCatch(ler_base("vocacao_cad", ""), error = function(e) NULL)
+carregar("rd")
+COR <- c(Agro = "#1baf7a", Ind = "#2a78d6", Serv = "#eb6834")
+TOM <- c(Consolidada = 1, Emergente = 0.55, Potencial = 0.26)
+ESTAGIOS <- names(TOM)
+# cor do setor clareada pelo estágio (mistura com branco)
+tom <- function(setor, classe) {
+  base <- grDevices::col2rgb(ifelse(is.na(setor), "#FFFFFF", COR[setor])); t <- TOM[classe]; t[is.na(t)] <- 0
+  m <- round(255 - (255 - base) * rep(t, each = 3))
+  ifelse(is.na(setor) | is.na(classe), "#F2F4F6", grDevices::rgb(m[1, ], m[2, ], m[3, ], maxColorValue = 255))
+}
+sinal_pct0 <- function(x) ifelse(is.na(x), "–", paste0(ifelse(x > 0, "+", ""), fmt_num(100 * x, 0), "%"))
+num_ou <- function(x, f = fmt_num) ifelse(is.na(x) | x == 0, "–", f(x))
+```
+
+```{r}
+if (is.null(v)) {
+  htmltools::p(class = "aviso", "As vocações por cadeia ainda não foram calculadas nesta atualização. Rode o pipeline (targets::tar_make()) de novo.")
+} else {
+  n <- table(factor(v$rd$classe, ESTAGIOS))
+  cartoes(list(
+    list(rotulo = "Vocações consolidadas", valor = fmt_num(n[["Consolidada"]]), nota = "já especializadas e com escala"),
+    list(rotulo = "Vocações emergentes", valor = fmt_num(n[["Emergente"]]), nota = paste0("emprego crescendo bem acima do estado (", sinal_pct0(v$g_pe), " em ", v$ano0, "-", v$ano, ")")),
+    list(rotulo = "Vocações potenciais", valor = fmt_num(n[["Potencial"]]), nota = "produção, exportação ou empresas sem emprego formal correspondente"),
+    list(rotulo = "Municípios com vocação destacada", valor = paste(nrow(v$lider), "de 185"))))
+}
+```
+
+Esta página olha as **`r if (!is.null(v)) n_distinct(v$rd$cadeia_id) else ""` cadeias e nichos** acompanhados pelo painel e pergunta, para cada Região de Desenvolvimento e cada município, em que estágio a atividade está. Ela junta quatro medidas de especialização (emprego formal no núcleo produtivo, empresas ativas, exportações e produção agropecuária), o peso no estado, o porte e o crescimento em dez anos. Para todas as atividades da CNAE, uma a uma, use a página [Vocações (todas as atividades)](vocacoes.qmd).
+
+## Mapa: a vocação de cada município
+
+```{r}
+if (!is.null(v)) {
+  m <- malha %>% mutate(id_municipio = as.character(id_municipio)) %>%
+    left_join(v$lider %>% select(id_municipio, cadeia, setor, classe, emp, ql_emp, prod, indice), by = "id_municipio") %>%
+    left_join(rd %>% mutate(id_municipio = as.character(id_municipio)) %>% select(id_municipio, rd), by = "id_municipio")
+  m$cor <- tom(m$setor, m$classe)
+  rot <- sprintf("<strong>%s</strong> (RD %s)<br/>%s", m$name_muni, m$rd,
+                 ifelse(is.na(m$cadeia), "Sem vocação destacada",
+                        paste0(m$cadeia, ": ", tolower(m$classe), "<br/>",
+                               ifelse(m$emp > 0, paste0(fmt_num(m$emp), " empregos no núcleo · QL ", fmt_num(m$ql_emp, 1)), ""),
+                               ifelse(m$prod > 0, paste0("<br/>produção de R$ ", fmt_num(m$prod / 1000, 1), " mi"), "")))) %>% lapply(htmltools::HTML)
+  leaflet::leaflet(m, options = leaflet::leafletOptions(zoomSnap = 0.25)) %>%
+    leaflet::addPolygons(fillColor = ~cor, weight = 0.6, color = "white", fillOpacity = 1, label = rot,
+                         highlightOptions = leaflet::highlightOptions(weight = 2, color = "#2C3E50", bringToFront = TRUE)) %>%
+    leaflet::addLegend("bottomright", colors = c(unname(COR), "#F2F4F6"),
+                       labels = c(unname(VOC_NOME_SETOR[names(COR)]), "Sem vocação destacada"), title = "Setor (cor forte = consolidada)", opacity = 1)
+}
+```
+
+<p class="fonte">A cor diz o setor e o tom diz o estágio: forte para consolidada, médio para emergente, claro para potencial. Cada município aparece pela vocação de maior peso econômico; passe o mouse para ver qual.</p>
+
+## Matriz: regiões e cadeias
+
+```{r}
+if (!is.null(v)) {
+  rds <- v$rd %>% distinct(rd) %>% arrange(rd) %>% pull(rd)
+  cl <- v$rd %>% filter(!is.na(classe))
+  linhas <- cl %>% distinct(cadeia_id, cadeia, setor, local) %>%
+    left_join(cl %>% group_by(cadeia_id) %>% summarise(n = n(), forte = sum(classe == "Consolidada"), .groups = "drop"), by = "cadeia_id") %>%
+    arrange(match(setor, names(COR)), local, desc(forte), desc(n))
+  cel <- function(cid, r) {
+    x <- cl %>% filter(cadeia_id == cid, rd == r)
+    if (!nrow(x)) return(htmltools::tags$td(class = "vazio", title = paste(r, "· sem vocação")))
+    htmltools::tags$td(style = paste0("background:", tom(x$setor, x$classe), ";", if (x$classe == "Potencial") "color:#2C3E50;" else ""),
+                       title = paste0(r, " · ", x$cadeia, ": ", tolower(x$classe), " · índice ", fmt_num(x$indice), " · ", fmt_num(x$emp), " empregos no núcleo"),
+                       substr(x$classe, 1, 1))
+  }
+  corpo <- list()
+  for (s in names(COR)) {
+    ls <- linhas %>% filter(setor == s)
+    if (!nrow(ls)) next
+    corpo <- c(corpo, list(htmltools::tags$tr(class = "setor", htmltools::tags$th(colspan = length(rds) + 1, VOC_NOME_SETOR[[s]]))))
+    corpo <- c(corpo, lapply(seq_len(nrow(ls)), function(i) htmltools::tags$tr(
+      htmltools::tags$th(class = "cad", htmltools::a(href = paste0("cadeias/", ls$cadeia_id[i], ".html"), ls$cadeia[i]), if (ls$local[i]) htmltools::span(class = "voc-cod", " base local")),
+      lapply(rds, function(r) cel(ls$cadeia_id[i], r)))))
+  }
+  htmltools::tagList(
+    htmltools::div(class = "voc-leg", c(
+      lapply(names(COR), function(s) htmltools::span(htmltools::tags$i(style = paste0("background:", COR[[s]])), VOC_NOME_SETOR[[s]])),
+      list(htmltools::span(htmltools::HTML("C = consolidada (tom forte) · E = emergente (tom médio) · P = potencial (tom claro)"))))),
+    htmltools::div(style = "overflow-x:auto", htmltools::tags$table(class = "voc-mat", `data-quarto-disable-processing` = "true",
+      htmltools::tags$thead(htmltools::tags$tr(htmltools::tags$th(""), lapply(rds, function(r) htmltools::tags$th(class = "rd", r)))),
+      htmltools::tags$tbody(corpo))))
+}
+```
+
+<p class="fonte">Só aparecem as cadeias com vocação em ao menos uma região. Saúde, construção civil e logística estão marcadas como base local: atendem sobretudo à população da própria região, então aparecem em quase todo lugar onde há cidade grande.</p>
+
+## Tabela por região
+
+```{r}
+if (!is.null(v)) {
+  t <- vocacao_tabela(v)
+  tabela(t %>% transmute(`Região` = rd, `Cadeia ou nicho` = cadeia, Setor = setor, `Estágio` = estagio, `Tendência (10 anos)` = tendencia,
+                         `Índice` = round(indice), `Empregos no núcleo` = emprego_nucleo, `Variação 10 anos` = sinal_pct0(variacao_10_anos),
+                         `QL emprego` = round(ql_emprego, 2), `QL empresas` = round(ql_empresas, 2), `QL produção` = round(ql_producao, 2),
+                         `QL exportações` = round(ql_exportacoes, 2), `Principais municípios` = principais_municipios))
+}
+```
+
+<p class="fonte">Base completa para download: <a href="dados/vocacoes_cadeias_rd.csv">vocacoes_cadeias_rd.csv</a>.</p>
+
+## Municípios
+
+```{r}
+if (!is.null(v)) {
+  tabela(v$lider %>% arrange(rd, desc(indice)) %>%
+           transmute(`Município` = municipio, `Região` = rd, `Vocação de maior peso` = cadeia, `Estágio` = classe, `Índice` = round(indice),
+                     `Empregos no núcleo` = emp, `QL emprego` = round(ql_emp, 2), `Produção (R$ mil)` = ifelse(prod > 0, round(prod), NA),
+                     `Tendência` = tendencia))
+}
+```
+
+## Como ler
+
+- **Consolidada:** a região já é especializada (quociente locacional do emprego no núcleo produtivo de 1,5 ou mais, ou de 1,2 com outra medida acima de 1) e tem escala (300 empregos ou mais e ao menos três estabelecimentos).
+- **Emergente:** ainda não consolidada, mas o emprego cresceu em dez anos pelo menos 15 pontos acima do emprego total do estado e 10 pontos acima da própria cadeia no estado.
+- **Potencial:** há produção, exportação ou empresas acima da média do estado, sem o emprego formal correspondente, e a atividade não está em queda. É onde há base para política de adensamento.
+- **Índice de vocação (0 a 100):** especialização (40%), peso na cadeia do estado (20%), porte (20%) e crescimento (20%).
+- **Núcleo produtivo:** o emprego não conta os elos de comércio e distribuição, que existem em todo lugar e escondem a especialização.
+
+Os critérios completos estão na [metodologia](metodologia.qmd#vocações-por-cadeia).
+
+```{r}
+if (!is.null(v)) rodape_fonte(paste0("RAIS ", v$ano, " e ", v$ano0, " (emprego formal), CNPJ/Receita Federal (empresas ativas, com MEI), ComexStat ", v$ano_exp,
+                                     " (exportações), IBGE: PAM, PPM e produção da aquicultura (produção e rebanhos)"))
+```

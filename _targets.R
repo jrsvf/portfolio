@@ -47,6 +47,8 @@ list(
   tar_target(janelas, par$comparacoes$janelas %||% CORTES_PADRAO$janelas),
   tar_target(desde, par$comparacoes$desde %||% CORTES_PADRAO$desde),
   tar_target(projeto, par$bigquery$projeto),
+  # mês da rodada: quando vira o mês, o CAGED é consultado de novo e o histórico ganha um retrato novo
+  tar_target(mes_ref, format(Sys.Date(), "%Y-%m"), cue = tar_cue(mode = "always")),
 
   # ------------------------------------------------------------------ extração
   tar_target(bq_auth, autenticar_bq()),
@@ -58,9 +60,13 @@ list(
   tar_target(bq_rais_pe,    { bq_esquema; extrair_rais_estab_uf(projeto, uf, anos$rais_inicio) }),
   tar_target(bq_rais_br,    { bq_esquema; extrair_rais_estab_brasil(projeto, anos$rais_inicio) }),
   tar_target(bq_perfil_pe,  { bq_esquema; extrair_rais_perfil_uf(projeto, uf, anos$rais_inicio) }),
-  tar_target(bq_caged_pe,   { bq_esquema; extrair_caged_uf(projeto, uf, anos$caged_inicio) }),
+  tar_target(bq_caged_pe,   { bq_esquema; mes_ref; extrair_caged_uf(projeto, uf, anos$caged_inicio) }),
+  # celetistas da RAIS: ponto de partida do estoque mensal de emprego (se falhar, o estoque usa a RAIS sem administração pública)
+  tar_target(bq_rais_clt,   { bq_esquema; tentar("RAIS celetistas", extrair_rais_clt_uf(projeto, uf, max(bq_rais_pe$ano) - 1)) }),
   tar_target(bq_comex_pe,   { bq_esquema; extrair_comex_uf(projeto, uf, anos$comex_inicio) }),
-  tar_target(bq_pib_pop,    { bq_esquema; extrair_pib_pop_uf(projeto, uf) }),
+  tar_target(bq_pib_bruto,  { bq_esquema; extrair_pib_pop_uf(projeto, uf) }),
+  # divisão do PIB por setor: completa pelo SIDRA os anos que a Base dos Dados ainda não tem, se o IBGE já divulgou
+  tar_target(bq_pib_pop,    completar_va_sidra(bq_pib_bruto, uf_codigo)),
   # só as tabelas importam: mudar o padrão de um produto em cadeias.yml não refaz o download
   tar_target(sidra_tabelas, sort(unique(cad$sidra$tabela))),
   tar_target(sidra_bruto,
@@ -144,6 +150,9 @@ list(
              concentracao_espacial(locais_cadeia, par_ind$ql_minimo, par_ind$emprego_minimo)),
   tar_target(serie_comp, serie_comparada(bq_rais_br, cad$elos, uf)),
   tar_target(caged_cad, caged_cadeia(bq_caged_pe, cad$elos)),
+  tar_target(caged_elo, caged_elos(bq_caged_pe, cad$elos)),
+  # estoque mensal de emprego com carteira: RAIS de dezembro + saldos do CAGED
+  tar_target(estoque, estoque_emprego(bq_rais_pe, bq_caged_pe, cad$elos, bq_cnae, bq_rais_clt)),
   # o ano corrente ainda está incompleto no ComexStat: fica de fora das comparações anuais
   tar_target(comex_anos_completos, bq_comex_pe %>% filter(ano < as.numeric(format(Sys.Date(), "%Y")))),
   tar_target(comex_cad,
@@ -234,6 +243,10 @@ list(
   tar_target(producao_terr, montar_producao(sidra_bruto, rd)),
   tar_target(saida_producao, exportar_producao(producao_terr), format = "file"),
 
+  # ------------- vocações por cadeia: consolidadas, emergentes e potenciais (RD e município)
+  tar_target(vocacao_cad, montar_vocacao(cad_mun, total_mun, cad$elos, cad$meta, rd, bq_municipios, bq_cnpj_cadeias, comex_cad,
+                                         comex_anos_completos, ql_prod, producao_terr, sidra_cad, malha)),
+
   # --------------------------------------------------------- lacunas/destaques
   tar_target(ultimos_anos, tibble::tibble(
     fonte = c("RAIS", "Novo CAGED", "ComexStat", "PIB dos Municípios", "Produção agropecuária (SIDRA)"),
@@ -276,6 +289,7 @@ list(
                  infraestrutura = infraestrutura, corte_atual = corte_atual, bq_dic = bq_dic,
                  cursos_cad = cursos_cad, escoamento_cad = escoamento_cad,
                  nereus = nereus, nereus_cad = nereus_cad, ql_mult = ql_mult, ql_vab = ql_vab,
+                 caged_elo = caged_elo, estoque = estoque, vocacao_cad = vocacao_cad, historico = historico,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),
@@ -284,6 +298,10 @@ list(
     emprego_cadeia_municipio = locais_cadeia %>% left_join(bq_municipios, by = "id_municipio"),
     emprego_elo_municipio    = locais_elo %>% filter(ano >= max(ano) - 10) %>% left_join(bq_municipios, by = "id_municipio"),
     caged_cadeia             = caged_cad,
+    caged_elos_12_meses      = caged_elo,
+    estoque_emprego_pe       = if (is.null(estoque)) tibble::tibble() else estoque$pe,
+    estoque_emprego_cadeia   = if (is.null(estoque)) tibble::tibble() else estoque$cadeia,
+    vocacoes_cadeias_rd      = vocacao_tabela(vocacao_cad),
     comex_cadeia             = comex_cad,
     producao_ibge_cadeia     = sidra_cad %>% filter(ano >= max(ano) - 10) %>% select(-any_of(c("valor_txt", "situacao"))),
     lacunas                  = lacunas
@@ -302,5 +320,11 @@ list(
                                empresas_maiores, qualificacao, educacao, icms, agro_familiar, credito_rural, infraestrutura)),
   tar_target(bq_cnae_grupos, { bq_esquema; extrair_cnae_grupos(projeto) }),
   tar_target(setores_base, montar_setores(bq_rais_pe, bq_cnae, bq_cnae_grupos, rd)),
-  tar_target(saida_territorio, exportar_territorio(territorio, setores_base), format = "file")
+  tar_target(saida_territorio, exportar_territorio(territorio, setores_base), format = "file"),
+
+  # ------------------------------------------------ histórico: um retrato por mês em historico/
+  tar_target(retrato, montar_retrato(mes_ref, ultimos_anos, cad_mun, total_mun, cad$elos, caged_cad, estoque, comex_cad,
+                                     comex_anos_completos, empresas, bq_cnpj_cadeias, bq_pib_pop, vocacao_cad)),
+  tar_target(historico_arq, salvar_retrato(retrato), format = "file"),
+  tar_target(historico, { historico_arq; ler_historico() })
 )

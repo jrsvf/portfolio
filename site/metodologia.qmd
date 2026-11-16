@@ -37,6 +37,40 @@ knitr::kable(fontes_datas %>% transmute(Fonte = fonte, `Órgão` = orgao, `Perí
 
 Cada cadeia é definida por **classes ou subclasses da CNAE 2.0** agrupadas em **elos**, por **posições SH4** do comércio exterior e por **produtos** do IBGE. A subclasse é usada quando a classe mistura cadeias diferentes (por exemplo, a classe 1012-1 junta abate de aves e de suínos). As posições SH4 vêm da lista da cadeia e da correspondência oficial NCM x CNAE do IBGE. Todos os códigos são conferidos contra o diretório CNAE a cada atualização. A configuração completa e aberta está em `config/cadeias.yml`. Quando uma classe CNAE é mais ampla que a cadeia (por exemplo, a apicultura está dentro de "criação de outros animais"), isso é sinalizado na página da cadeia e na página de lacunas.
 
+### Cadeias, nichos e núcleo produtivo
+
+O painel separa **cadeias** (conjuntos amplos de atividades, do insumo à venda, que quase não repetem códigos entre si) de **nichos**. O nicho produtivo é uma atividade específica, às vezes inteira dentro de uma cadeia (campo `contido_em` da configuração); o nicho transversal é um tema que atravessa setores e repete códigos de propósito. Por isso nichos e cadeias não devem ser somados. A [página das cadeias](cadeias/index.qmd#cadeia-ou-nicho) lista quem divide códigos com quem.
+
+Cada elo é marcado como parte ou não do **núcleo produtivo** da cadeia. Ficam fora os elos de comércio, varejo, distribuição, ração e alimentação, que existem em quase todo município e escondem a especialização. A regra vale pelo nome do elo e pode ser trocada elo a elo na configuração (chave `nucleo`). O núcleo é a base das vocações por cadeia, do saldo do CAGED "só do núcleo" e do estoque de emprego do núcleo; os totais da cadeia continuam com todos os elos.
+
+## Novo CAGED e estoque de emprego
+
+O Novo CAGED registra admissões e desligamentos de empregos com carteira assinada (CLT), mês a mês, desde 2020. Não cobre servidores estatutários, MEI, autônomos nem informais. O painel usa as movimentações declaradas no prazo, sem o ajuste que o MTE faz depois com as declarações atrasadas; os saldos podem diferir um pouco dos divulgados oficialmente. Na página de cada cadeia o saldo aparece para todos os elos e só para o núcleo produtivo, com o detalhe por elo dos últimos 12 meses.
+
+O **estoque mensal de emprego com carteira** é uma estimativa: parte do estoque da RAIS em dezembro do último ano que o CAGED cobre inteiro e soma os saldos dos meses seguintes (ou subtrai os dos meses anteriores). O ponto de partida são os celetistas da RAIS; se essa consulta não estiver disponível, entram os vínculos da RAIS fora da administração pública, onde está a maior parte dos estatutários, e a nota do gráfico informa qual foi usado. A RAIS e o CAGED nem sempre fecham entre si, então a série serve para ver direção e ritmo, não para substituir o estoque oficial do MTE.
+
+## Vocações por cadeia
+
+A página [Vocações por cadeia](vocacoes-cadeias.qmd) classifica cada combinação de Região de Desenvolvimento e cadeia (e de município e cadeia) em três estágios, a partir de quatro quocientes locacionais: emprego formal no núcleo produtivo, empresas ativas (com MEI), exportações e produção agropecuária (ou densidade do rebanho, quando o IBGE não divulga valor).
+
+- **Consolidada:** especializada e com escala. Na região, pede ao menos 300 empregos no núcleo e 3 estabelecimentos, com QL do emprego de 1,5 ou mais; ou de 1,2 com mais um quociente acima de 1; ou de 1,05 quando a região tem metade do emprego da cadeia no estado.
+- **Emergente:** ainda não consolidada, com ao menos 150 empregos e QL de 0,7, e emprego crescendo em dez anos pelo menos 15 pontos acima do emprego total do estado e 10 pontos acima da própria cadeia no estado, com ganho de 100 empregos ou mais.
+- **Potencial:** há produção, exportação ou empresas acima da média do estado, sem o emprego formal correspondente, e a atividade não está em queda.
+
+No município os cortes são menores (50 empregos; produção de R$ 3 milhões ou rebanho de 30 mil cabeças). O **índice de vocação** vai de 0 a 100 e pondera especialização (40%), peso na cadeia do estado (20%), porte (20%) e crescimento (20%). A vocação líder do município é a de maior peso econômico entre as classificadas; quando um nicho e a cadeia que o contém aparecem juntos, fica a cadeia. Saúde, construção civil e logística atendem sobretudo à demanda local e são marcadas como base local.
+
+## Empresas: uma linha por empresa
+
+As listas de maiores empresas ordenam pelo capital social, que é da empresa inteira e se repete em cada filial. Cada empresa (raiz do CNPJ) aparece uma vez por cadeia e município: fica a matriz, se houver, ou a unidade mais antiga, com o número de unidades ativas no local. Nas filiais, o capital mostrado não é o da unidade. MEI e empresário individual ficam fora das listas, porque a razão social é o nome da pessoa.
+
+## PIB dos Municípios
+
+O PIB total e o PIB per capita existem para os 185 municípios até o último ano divulgado. A divisão do valor adicionado por setor (agropecuária, indústria, serviços e administração pública) pode parar antes: em novembro de 2026 o IBGE só a tinha divulgado até 2021, e a tabela 5938 do SIDRA trazia 2022 e 2023 sem valor por setor. A cada atualização o pipeline consulta o SIDRA e completa os anos que faltam assim que saírem.
+
+## Histórico
+
+A cada atualização o pipeline guarda um retrato do mês em `historico/AAAA-MM.rds`: até onde vai cada fonte, os principais números do estado, de cada cadeia e de cada município, as vocações de cada região e, no painel interno, os totais dos programas. Rodar de novo no mesmo mês substitui o retrato daquele mês. A página [O que mudou](mudancas.qmd) compara o retrato mais recente com o anterior. Só há comparação a partir do segundo mês registrado.
+
 ## Indicadores
 
 Notação: $E_{ij}$ é o emprego formal da atividade $j$ no município $i$; o ponto indica soma.

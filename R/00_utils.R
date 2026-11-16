@@ -47,12 +47,20 @@ normalizar_cnae <- function(x, digitos = 5) {
 }
 
 # Lê config/cadeias.yml e devolve:
-#   $meta  uma linha por cadeia
+#   $meta  uma linha por cadeia. `contido_em` aponta a cadeia de que um nicho
+#          é parte (ex.: vitivinicultura dentro de fruticultura).
 #   $elos  uma linha por (cadeia, elo, código CNAE). `codigo` tem 5 dígitos
 #          (classe) ou 7 (subclasse); `nivel` diz qual; `classe` é sempre a
-#          classe de 5 dígitos correspondente.
+#          classe de 5 dígitos correspondente. `nucleo` diz se o elo faz parte
+#          do núcleo produtivo da cadeia.
 #   $sh4   uma linha por (cadeia, sh4), com a origem (manual ou automática)
 #   $sidra uma linha por (cadeia, tabela, padrao)
+# Elos fora do núcleo produtivo: comércio, distribuição e serviços que existem
+# em qualquer cidade e escondem a especialização (uma loja de roupas não faz de
+# um município um polo de confecções). Vale para o nome do elo; a chave
+# `nucleo: true` ou `nucleo: false` no elo, em cadeias.yml, tem prioridade.
+ELOS_FORA_NUCLEO <- "^Distribuição( de|$)|Comércio|^Varejo|^Insumos \\(ração\\)|^Alimentação$"
+
 ler_cadeias <- function(arquivo = caminho("config", "cadeias.yml"),
                         arq_sh4 = caminho("config", "sh4_cnae.csv")) {
   exigir_arquivo(arquivo, "config/cadeias.yml faz parte do repositório")
@@ -68,18 +76,22 @@ ler_cadeias <- function(arquivo = caminho("config", "cadeias.yml"),
     macrossetor = c$macrossetor %||% "Outros",
     grupo       = c$grupo %||% "cadeia",
     descricao   = str_squish(c$descricao %||% ""),
-    nota        = str_squish(c$nota %||% "")
+    nota        = str_squish(c$nota %||% ""),
+    contido_em  = c$contido_em %||% NA_character_
   ))
+  sem_pai <- setdiff(na.omit(meta$contido_em), meta$cadeia_id)
+  if (length(sem_pai)) stop("contido_em aponta para cadeia que não existe em cadeias.yml: ", paste(sem_pai, collapse = ", "))
 
   elos <- map_dfr(cfg, function(c) {
     map_dfr(seq_along(c$elos), function(i) {
       e <- c$elos[[i]]
       cod <- gsub("[^0-9]", "", as.character(unlist(e$cnae)))
-      tibble(cadeia_id = c$id, elo_ordem = i, elo = e$nome, codigo = cod)
+      tibble(cadeia_id = c$id, elo_ordem = i, elo = e$nome, codigo = cod, nucleo = as.logical(e$nucleo %||% NA))
     })
   }) %>%
     mutate(nivel = case_when(nchar(codigo) == 5 ~ "classe", nchar(codigo) == 7 ~ "subclasse", TRUE ~ NA_character_),
-           classe = substr(codigo, 1, 5))
+           classe = substr(codigo, 1, 5),
+           nucleo = coalesce(nucleo, !grepl(ELOS_FORA_NUCLEO, elo)))
 
   invalidas <- elos %>% filter(is.na(nivel))
   if (nrow(invalidas) > 0) {
@@ -100,8 +112,9 @@ ler_cadeias <- function(arquivo = caminho("config", "cadeias.yml"),
   }
 
   sh4_manual <- map_dfr(cfg, function(c) {
-    v <- unlist(c$sh4)
-    if (length(v) == 0) return(tibble(cadeia_id = character(), sh4 = character()))
+    # [["sh4"]] e não $sh4: numa cadeia sem `sh4`, o $ casa pelo começo do nome com `sh4_auto` e devolve FALSE
+    v <- unlist(c[["sh4"]])
+    if (length(v) == 0 || is.logical(v)) return(tibble(cadeia_id = character(), sh4 = character()))
     tibble(cadeia_id = c$id, sh4 = str_pad(as.character(v), 4, pad = "0"))
   }) %>% mutate(origem = "manual")
 
@@ -136,6 +149,15 @@ ligar_elos <- function(df, elos, colunas_elo = c("cadeia_id", "elo_ordem", "elo"
     inner_join(elos %>% filter(nivel == "subclasse") %>% select(all_of(colunas_elo), subclasse = codigo),
                by = "subclasse", relationship = "many-to-many")
   bind_rows(por_classe, por_sub)
+}
+
+# Pares de cadeias e nichos que usam o mesmo código CNAE (nos dois sentidos).
+# Uma classe de 5 dígitos em uma cadeia cobre as subclasses dela em outra.
+sobreposicao_cadeias <- function(elos) {
+  e <- elos %>% select(cadeia_id, codigo, nivel, classe)
+  inner_join(e, e, by = "classe", suffix = c("", "_b"), relationship = "many-to-many") %>%
+    filter(cadeia_id != cadeia_id_b, nivel == "classe" | nivel_b == "classe" | codigo == codigo_b) %>%
+    distinct(cadeia_id, com = cadeia_id_b)
 }
 
 # Confere os códigos das cadeias contra o diretório CNAE oficial
