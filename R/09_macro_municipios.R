@@ -389,7 +389,7 @@ montar_raiox <- function(municipios, rd, pib_pop, pop, rais_secao, perfil_pe, ca
   out
 }
 
-exportar_raiox <- function(raiox, malha, destino = caminho("site", "dados", "raiox_municipios.json")) {
+exportar_raiox <- function(raiox, malha, destino = caminho("site", "dados", "raiox_municipios.json"), rd = NULL) {
   dir.create(dirname(destino), recursive = TRUE, showWarnings = FALSE)
   jsonlite::write_json(unname(raiox), destino, auto_unbox = TRUE, na = "null", digits = NA, dataframe = "rows")
   # malha leve para o mapa de localização
@@ -397,7 +397,9 @@ exportar_raiox <- function(raiox, malha, destino = caminho("site", "dados", "rai
   geo <- sf::st_simplify(sf::st_transform(malha %>% filter(id_municipio != "2605459"), 4326), dTolerance = 0.005, preserveTopology = TRUE)
   geo_arq <- caminho("site", "dados", "malha_pe.geojson")
   unlink(geo_arq)
-  sf::st_write(geo %>% select(id_municipio, name_muni), geo_arq, driver = "GeoJSON", quiet = TRUE,
+  if (!is.null(rd)) geo <- geo %>% left_join(rd %>% transmute(id_municipio = as.character(id_municipio), rd), by = "id_municipio")
+  else geo$rd <- NA_character_
+  sf::st_write(geo %>% select(id_municipio, name_muni, rd), geo_arq, driver = "GeoJSON", quiet = TRUE,
                layer_options = "COORDINATE_PRECISION=4")
   c(destino, geo_arq)
 }

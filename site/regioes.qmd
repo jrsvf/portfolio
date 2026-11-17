@@ -15,7 +15,7 @@ geo = ({type: "FeatureCollection", features: geo0.features.map(f => {
   const coords = g.type === "Polygon" ? rev(g.coordinates) : g.coordinates.map(rev);
   return {...f, geometry: {...g, coordinates: coords}};
 })})
-import {cartoes, blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra} from "./territorio.js"
+import {cartoes, blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra, listaCursos, blocoAssociativas} from "./territorio.js"
 PROD = FileAttachment("dados/producao.json").json()
 tabProd = (linhas, n = 15, total = null) => {
   if (!linhas || !linhas.length) return html`<p>Sem produção agropecuária registrada pelo IBGE.</p>`;
@@ -115,11 +115,11 @@ html`<div class="rx-duas">
 
 ```{ojs}
 //| echo: false
-cadR = (r.cadeias ?? []).slice().sort((a, b) => b.ql - a.ql)
-html`<p>Do maior para o menor quociente locacional (QL). QL acima de 1 indica que a região tem, na cadeia, uma fatia do seu emprego maior que a média do estado.</p>
-<table class="rx-tab rx-cad"><thead><tr><th>Cadeia ou nicho</th><th>Empregos</th><th>QL</th><th>% do emprego da cadeia em PE</th></tr></thead><tbody>
-${cadR.map(c => html`<tr class="${c.ql >= 1 ? "rx-esp" : ""}"><td><a href="cadeias/${c.cadeia_id}.html">${c.cadeia}</a>${c.grupo === "nicho" ? html` <span class="rx-nicho">nicho</span>` : ""}</td>
-  <td>${nf(c.emprego)}</td><td>${nf(c.ql, 2)}</td><td>${pct(c.part_pe)}</td></tr>`)}</tbody></table>`
+cadR = r.cadeias ?? []
+html`<p>Primeiro as vocações da região (consolidadas, emergentes e potenciais, como em <a href="vocacoes-cadeias.html">Vocações por cadeia</a>), depois as demais, do maior para o menor quociente locacional (QL). O QL usa o emprego do núcleo produtivo, sem comércio e distribuição, e só aparece com 10 empregos ou mais: abaixo disso um punhado de vínculos já dá QL alto.</p>
+<table class="rx-tab rx-cad"><thead><tr><th>Cadeia ou nicho</th><th>Vocação</th><th>Empregos</th><th>No núcleo produtivo</th><th>QL</th><th>% do emprego da cadeia em PE</th></tr></thead><tbody>
+${cadR.map(c => html`<tr class="${c.estagio || c.ql >= 1 ? "rx-esp" : ""}"><td><a href="cadeias/${c.cadeia_id}.html">${c.cadeia}</a>${c.grupo === "nicho" ? html` <span class="rx-nicho">nicho</span>` : ""}</td>
+  <td style="text-align:left">${c.estagio ?? ""}</td><td>${nf(c.emprego)}</td><td>${nf(c.emprego_nucleo ?? c.emprego)}</td><td>${c.ql == null ? "–" : nf(c.ql, 2)}</td><td>${pct(c.part_pe)}</td></tr>`)}</tbody></table>`
 ```
 
 ## Empresas
@@ -147,7 +147,25 @@ blocoQualif(r.qualificacao, {Plot, html})
 blocoEducacao(r.educacao, {Plot, html})
 ```
 
+### Cursos oferecidos
+
+```{ojs}
+//| echo: false
+listaCursos(r.formacao, {html})
+```
+
+<p class="fonte">Cursos superiores (presenciais e a distância) pelo Censo da Educação Superior e cursos técnicos pelas turmas do Censo Escolar (INEP), via Base dos Dados; cursos novos, que começaram depois do último Censo publicado, entram por config/cursos_novos.csv, com a fonte. Nos cursos a distância, as matrículas são de alunos ligados a polos aqui. A ligação com as cadeias é feita por palavras do nome do curso e é aproximada.</p>
+
 :::
+
+## Cooperativas e associações
+
+```{ojs}
+//| echo: false
+blocoAssociativas(r.associativas, {html})
+```
+
+<p class="fonte">Fonte: Cadastro Nacional da Pessoa Jurídica (Receita Federal), via Base dos Dados. Estabelecimentos ativos com natureza jurídica de cooperativa, associação privada ou entidade sindical, sem organizações religiosas, condomínios e partidos. A lista mostra cooperativas e associações ligadas à produção: pela atividade principal, quando ela está numa cadeia, ou pelo nome (produtores, agricultores, apicultores, artesãos e outros), ligação marcada como "pelo nome" e aproximada.</p>
 
 ## ICMS
 

@@ -11,13 +11,14 @@ normalizar_txt <- function(x) tolower(iconv(x, to = "ASCII//TRANSLIT"))
 extrair_cursos_nome <- function(projeto, uf) {
   sql <- function(com_grau) glue::glue("
     SELECT ano, id_municipio, nome_curso, {if (com_grau) 'CAST(tipo_grau_academico AS STRING)' else 'NULL'} AS grau,
+           CAST(tipo_modalidade_ensino AS STRING) AS modalidade,
            CAST(tipo_organizacao_administrativa AS STRING) AS adm,
            COUNT(*) AS cursos, SUM(quantidade_vagas) AS vagas, SUM(quantidade_matriculas) AS matriculas,
            SUM(quantidade_concluintes) AS concluintes
     FROM `basedosdados.br_inep_censo_educacao_superior.curso`
-    WHERE sigla_uf = '{uf}' AND CAST(tipo_modalidade_ensino AS STRING) = '1'
+    WHERE sigla_uf = '{uf}'
       AND ano = (SELECT MAX(ano) FROM `basedosdados.br_inep_censo_educacao_superior.curso` WHERE sigla_uf = '{uf}')
-    GROUP BY 1, 2, 3, 4, 5")
+    GROUP BY 1, 2, 3, 4, 5, 6")
   df <- tryCatch(consultar(sql(TRUE), projeto), error = function(e) {
     msg("Cursos com grau acadêmico falhou (", conditionMessage(e), "); tentando sem o grau.")
     consultar(sql(FALSE), projeto)
@@ -29,6 +30,8 @@ ler_cadeia_cursos <- function(arq) readr::read_csv(arq, col_types = "ccc") %>% m
 
 cursos_cadeia <- function(cursos, mapa, dic, municipios) {
   if (!NROW(cursos) || !NROW(mapa)) return(tibble())
+  # a página da cadeia trata do ensino presencial; os polos a distância aparecem na formação de cada município
+  if ("modalidade" %in% names(cursos)) cursos <- cursos %>% filter(is.na(modalidade) | modalidade == "1")
   rot <- function(x, col) rotular(x, dic, "br_inep_censo_educacao_superior", "curso", col)
   cs <- cursos %>% mutate(
     curso_n = normalizar_txt(nome_curso),

@@ -101,24 +101,35 @@ pedaco_agro <- function(af, cr, ids) {
   out
 }
 
-# QL das cadeias e nichos para um conjunto de municípios
-pedaco_cadeias <- function(cad_mun, emp_tot, cad_meta, ids, ult) {
-  e <- cad_mun %>% filter(ano == ult) %>% group_by(cadeia_id, sel = id_municipio %in% ids) %>%
-    summarise(emp = sum(emprego), .groups = "drop") %>%
-    tidyr::pivot_wider(names_from = sel, values_from = emp, values_fill = 0, names_prefix = "s")
-  if (!"sTRUE" %in% names(e)) return(NULL)
+# QL das cadeias e nichos para um conjunto de municípios. O QL usa o emprego do
+# núcleo produtivo (sem comércio e distribuição) e só vale com `minimo`
+# empregos ou mais no núcleo; `estagio` traz a vocação (consolidada,
+# emergente, potencial) quando houver.
+pedaco_cadeias <- function(cad_mun, emp_tot, cad_meta, ids, ult, elos = NULL, estagio = NULL, minimo = 10) {
+  x <- cad_mun %>% filter(ano == ult)
+  x <- if (!is.null(elos) && "nucleo" %in% names(elos)) x %>% left_join(elos %>% distinct(cadeia_id, elo, nucleo), by = c("cadeia_id", "elo")) %>% mutate(nucleo = coalesce(nucleo, TRUE)) else x %>% mutate(nucleo = TRUE)
+  x <- x %>% mutate(sel = id_municipio %in% ids)
+  if (!any(x$sel)) return(NULL)
   t_sel <- sum(emp_tot$e[emp_tot$ano == ult & emp_tot$id_municipio %in% ids]); t_pe <- sum(emp_tot$e[emp_tot$ano == ult])
-  e %>% mutate(emprego = sTRUE, ql = round((sTRUE / t_sel) / ((sTRUE + coalesce(sFALSE, 0)) / t_pe), 2),
-               part_pe = round(sTRUE / (sTRUE + coalesce(sFALSE, 0)), 4)) %>%
-    left_join(cad_meta %>% select(cadeia_id, cadeia, grupo), by = "cadeia_id") %>%
-    filter(emprego > 0) %>% arrange(desc(ql)) %>% select(cadeia_id, cadeia, grupo, emprego, ql, part_pe)
+  e <- x %>% group_by(cadeia_id) %>%
+    # emprego_nucleo antes de emprego: no summarise, o nome novo passaria a valer nas linhas seguintes
+    summarise(emp_pe = sum(emprego), nuc_pe = sum(emprego[nucleo]), emprego_nucleo = sum(emprego[sel & nucleo]), emprego = sum(emprego[sel]), .groups = "drop") %>%
+    filter(emprego > 0) %>%
+    mutate(ql = ifelse(emprego_nucleo >= minimo & nuc_pe > 0, round((emprego_nucleo / t_sel) / (nuc_pe / t_pe), 2), NA_real_),
+           part_pe = round(emprego / emp_pe, 4)) %>%
+    left_join(cad_meta %>% select(cadeia_id, cadeia, grupo), by = "cadeia_id")
+  e <- if (NROW(estagio)) e %>% left_join(estagio %>% select(cadeia_id, estagio), by = "cadeia_id") else e %>% mutate(estagio = NA_character_)
+  e %>% arrange(match(estagio, c("Consolidada", "Emergente", "Potencial")), desc(coalesce(ql, -1))) %>%
+    select(cadeia_id, cadeia, grupo, estagio, emprego, emprego_nucleo, ql, part_pe)
 }
 
 # ---------------------------------------------------------------------------
 # Montagem
 # ---------------------------------------------------------------------------
 montar_territorio <- function(municipios, rd, pib_pop, pop, rais_secao, cad_mun, cad_meta, empresas, empresas_maiores,
-                              qualificacao, educacao, icms, agro_familiar, credito_rural, infraestrutura) {
+                              qualificacao, educacao, icms, agro_familiar, credito_rural, infraestrutura,
+                              formacao = NULL, associativas = NULL, elos = NULL, vocacao = NULL) {
+  nomes_cad <- setNames(cad_meta$cadeia, cad_meta$cadeia_id)
   pop_all <- bind_rows(pop, pib_pop %>% select(ano, id_municipio, populacao)) %>% filter(!is.na(populacao)) %>%
     distinct(ano, id_municipio, .keep_all = TRUE)
   pop_u <- pop_all %>% filter(ano == max(ano))
@@ -129,6 +140,7 @@ montar_territorio <- function(municipios, rd, pib_pop, pop, rais_secao, cad_mun,
     p <- sum(pop_u$populacao[pop_u$id_municipio %in% ids])
     list(empresas = pedaco_empresas(empresas, ids), qualificacao = pedaco_qualif(qualificacao, ids),
          educacao = pedaco_educ(educacao, ids), icms = pedaco_icms(icms, ids, p), agro = pedaco_agro(agro_familiar, credito_rural, ids),
+         formacao = pedaco_formacao(formacao, ids, nomes_cad), associativas = pedaco_associativas(associativas, ids, nomes_cad),
          infra = if (NROW(infraestrutura)) infraestrutura %>% filter(id_municipio %in% ids) %>% select(tipo, nome, nota) else NULL)
   }
   mun <- lapply(municipios$id_municipio, function(id) {
@@ -159,7 +171,8 @@ montar_territorio <- function(municipios, rd, pib_pop, pop, rais_secao, cad_mun,
                                      serv = sum(va_servicos, na.rm = TRUE), adm = sum(va_adespss, na.rm = TRUE)))),
            emprego = list(ano = ult, total = sum(e_s$emprego), part = sum(e_s$emprego) / sum(emp_tot$e[emp_tot$ano == ult]),
                           serie = e_ser, setores = e_s %>% head(8) %>% transmute(setor = stringr::str_to_sentence(descricao_secao), emprego)),
-           cadeias = pedaco_cadeias(cad_mun, emp_tot, cad_meta, ids, ult),
+           cadeias = pedaco_cadeias(cad_mun, emp_tot, cad_meta, ids, ult, elos,
+                                    if (!is.null(vocacao)) vocacao$rd %>% filter(rd == r, !is.na(classe)) %>% transmute(cadeia_id, estagio = classe) else NULL),
            maiores_mun = municipios %>% filter(id_municipio %in% ids) %>%
              left_join(emp_tot %>% filter(ano == ult), by = "id_municipio") %>% arrange(desc(e)) %>% head(5) %>%
              transmute(id = id_municipio, nome = municipio, emprego = e)),

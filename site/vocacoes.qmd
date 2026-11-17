@@ -31,6 +31,7 @@ reaisMil = v => v == null ? "–" : v >= 1e6 ? "R$ " + (v / 1e6).toLocaleString(
 nf = (x, d = 0) => x == null || isNaN(x) ? "–" : x.toLocaleString("pt-BR", {maximumFractionDigits: d, minimumFractionDigits: d})
 A = V.atividades
 nomeMun = new Map(geo.features.map(f => [f.properties.id_municipio, f.properties.name_muni]))
+rdMun = new Map(geo.features.map(f => [f.properties.id_municipio, f.properties.rd]))
 listaMun = [...Object.keys(V.municipios)].map(id => ({id, nome: nomeMun.get(id) ?? id, tipo: "Município"})).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
 listaRd = Object.keys(V.regioes).sort().map(r => ({id: r, nome: r, tipo: "Região de Desenvolvimento"}))
 tagCad = i => (A.cadeias[i] || "").split(";").filter(Boolean).map(c => html`<a class="voc-cad" href="cadeias/${c}.html">${V.cadeias[c] ?? c}</a>`)
@@ -95,12 +96,12 @@ viewof escolha = Inputs.table(busca, {columns: ["nome", "cod", "emprego", "n_mun
     marks: [Plot.geo(feats, {fill: d => faixa(d.properties.emprego >= V.emprego_minimo ? d.properties.ql : (d.properties.emprego ? 0.5 : null)),
       stroke: "white", strokeWidth: 0.4,
       title: d => `${d.properties.name_muni}\n${d.properties.emprego ? nf(d.properties.emprego) + " empregos · QL " + nf(d.properties.ql, 1) : "sem emprego formal"}`})]});
-  const t = [...por.entries()].map(([id, d]) => ({mun: nomeMun.get(id) ?? id, ...d})).sort((a, b) => b.emprego - a.emprego);
+  const t = [...por.entries()].map(([id, d]) => ({mun: nomeMun.get(id) ?? id, rd: rdMun.get(id), ...d})).sort((a, b) => b.emprego - a.emprego);
   return html`<h4>${sel.nome} <span class="voc-cod">${sel.cod}</span></h4>
     <p>${nf(A.emprego[sel.i])} empregos formais e ${nf(A.estab[sel.i])} estabelecimentos em ${nf(A.n_mun[sel.i])} municípios (RAIS ${V.ano}). ${tagCad(sel.i).length ? html`Faz parte de: ${tagCad(sel.i)}` : ""}</p>
     ${mapa}
-    <div class="voc-tab"><table class="table table-sm"><thead><tr><th>Município</th><th>Empregos</th><th>Estab.</th><th>QL</th></tr></thead><tbody>
-    ${t.slice(0, 40).map(d => html`<tr><td>${d.mun}</td><td>${nf(d.emprego)}</td><td>${nf(d.estab)}</td><td>${d.emprego >= V.emprego_minimo ? nf(d.ql, 1) : "–"}</td></tr>`)}</tbody></table></div>
+    <div class="voc-tab"><table class="table table-sm"><thead><tr><th>Município</th><th>RD</th><th>Empregos</th><th>Estab.</th><th>QL</th></tr></thead><tbody>
+    ${t.slice(0, 40).map(d => html`<tr><td>${d.mun}</td><td class="voc-cod">${d.rd ?? ""}</td><td>${nf(d.emprego)}</td><td>${nf(d.estab)}</td><td>${d.emprego >= V.emprego_minimo ? nf(d.ql, 1) : "–"}</td></tr>`)}</tbody></table></div>
     <p class="fonte">Municípios com menos de ${V.emprego_minimo} empregos na atividade aparecem como "abaixo de 1" no mapa e sem QL na tabela, para evitar QL alto com poucos vínculos.</p>`;
 }
 ```
@@ -126,7 +127,7 @@ viewof escP = Inputs.table(buscaP, {columns: ["nome", "grupo", "valor", "n_mun"]
   const faixa = d => rebanho ? (d.qtd ? "Com rebanho" : "Sem registro") : d.ql == null ? (d.valor ? "Abaixo de R$ 50 mil" : "Sem registro") : d.ql < 1 ? "QL abaixo de 1" : d.ql < 2 ? "QL 1 a 2" : d.ql < 5 ? "QL 2 a 5" : "QL 5 ou mais";
   const dom = rebanho ? ["Sem registro", "Com rebanho"] : ["Sem registro", "Abaixo de R$ 50 mil", "QL abaixo de 1", "QL 1 a 2", "QL 2 a 5", "QL 5 ou mais"];
   const cores = rebanho ? ["#EEF1F4", "#2E9E5B"] : ["#EEF1F4", "#E3EDE5", "#C3DFC9", "#7CC08E", "#2E9E5B", "#145A32"];
-  const t = [...por.entries()].map(([id, d]) => ({mun: nomeMun.get(id) ?? id, ...d})).sort((a, b) => (b.valor || b.qtd) - (a.valor || a.qtd));
+  const t = [...por.entries()].map(([id, d]) => ({mun: nomeMun.get(id) ?? id, rd: rdMun.get(id), ...d})).sort((a, b) => (b.valor || b.qtd) - (a.valor || a.qtd));
   const un = (PROD.produtos.unidade[sel.i] ?? "").toLowerCase();
   return html`<h4>${sel.nome} <span class="voc-cod">${sel.grupo}</span></h4>
     <p>${sel.valor ? html`${reaisMil(sel.valor)} de valor da produção em ` : ""}${nf(sel.n_mun)} municípios (IBGE ${PROD.produtos.ano[sel.i] ?? ""}).</p>
@@ -134,8 +135,8 @@ viewof escP = Inputs.table(buscaP, {columns: ["nome", "grupo", "valor", "n_mun"]
       color: {domain: dom, range: cores, legend: true},
       marks: [Plot.geo(feats, {fill: d => faixa(d.properties), stroke: "white", strokeWidth: 0.4,
         title: d => `${d.properties.name_muni}\n${d.properties.valor ? reaisMil(d.properties.valor) : ""} ${d.properties.qtd ? nf(d.properties.qtd) + " " + un : "sem registro"}${d.properties.ql != null ? " · QL " + nf(d.properties.ql, 1) : ""}`})]})}
-    <div class="voc-tab"><table class="table table-sm"><thead><tr><th>Município</th><th>Valor</th><th>Quantidade</th><th>QL do valor</th></tr></thead><tbody>
-    ${t.slice(0, 40).map(d => html`<tr><td>${d.mun}</td><td>${d.valor ? reaisMil(d.valor) : "–"}</td><td>${d.qtd ? nf(d.qtd) + " " + un : "–"}</td><td>${d.ql == null ? "–" : nf(d.ql, 1)}</td></tr>`)}</tbody></table></div>`;
+    <div class="voc-tab"><table class="table table-sm"><thead><tr><th>Município</th><th>RD</th><th>Valor</th><th>Quantidade</th><th>QL do valor</th></tr></thead><tbody>
+    ${t.slice(0, 40).map(d => html`<tr><td>${d.mun}</td><td class="voc-cod">${d.rd ?? ""}</td><td>${d.valor ? reaisMil(d.valor) : "–"}</td><td>${d.qtd ? nf(d.qtd) + " " + un : "–"}</td><td>${d.ql == null ? "–" : nf(d.ql, 1)}</td></tr>`)}</tbody></table></div>`;
 }
 ```
 

@@ -1,0 +1,31 @@
+cadeia_id,padrao
+avicultura,avicult|avicola|\bovos\b|galinha|frango
+bovinocultura,\bleite\b|leiteir|laticin|bovin|gado|pecuarist|queijo
+ovinocaprinocultura,caprin|ovin|\bcabra|ovinocaprin|caprinovin|bode
+apicultura,apicult|apiario|\bmel\b|meliponi
+aquicultura,aquicult|piscicult|tilapia|\bpeixe|pescador|\bpesca\b|colonia de pesca|colonia z
+fruticultura,fruticult|fruta|\buva\b|manga|banana|acerola|goiab|irrigant|perimetro irrigado|distrito de irrigacao
+sucroenergetico,cana de acucar|canavieir|fornecedores de cana|plantadores de cana
+textil_confeccoes,confecc|costur|faccao|vestuario|textil|\bmoda\b|jeans|sulanca
+moveleiro,moveis|moveleir|marcenar|marceneir
+construcao_civil,construcao civil|construtor|olaria|tijolo
+cachaca,cachaca|aguardente
+mandiocultura,mandioca|farinha|casa de farinha|macaxeira
+cafeicultura,\bcafe\b|cafeicult
+cajucultura,\bcaju|castanha de caju
+coco,\bcoco\b|coqueir
+floricultura,flores|floricult|plantas ornamentais
+cotonicultura,algodao|cotonicult
+carcinicultura,camarao|carcinicult
+calcados,calcad|couro|sapato|curtume
+ceramica_vermelha,ceramica|olaria|telha
+joias,joia|ourive|bijuteri
+turismo,turism|hotel|pousada|guias de turismo|receptivo
+economia_criativa,artesa|artesanato|rendeir|bordad|cultura popular|quadrilha junina|maracatu|frevo|coco de roda|cinema|audiovisual
+economia_do_mar,pescador|marisqueir|colonia de pesca|naut|jangad
+bioeconomia_renovaveis,reciclag|catadores|material reciclavel|energia solar|biogas|extrativis|agroecolog
+suinocultura,suin|porco
+vitivinicultura,vinho|vitivin|vinicol|\buva\b
+logistica,transport|caminhoneir|mototaxi|taxistas
+saude,saude|medic|odontolog|enfermag|hospital
+ti_software,software|tecnologia da informacao|informatica

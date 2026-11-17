@@ -67,6 +67,12 @@ As listas de maiores empresas ordenam pelo capital social, que é da empresa int
 
 O PIB total e o PIB per capita existem para os 185 municípios até o último ano divulgado. A divisão do valor adicionado por setor (agropecuária, indústria, serviços e administração pública) pode parar antes: em novembro de 2026 o IBGE só a tinha divulgado até 2021, e a tabela 5938 do SIDRA trazia 2022 e 2023 sem valor por setor. A cada atualização o pipeline consulta o SIDRA e completa os anos que faltam assim que saírem.
 
+## Formação e cooperativas
+
+Os cursos de cada município vêm de três fontes: o Censo da Educação Superior (cursos presenciais e a distância, estes pelos polos onde há alunos), as turmas de educação profissional do Censo Escolar (cursos técnicos, pelo código do curso e o nome na lista oficial do INEP) e o arquivo `config/cursos_novos.csv`, para cursos que começaram depois do último Censo publicado, sempre com a fonte. Os Censos saem com um a dois anos de atraso: os cursos da UFPE em Sertânia, com aulas desde setembro de 2025, só entram no Censo da Educação Superior de 2025. A ligação de um curso com uma cadeia é feita por palavras do nome (`config/cadeia_cursos.csv`) e é aproximada.
+
+Cooperativas e associações vêm do cadastro de CNPJ: estabelecimentos ativos com natureza jurídica de cooperativa, associação privada ou entidade sindical, sem organizações religiosas, condomínios e partidos. A ligação com a cadeia vem da atividade principal, quando ela está nos elos, ou do nome (`config/associativas_cadeias.csv`), porque associação de produtores costuma usar um código genérico da CNAE. Cooperativas de crédito aparecem à parte.
+
 ## Histórico
 
 A cada atualização o pipeline guarda um retrato do mês em `historico/AAAA-MM.rds`: até onde vai cada fonte, os principais números do estado, de cada cadeia e de cada município, as vocações de cada região e, no painel interno, os totais dos programas. Rodar de novo no mesmo mês substitui o retrato daquele mês. A página [O que mudou](mudancas.qmd) compara o retrato mais recente com o anterior. Só há comparação a partir do segundo mês registrado.

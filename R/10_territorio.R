@@ -3,7 +3,7 @@
 # agricultura familiar, crédito rural (PRONAF), infraestrutura e o corte de 2026
 # =============================================================================
 # Fontes (Base dos Dados, faturado no projeto do usuário):
-#   br_me_cnpj.estabelecimentos / empresas / simples   (Receita Federal)
+#   br_rf_cnpj.estabelecimentos / empresas / simples   (Receita Federal)
 #   br_me_rais.microdados_vinculos                     (escolaridade e ocupação)
 #   br_inep_censo_educacao_superior.curso / ies
 #   br_inep_censo_escolar.turma                        (educação profissional)
@@ -22,7 +22,7 @@ tentar <- function(rotulo, expr) {
 
 # Dicionários da Base dos Dados (códigos -> rótulos)
 extrair_dicionarios_bd <- function(projeto) {
-  ds <- c("br_me_cnpj", "br_inep_censo_educacao_superior", "br_inep_censo_escolar", "br_bcb_sicor", "br_me_rais")
+  ds <- c("br_rf_cnpj", "br_inep_censo_educacao_superior", "br_inep_censo_escolar", "br_bcb_sicor", "br_me_rais")
   bind_rows(lapply(ds, function(d) tentar(paste("dicionário", d), consultar(glue::glue(
     "SELECT '{d}' AS dataset, id_tabela, nome_coluna, chave, valor FROM `basedosdados.{d}.dicionario`"), projeto))))
 }
@@ -37,16 +37,18 @@ rotular <- function(x, dic, dataset, tabela, coluna) {
 # ---------------------------------------------------------------------------
 # 1. Empresas (CNPJ): aberturas, baixas e estoque por município x divisão CNAE
 # ---------------------------------------------------------------------------
-SQL_CNPJ_ULT <- "(SELECT MAX(data) FROM `basedosdados.br_me_cnpj.estabelecimentos` WHERE data >= DATE_SUB(CURRENT_DATE(), INTERVAL 540 DAY))"
+# Em novembro de 2026 a Base dos Dados mudou o CNPJ de br_me_cnpj para br_rf_cnpj (coluna
+# data virou data_referencia); as tabelas antigas ficaram só com um aviso do novo endereço.
+SQL_CNPJ_ULT <- "(SELECT MAX(data_referencia) FROM `basedosdados.br_rf_cnpj.estabelecimentos` WHERE data_referencia >= DATE_SUB(CURRENT_DATE(), INTERVAL 540 DAY))"
 
 extrair_cnpj_fluxos <- function(projeto, uf, ano_ini = 2010) {
   sql <- glue::glue("
     WITH e AS (
       SELECT id_municipio, SUBSTR(cnae_fiscal_principal, 1, 2) AS divisao, cnpj_basico, situacao_cadastral,
-             data_inicio_atividade, data_situacao_cadastral, data
-      FROM `basedosdados.br_me_cnpj.estabelecimentos`
-      WHERE data = {SQL_CNPJ_ULT} AND sigla_uf = '{uf}'),
-    s AS (SELECT cnpj_basico, MAX(opcao_mei) AS mei FROM `basedosdados.br_me_cnpj.simples` GROUP BY 1)
+             data_inicio_atividade, data_situacao_cadastral, data_referencia AS data
+      FROM `basedosdados.br_rf_cnpj.estabelecimentos`
+      WHERE data_referencia = {SQL_CNPJ_ULT} AND sigla_uf = '{uf}'),
+    s AS (SELECT cnpj_basico, MAX(opcao_mei) AS mei FROM `basedosdados.br_rf_cnpj.simples` GROUP BY 1)
     SELECT 'abertura' AS tipo, e.id_municipio, e.divisao, IFNULL(s.mei, 0) AS mei,
            EXTRACT(YEAR FROM e.data_inicio_atividade) AS ano, e.situacao_cadastral, MAX(e.data) AS data_base, COUNT(*) AS n
     FROM e LEFT JOIN s USING (cnpj_basico)
@@ -73,13 +75,13 @@ extrair_cnpj_maiores <- function(projeto, uf, elos, top = 5) {
     e AS (
       SELECT cnpj, cnpj_basico, id_municipio, cnae_fiscal_principal AS cnae, data_inicio_atividade,
              identificador_matriz_filial AS matriz_filial, nome_fantasia, situacao_cadastral
-      FROM `basedosdados.br_me_cnpj.estabelecimentos`
-      WHERE data = {SQL_CNPJ_ULT} AND sigla_uf = '{uf}' AND situacao_cadastral IN ('2', '02')),
+      FROM `basedosdados.br_rf_cnpj.estabelecimentos`
+      WHERE data_referencia = {SQL_CNPJ_ULT} AND sigla_uf = '{uf}' AND situacao_cadastral IN ('2', '02')),
     emp AS (
       SELECT cnpj_basico, razao_social, natureza_juridica, capital_social, porte
-      FROM `basedosdados.br_me_cnpj.empresas`
-      WHERE data = (SELECT MAX(data) FROM `basedosdados.br_me_cnpj.empresas` WHERE data >= DATE_SUB(CURRENT_DATE(), INTERVAL 540 DAY))),
-    s AS (SELECT cnpj_basico, MAX(opcao_mei) AS mei FROM `basedosdados.br_me_cnpj.simples` GROUP BY 1),
+      FROM `basedosdados.br_rf_cnpj.empresas`
+      WHERE data_referencia = (SELECT MAX(data_referencia) FROM `basedosdados.br_rf_cnpj.empresas` WHERE data_referencia >= DATE_SUB(CURRENT_DATE(), INTERVAL 540 DAY))),
+    s AS (SELECT cnpj_basico, MAX(opcao_mei) AS mei FROM `basedosdados.br_rf_cnpj.simples` GROUP BY 1),
     j AS (
       SELECT c.cadeia_id, e.*, emp.razao_social, emp.natureza_juridica, emp.capital_social, emp.porte
       FROM e
@@ -116,7 +118,7 @@ extrair_cnpj_maiores <- function(projeto, uf, elos, top = 5) {
 montar_empresas <- function(fluxos, dic, dir_cnae) {
   if (!NROW(fluxos)) return(list(fluxo = tibble(), estoque = tibble(), data_base = NA))
   sit <- function(x) {
-    r <- tolower(rotular(x, dic, "br_me_cnpj", "estabelecimentos", "situacao_cadastral"))
+    r <- tolower(rotular(x, dic, "br_rf_cnpj", "estabelecimentos", "situacao_cadastral"))
     case_when(grepl("ativa", r) | x %in% c("2", "02") ~ "ativa",
               grepl("baixada", r) | x %in% c("8", "08") ~ "baixada",
               TRUE ~ "outra")
@@ -138,7 +140,7 @@ montar_empresas <- function(fluxos, dic, dir_cnae) {
 montar_maiores <- function(maiores, dic, dir_cnae) {
   if (!NROW(maiores)) return(tibble())
   porte_txt <- function(x) {
-    r <- rotular(x, dic, "br_me_cnpj", "empresas", "porte")
+    r <- rotular(x, dic, "br_rf_cnpj", "empresas", "porte")
     recode(r, "01" = "Microempresa", "1" = "Microempresa", "03" = "Pequeno porte", "3" = "Pequeno porte",
            "05" = "Demais", "5" = "Demais", "00" = "Não informado", "0" = "Não informado")
   }

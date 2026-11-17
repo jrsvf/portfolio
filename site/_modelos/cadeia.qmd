@@ -134,8 +134,10 @@ mapa_municipios(malha, lc, "emprego", "Vínculos", municipios, formato = functio
 ### Ranking
 
 ```{r}
+rd_tab <- tryCatch(ler_base("rd", ""), error = function(e) NULL)
+rd_de <- function(id) if (is.null(rd_tab)) NA_character_ else rd_tab$rd[match(id, as.character(rd_tab$id_municipio))]
 lc %>% arrange(desc(emprego)) %>%
-  transmute(Município = nome_mun(id_municipio), Vínculos = emprego, Estabelecimentos = estabelecimentos,
+  transmute(Município = nome_mun(id_municipio), RD = rd_de(id_municipio), Vínculos = emprego, Estabelecimentos = estabelecimentos,
             QL = round(ql, 2), `% do estado` = round(100 * pr, 1),
             `Peso no município (%)` = round(100 * pl, 2)) %>%
   tabela()
@@ -465,6 +467,43 @@ if (nrow(cc) > 0) {
                                      format = "html", table.attr = "class='table table-sm'")))),
     rodape_fonte("INEP, Censo da Educação Superior, cursos presenciais, via Base dos Dados. A ligação entre curso e cadeia é feita por palavras do nome do curso (config/cadeia_cursos.csv) e é aproximada: um mesmo curso pode servir a várias cadeias. Cursos técnicos de nível médio ainda não entram"))
 } else htmltools::p("Nenhum curso superior presencial em Pernambuco com nome ligado a esta cadeia.")
+```
+
+```{r}
+# cursos técnicos, a distância e novos (fora do Censo) ligados à cadeia, com o município e a RD
+fm <- tryCatch(ler_base("formacao", ""), error = function(e) NULL)
+fm <- if (NROW(fm)) fm %>% filter(vapply(strsplit(cadeias, ";"), function(k) CADEIA %in% k, logical(1)), tipo != "Superior presencial") else tibble()
+if (nrow(fm) > 0) {
+  htmltools::tagList(
+    htmltools::h4("Cursos técnicos, a distância e novos"),
+    htmltools::div(class = "voc-tab", htmltools::HTML(knitr::kable(fm %>% arrange(match(tipo, c("Novo (ainda fora do Censo)", "Técnico", "Superior a distância")), desc(matriculas)) %>%
+      transmute(Curso = curso, Tipo = recode(tipo, "Novo (ainda fora do Censo)" = "novo, ainda fora do Censo", "Técnico" = "técnico", "Superior a distância" = "a distância"),
+                `Município` = municipio, RD = rd, Rede = rede, `Matrículas` = ifelse(is.na(matriculas), "–", fmt_num(matriculas)),
+                Detalhe = coalesce(detalhe, "")),
+      format = "html", table.attr = "class='table table-sm'"))),
+    rodape_fonte("INEP: Censo Escolar (turmas de educação profissional) e Censo da Educação Superior (cursos a distância, pelos polos), via Base dos Dados; cursos novos em config/cursos_novos.csv, com a fonte de cada um"))
+}
+```
+
+## Cooperativas e associações ligadas à cadeia
+
+```{r}
+asc <- tryCatch(ler_base("associativas", ""), error = function(e) NULL)
+al <- if (!is.null(asc)) asc$lista %>% filter(vapply(strsplit(cadeias, ";"), function(k) CADEIA %in% k, logical(1))) else tibble()
+if (nrow(al) > 0) {
+  htmltools::tagList(
+    cartoes(list(
+      list(rotulo = "Cooperativas", valor = fmt_num(sum(al$tipo == "Cooperativa"))),
+      list(rotulo = "Associações", valor = fmt_num(sum(al$tipo == "Associação"))),
+      list(rotulo = "Entidades sindicais", valor = fmt_num(sum(al$tipo == "Entidade sindical"))),
+      list(rotulo = "Municípios", valor = fmt_num(n_distinct(al$id_municipio))))),
+    htmltools::div(class = "voc-tab", htmltools::HTML(knitr::kable(al %>% arrange(match(tipo, c("Cooperativa", "Associação", "Entidade sindical")), rd, municipio) %>%
+      transmute(Entidade = nome, Tipo = tipo, `Município` = municipio, RD = rd, `Atividade principal` = coalesce(atividade, "–"),
+                `Ligação` = ifelse(via == "nome", "pelo nome", "pela atividade")),
+      format = "html", table.attr = "class='table table-sm'"))),
+    rodape_fonte(paste0("CNPJ (Receita Federal), via Base dos Dados: estabelecimentos ativos com natureza jurídica de cooperativa, associação privada ou entidade sindical. ",
+                        "A ligação pelo nome usa palavras como produtores, apicultores ou artesãos (config/associativas_cadeias.csv) e é aproximada")))
+} else htmltools::p("Nenhuma cooperativa ou associação ativa ligada a esta cadeia pela atividade principal ou pelo nome.")
 ```
 
 ## Encadeamentos com o resto da economia

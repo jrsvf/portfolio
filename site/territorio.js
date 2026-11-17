@@ -109,3 +109,40 @@ export function listaMaiores(lst, {html}) {
                e.matriz_filial === "Filial" ? "filial" : null, e.n_unidades > 1 ? e.n_unidades + " unidades aqui" : null].filter(Boolean).join(" · ")}</span></li>`)}</ul>
     ${temFilial ? html`<p class="fonte">Nas filiais, o capital social que ordena a lista é o da empresa inteira, não o da unidade no município.</p>` : ""}</div>`;
 }
+
+
+// Cursos oferecidos no território: superior presencial e a distância, técnico e
+// cursos novos que ainda não aparecem no Censo. As etiquetas levam à cadeia ligada ao curso.
+const TAG_TIPO = {"Novo (ainda fora do Censo)": "novo", "Superior presencial": "presencial", "Técnico": "técnico", "Superior a distância": "a distância"};
+const etiquetasCad = (cs, html) => (cs ?? []).map(c => html`<a class="voc-cad" href="cadeias/${c.id}.html">${c.nome ?? c.id}</a>`);
+export function listaCursos(f, {html}) {
+  if (!f || !f.lista || !f.lista.length) return html`<p>Nenhum curso superior ou técnico registrado aqui no Censo da Educação Superior e no Censo Escolar.</p>`;
+  const r = Object.fromEntries((f.resumo ?? []).map(d => [d.tipo, d]));
+  const novos = f.lista.filter(d => d.tipo === "Novo (ainda fora do Censo)");
+  return html`<div>
+    ${cartoes(html, [
+      r["Superior presencial"] ? ["Cursos superiores presenciais", nf(r["Superior presencial"].cursos), nf(r["Superior presencial"].matriculas) + " matrículas"] : null,
+      r["Técnico"] ? ["Cursos técnicos", nf(r["Técnico"].cursos), nf(r["Técnico"].matriculas) + " matrículas"] : null,
+      r["Superior a distância"] ? ["Cursos a distância com alunos aqui", nf(r["Superior a distância"].cursos), nf(r["Superior a distância"].matriculas) + " matrículas"] : null,
+      novos.length ? ["Cursos novos, ainda fora do Censo", nf(novos.length), novos[0].detalhe] : null])}
+    <div class="voc-tab"><table class="rx-tab"><thead><tr><th>Curso</th><th style="text-align:left">Tipo</th><th style="text-align:left">Rede</th><th>Matrículas</th><th style="text-align:left">Cadeias ligadas</th></tr></thead><tbody>
+    ${f.lista.map(d => html`<tr><td>${d.curso}${d.detalhe ? html`<span class="voc-cod"> ${d.detalhe}</span>` : ""}${d.municipios ? html`<br><span class="voc-cod">${d.municipios}</span>` : ""}</td>
+      <td style="text-align:left">${TAG_TIPO[d.tipo] ?? d.tipo}</td><td style="text-align:left">${d.rede ?? "–"}</td><td>${d.matriculas == null ? "–" : nf(d.matriculas)}</td><td style="text-align:left">${etiquetasCad(d.cadeias, html)}</td></tr>`)}</tbody></table></div>
+    ${f.total > f.lista.length ? html`<p class="fonte">Mostrando ${f.lista.length} de ${nf(f.total)} cursos.</p>` : ""}</div>`;
+}
+
+// Cooperativas e associações (CNPJ ativos). A ligação com a cadeia vem da atividade principal ou do nome.
+export function blocoAssociativas(a, {html}) {
+  if (!a) return html`<p>Nenhuma cooperativa ou associação ativa registrada aqui no cadastro da Receita.</p>`;
+  const n = a.n ?? {};
+  return html`<div>
+    ${cartoes(html, [
+      ["Cooperativas", nf(n["Cooperativa"] ?? 0), (n["Cooperativa de crédito"] ? nf(n["Cooperativa de crédito"]) + " de crédito à parte" : "sem contar as de crédito")],
+      ["Associações de produtores e de produção", nf(n["Associação produtiva"] ?? 0), "pelo nome ou pela atividade"],
+      ["Entidades sindicais", nf(n["Entidade sindical"] ?? 0), ""],
+      ["Outras associações", nf(n["Outra associação"] ?? 0), "moradores, culturais, esportivas e outras"]])}
+    ${a.lista && a.lista.length ? html`<div class="voc-tab"><table class="rx-tab"><thead><tr><th>Entidade</th><th style="text-align:left">Tipo</th><th style="text-align:left">Atividade principal</th><th style="text-align:left">Cadeias ligadas</th></tr></thead><tbody>
+      ${a.lista.map(d => html`<tr><td>${d.nome}${d.municipio ? html`<br><span class="voc-cod">${d.municipio}</span>` : ""}</td><td style="text-align:left">${d.grupo}</td>
+        <td style="text-align:left">${d.atividade ?? "–"}</td><td style="text-align:left">${etiquetasCad(d.cadeias, html)}${d.via === "nome" ? html`<span class="voc-cod"> pelo nome</span>` : ""}</td></tr>`)}</tbody></table></div>
+      ${a.total_lista > a.lista.length ? html`<p class="fonte">Mostrando ${a.lista.length} de ${nf(a.total_lista)} cooperativas e associações ligadas à produção.</p>` : ""}` : ""}</div>`;
+}

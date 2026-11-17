@@ -25,9 +25,9 @@ extrair_cnpj_cadeias <- function(projeto, uf, elos) {
     WITH cods AS (SELECT * FROM UNNEST([{linhas}])),
     e AS (
       SELECT cnpj_basico, id_municipio, cnae_fiscal_principal AS cnae
-      FROM `basedosdados.br_me_cnpj.estabelecimentos`
-      WHERE data = {SQL_CNPJ_ULT} AND sigla_uf = '{uf}' AND situacao_cadastral IN ('2', '02')),
-    s AS (SELECT cnpj_basico, MAX(opcao_mei) AS mei FROM `basedosdados.br_me_cnpj.simples` GROUP BY 1),
+      FROM `basedosdados.br_rf_cnpj.estabelecimentos`
+      WHERE data_referencia = {SQL_CNPJ_ULT} AND sigla_uf = '{uf}' AND situacao_cadastral IN ('2', '02')),
+    s AS (SELECT cnpj_basico, MAX(opcao_mei) AS mei FROM `basedosdados.br_rf_cnpj.simples` GROUP BY 1),
     es AS (SELECT e.*, IFNULL(s.mei, 0) AS mei FROM e LEFT JOIN s USING (cnpj_basico))
     SELECT 'cadeia' AS nivel, c.cadeia_id, es.id_municipio, es.mei, COUNT(DISTINCT CONCAT(es.cnpj_basico, es.cnae)) AS n
     FROM es JOIN cods c ON (LENGTH(c.cod) = 7 AND es.cnae = c.cod) OR (LENGTH(c.cod) = 5 AND SUBSTR(es.cnae, 1, 5) = c.cod)

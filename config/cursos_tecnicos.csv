@@ -1,0 +1,241 @@
+cod_curso,curso,eixo
+1001,Agente Comunitário de Saúde,01 - Ambiente e saúde
+1002,Análises clínicas,01 - Ambiente e saúde
+1004,Citopatologia,01 - Ambiente e saúde
+1005,Controle Ambiental,01 - Ambiente e saúde
+1006,Enfermagem,01 - Ambiente e saúde
+1007,Equipamentos Biomédicos,01 - Ambiente e saúde
+1008,Estética,01 - Ambiente e saúde
+1009,Farmácia,01 - Ambiente e saúde
+1010,Gerência de Saúde,01 - Ambiente e saúde
+1011,Hemoterapia,01 - Ambiente e saúde
+1012,Saúde Bucal,01 - Ambiente e saúde
+1013,Imagem Pessoal,01 - Ambiente e saúde
+1014,Imobilizações Ortopédicas,01 - Ambiente e saúde
+1015,Massoterapia,01 - Ambiente e saúde
+1016,Meio Ambiente,01 - Ambiente e saúde
+1017,Meteorologia,01 - Ambiente e saúde
+1018,Nutrição e Dietética,01 - Ambiente e saúde
+1019,Óptica,01 - Ambiente e saúde
+1020,Órteses e Próteses,01 - Ambiente e saúde
+1021,Podologia,01 - Ambiente e saúde
+1022,Prótese Dentária,01 - Ambiente e saúde
+1023,Radiologia,01 - Ambiente e saúde
+1024,Reabilitação de Dependentes Químicos,01 - Ambiente e saúde
+1025,Reciclagem,01 - Ambiente e saúde
+1026,Registros e Informações em Saúde,01 - Ambiente e saúde
+1028,Vigilância em Saúde,01 - Ambiente e saúde
+1029,Cuidados de Idosos,01 - Ambiente e saúde
+1030,Necropsia,01 - Ambiente e saúde
+1999,Outros - Eixo Ambiente e Saúde,01 - Ambiente e saúde
+2029,Alimentação Escolar,02 - Desenvolvimento educacional e social
+2030,Biblioteconomia,02 - Desenvolvimento educacional e social
+2031,Infraestrutura escolar,02 - Desenvolvimento educacional e social
+2032,Multimeios Didáticos,02 - Desenvolvimento educacional e social
+2033,Orientação Comunitária,02 - Desenvolvimento educacional e social
+2034,Secretaria Escolar,02 - Desenvolvimento educacional e social
+2035,Ludoteca,02 - Desenvolvimento educacional e social
+2036,Produção de materiais didáticos bilíngue em Libras/Língua Portuguesa,02 - Desenvolvimento educacional e social
+2037,Tradução e Interpretação de Libras,02 - Desenvolvimento educacional e social
+2038,Treinamento e Instrução de Cães-Guia,02 - Desenvolvimento educacional e social
+2039,Laboratório de Ciências da Natureza,02 - Desenvolvimento educacional e social
+2999,Outros - Eixo Desenvolvimento educacional e social,02 - Desenvolvimento educacional e social
+3036,Automação Industrial,03 - Controle e processos industriais
+3037,Eletroeletrônica,03 - Controle e processos industriais
+3038,Eletromecânica,03 - Controle e processos industriais
+3039,Eletrônica,03 - Controle e processos industriais
+3040,Eletrotécnica,03 - Controle e processos industriais
+3041,Manutenção Automotiva,03 - Controle e processos industriais
+3042,Manutenção de Máquinas Navais,03 - Controle e processos industriais
+3043,Mecânica,03 - Controle e processos industriais
+3044,Mecatrônica,03 - Controle e processos industriais
+3045,Metalurgia,03 - Controle e processos industriais
+3048,Refrigeração e Climatização,03 - Controle e processos industriais
+3049,Sistemas a Gás,03 - Controle e processos industriais
+3050,Manutenção de Aeronaves em Aviônicos,03 - Controle e processos industriais
+3051,Manutenção de Aeronaves em Célula,03 - Controle e processos industriais
+3052,Manutenção de Aeronaves em Grupo Motopropulsor,03 - Controle e processos industriais
+3053,Manutenção de Máquinas Pesadas,03 - Controle e processos industriais
+3054,Manutenção de Sistemas Metroferroviários,03 - Controle e processos industriais
+3055,Mecânica de Precisão,03 - Controle e processos industriais
+3056,Metrologia,03 - Controle e processos industriais
+3057,Processamento da Madeira,03 - Controle e processos industriais
+3058,Sistemas de Energia Renovável,03 - Controle e processos industriais
+3059,Soldagem,03 - Controle e processos industriais
+3060,Manutenção de Máquinas Industriais,03 - Controle e processos industriais
+3999,Outros - Eixo Controle e Processos Industriais,03 - Controle e processos industriais
+4050,Administração,04 - Gestão e negócios
+4051,Comércio,04 - Gestão e negócios
+4052,Comércio Exterior,04 - Gestão e negócios
+4053,Contabilidade,04 - Gestão e negócios
+4054,Cooperativismo,04 - Gestão e negócios
+4055,Finanças,04 - Gestão e negócios
+4056,Logística,04 - Gestão e negócios
+4057,Marketing,04 - Gestão e negócios
+4058,Qualidade,04 - Gestão e negócios
+4059,Recursos Humanos,04 - Gestão e negócios
+4060,Secretariado,04 - Gestão e negócios
+4061,Seguros,04 - Gestão e negócios
+4062,Condomínio,04 - Gestão e negócios
+4063,Serviços Públicos,04 - Gestão e negócios
+4064,Transações Imobiliárias,04 - Gestão e negócios
+4065,Vendas,04 - Gestão e negócios
+4066,Serviços Jurídicos,04 - Gestão e negócios
+4999,Outros - Eixo Gestão e Negócios,04 - Gestão e negócios
+5066,Agenciamento de Viagem,"05 - Turismo, hospitalidade e lazer"
+5067,Cozinha,"05 - Turismo, hospitalidade e lazer"
+5068,Eventos,"05 - Turismo, hospitalidade e lazer"
+5069,Guia de Turismo,"05 - Turismo, hospitalidade e lazer"
+5070,Hospedagem,"05 - Turismo, hospitalidade e lazer"
+5071,Lazer,"05 - Turismo, hospitalidade e lazer"
+5072,Restaurante e Bar,"05 - Turismo, hospitalidade e lazer"
+5999,"Outros - Eixo Turismo, hospitalidade e Lazer","05 - Turismo, hospitalidade e lazer"
+6073,Informática,06 - Informação e comunicação
+6074,Informática para Internet,06 - Informação e comunicação
+6075,Manutenção e Suporte em Informática,06 - Informação e comunicação
+6076,Programação de Jogos Digitais,06 - Informação e comunicação
+6077,Redes de Computadores,06 - Informação e comunicação
+6078,Sistemas de Comutação,06 - Informação e comunicação
+6079,Sistemas de Transmissão,06 - Informação e comunicação
+6080,Telecomunicações,06 - Informação e comunicação
+6081,Computação Gráfica,06 - Informação e comunicação
+6082,Desenvolvimento de Sistemas,06 - Informação e comunicação
+6999,Outros - Eixo Informação e Comunicação,06 - Informação e comunicação
+7081,Aeroportuário,07 - Infraestrutura
+7082,Agrimensura,07 - Infraestrutura
+7083,Carpintaria,07 - Infraestrutura
+7084,Desenho de Construção Civil,07 - Infraestrutura
+7085,Edificações,07 - Infraestrutura
+7086,Estradas,07 - Infraestrutura
+7087,Geodésia e Cartografia,07 - Infraestrutura
+7088,Geoprocessamento,07 - Infraestrutura
+7089,Hidrologia,07 - Infraestrutura
+7091,Portos,07 - Infraestrutura
+7092,Saneamento,07 - Infraestrutura
+7093,Trânsito,07 - Infraestrutura
+7094,Transporte Aquaviário,07 - Infraestrutura
+7095,Transporte de Cargas,07 - Infraestrutura
+7096,Transporte Dutoviário,07 - Infraestrutura
+7097,Transporte Metroferroviário,07 - Infraestrutura
+7098,Transporte Rodoviário,07 - Infraestrutura
+7999,Outros - Eixo Infra-Estrutura,07 - Infraestrutura
+8099,Comunicações Aeronáuticas,08 - Militar
+8100,Controle de Tráfego Aéreo,08 - Militar
+8101,Desenho Militar,08 - Militar
+8102,Eletricidade e Instrumentos Aeronáuticos,08 - Militar
+8103,Equipamentos de Vôo,08 - Militar
+8104,Estrutura e Pintura de Aeronaves,08 - Militar
+8105,Fotointeligência,08 - Militar
+8106,Guarda e Segurança,08 - Militar
+8107,Hidrografia,08 - Militar
+8108,Informações Aeronáuticas,08 - Militar
+8109,Manobras e Equipamentos de Convés,08 - Militar
+8110,Material Bélico,08 - Militar
+8111,Mergulho,08 - Militar
+8112,Operação de Radar,08 - Militar
+8113,Operação de Sonar,08 - Militar
+8114,Operações de Engenharia Militar,08 - Militar
+8115,Preparação Física e Desportiva Militar,08 - Militar
+8116,Sensores de Aviação,08 - Militar
+8117,Sinais Navais,08 - Militar
+8118,Sinalização Náutica,08 - Militar
+8119,Suprimento,08 - Militar
+8120,Ações de Comandos,08 - Militar
+8121,Armamento de Aeronaves,08 - Militar
+8122,Artilharia,08 - Militar
+8123,Artilharia Antiaérea,08 - Militar
+8124,Cavalaria,08 - Militar
+8125,"Combate a Incêndio, Resgate e Prevenção de Acidentes de Aviação",08 - Militar
+8126,Comunicações Navais,08 - Militar
+8127,Equipamento de Engenharia,08 - Militar
+8128,Forças Especiais,08 - Militar
+8129,Infantaria,08 - Militar
+8130,Mecânica de Aeronaves,08 - Militar
+8131,Montanhismo,08 - Militar
+8132,Navegação Fluvial,08 - Militar
+8133,Bombeiro Aeronáutico,08 - Militar
+8999,Outros - Eixo Militar,08 - Militar
+9120,Alimentos,09 - Produção alimentícia
+9121,Agroindústria,09 - Produção alimentícia
+9122,Apicultura,09 - Produção alimentícia
+9123,Cervejaria,09 - Produção alimentícia
+9124,Confeitaria,09 - Produção alimentícia
+9125,Panificação,09 - Produção alimentícia
+9126,Processamento de Pescado,09 - Produção alimentícia
+9127,Viticultura e Enologia,09 - Produção alimentícia
+9999,Outros - Eixo Produção Alimentícia,09 - Produção alimentícia
+10128,Artes Circenses,10 - Produção cultural e design
+10129,Teatro,10 - Produção cultural e design
+10130,Artes Visuais,10 - Produção cultural e design
+10131,Artesanato,10 - Produção cultural e design
+10132,Canto,10 - Produção cultural e design
+10133,Composição e Arranjo,10 - Produção cultural e design
+10134,Comunicação Visual,10 - Produção cultural e design
+10135,Conservação e Restauro,10 - Produção cultural e design
+10136,Dança,10 - Produção cultural e design
+10137,Design de Calçados,10 - Produção cultural e design
+10138,Design de Embalagens,10 - Produção cultural e design
+10139,Design de Interiores,10 - Produção cultural e design
+10140,Design de Jóias,10 - Produção cultural e design
+10141,Design de Móveis,10 - Produção cultural e design
+10142,Documentação Musical,10 - Produção cultural e design
+10143,Fabricação de Instrumentos Musicais,10 - Produção cultural e design
+10144,Instrumento Musical,10 - Produção cultural e design
+10145,Modelagem do Vestuário,10 - Produção cultural e design
+10146,Multimídia,10 - Produção cultural e design
+10147,Paisagismo,10 - Produção cultural e design
+10148,Processos Fotográficos,10 - Produção cultural e design
+10149,Produção de Áudio e Vídeo,10 - Produção cultural e design
+10150,Produção de Moda,10 - Produção cultural e design
+10151,Publicidade,10 - Produção cultural e design
+10152,Rádio e Televisão,10 - Produção cultural e design
+10153,Regência,10 - Produção cultural e design
+10154,Cenografia,10 - Produção cultural e design
+10155,Museologia,10 - Produção cultural e design
+10156,Processos Fonográficos,10 - Produção cultural e design
+10157,Figurino Cênico,10 - Produção cultural e design
+10999,Outros - Eixo Produção Cultural e Design,10 - Produção cultural e design
+11154,Açúcar e Álcool,11 - Produção industrial
+11155,Biocombustíveis,11 - Produção industrial
+11156,Calçados,11 - Produção industrial
+11157,Celulose e Papel,11 - Produção industrial
+11158,Cerâmica,11 - Produção industrial
+11159,Construção Naval,11 - Produção industrial
+11160,Curtimento,11 - Produção industrial
+11161,Fabricação Mecânica,11 - Produção industrial
+11162,Impressão Rotográfica e Flexográfica,11 - Produção industrial
+11163,Impressão Offset,11 - Produção industrial
+11164,Joalheria,11 - Produção industrial
+11165,Móveis,11 - Produção industrial
+11166,Petróleo e Gás,11 - Produção industrial
+11167,Plásticos,11 - Produção industrial
+11168,Pré-Impressão Gráfica,11 - Produção industrial
+11169,Têxtil,11 - Produção industrial
+11170,Vestuário,11 - Produção industrial
+11171,Processos Gráficos,11 - Produção industrial
+11172,Análises Químicas,11 - Produção industrial
+11173,Biotecnologia,11 - Produção industrial
+11174,Petroquímica,11 - Produção industrial
+11175,Química,11 - Produção industrial
+11999,Outros - Eixo Produção Industrial,11 - Produção industrial
+12171,Agricultura,12 - Recursos naturais
+12172,Agroecologia,12 - Recursos naturais
+12173,Agronegócio,12 - Recursos naturais
+12174,Agropecuária,12 - Recursos naturais
+12175,Aquicultura,12 - Recursos naturais
+12176,Cafeicultura,12 - Recursos naturais
+12177,Equipamentos Pesqueiros,12 - Recursos naturais
+12178,Florestas,12 - Recursos naturais
+12179,Fruticultura,12 - Recursos naturais
+12180,Geologia,12 - Recursos naturais
+12181,Mineração,12 - Recursos naturais
+12182,Pesca,12 - Recursos naturais
+12183,Recursos Minerais,12 - Recursos naturais
+12184,Recursos Pesqueiros,12 - Recursos naturais
+12185,Zootecnia,12 - Recursos naturais
+12186,Grãos,12 - Recursos naturais
+12187,Pós-Colheita,12 - Recursos naturais
+12999,Outros - Eixo Recursos Naturais,12 - Recursos naturais
+13181,Defesa Civil,13 - Segurança
+13182,Segurança do Trabalho,13 - Segurança
+13999,Outros - Eixo Segurança,13 - Segurança

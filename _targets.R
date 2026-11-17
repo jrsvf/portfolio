@@ -119,6 +119,16 @@ list(
   tar_target(bq_escoamento,   { bq_esquema; tentar("escoamento", extrair_comex_escoamento(projeto, uf)) }),
   tar_target(nomes_urf,       { bq_esquema; obter_nomes_comex(projeto) }),
   tar_target(cursos_cad,      cursos_cadeia(bq_cursos_nome, ler_cadeia_cursos(arq_cadeia_cursos), bq_dic, bq_municipios)),
+  # formação por município: superior presencial e a distância, técnico (pelo nome do curso) e cursos novos fora do Censo
+  tar_target(nomes_tec,       obter_cursos_tecnicos(), cue = tar_cue(mode = "always")),
+  tar_target(bq_tecnico_cursos, { bq_esquema; tentar("cursos técnicos", extrair_tecnico_cursos(projeto, uf)) }),
+  tar_target(arq_cursos_novos, "config/cursos_novos.csv", format = "file"),
+  tar_target(formacao,        montar_formacao(bq_cursos_nome, bq_tecnico_cursos, nomes_tec, ler_cursos_novos(arq_cursos_novos),
+                                              ler_cadeia_cursos(arq_cadeia_cursos), bq_dic, bq_municipios, rd)),
+  # cooperativas e associações (CNPJ)
+  tar_target(bq_associativas, { bq_esquema; tentar("CNPJ cooperativas e associações", extrair_cnpj_associativas(projeto, uf)) }),
+  tar_target(arq_assoc_cad,   "config/associativas_cadeias.csv", format = "file"),
+  tar_target(associativas,    montar_associativas(bq_associativas, cad$elos, cad$meta, ler_associativas_cadeias(arq_assoc_cad), bq_cnae, bq_municipios, rd)),
   tar_target(escoamento_cad,  escoamento_cadeia(bq_escoamento, cad$sh4, nomes_urf)),
   tar_target(agro_familiar,   tentar("Censo Agro", obter_agro_familiar(uf_codigo))),
   tar_target(empresas,         montar_empresas(bq_cnpj_fluxos, bq_dic, bq_cnae)),
@@ -290,6 +300,7 @@ list(
                  cursos_cad = cursos_cad, escoamento_cad = escoamento_cad,
                  nereus = nereus, nereus_cad = nereus_cad, ql_mult = ql_mult, ql_vab = ql_vab,
                  caged_elo = caged_elo, estoque = estoque, vocacao_cad = vocacao_cad, historico = historico,
+                 formacao = formacao, associativas = associativas,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),
@@ -302,6 +313,8 @@ list(
     estoque_emprego_pe       = if (is.null(estoque)) tibble::tibble() else estoque$pe,
     estoque_emprego_cadeia   = if (is.null(estoque)) tibble::tibble() else estoque$cadeia,
     vocacoes_cadeias_rd      = vocacao_tabela(vocacao_cad),
+    formacao_cursos          = if (NROW(formacao)) formacao else tibble::tibble(),
+    cooperativas_associacoes = if (is.null(associativas)) tibble::tibble() else associativas$lista,
     comex_cadeia             = comex_cad,
     producao_ibge_cadeia     = sidra_cad %>% filter(ano >= max(ano) - 10) %>% select(-any_of(c("valor_txt", "situacao"))),
     lacunas                  = lacunas
@@ -314,10 +327,11 @@ list(
              montar_raiox(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, bq_perfil_pe, bq_caged_pe,
                           comex_anos_completos, bq_sh4_nomes, sidra_bruto, locais_cadeia, sidra_cad,
                           comex_cad, cad$meta, krugman, ipca, locais_elo) %>% adicionar_ql_raiox(ql_mult, ql_vab)),
-  tar_target(saida_raiox, exportar_raiox(raiox, malha), format = "file"),
+  tar_target(saida_raiox, exportar_raiox(raiox, malha, rd = rd), format = "file"),
   tar_target(territorio,
              montar_territorio(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, cad_mun, cad$meta, empresas,
-                               empresas_maiores, qualificacao, educacao, icms, agro_familiar, credito_rural, infraestrutura)),
+                               empresas_maiores, qualificacao, educacao, icms, agro_familiar, credito_rural, infraestrutura,
+                               formacao, associativas, cad$elos, vocacao_cad)),
   tar_target(bq_cnae_grupos, { bq_esquema; extrair_cnae_grupos(projeto) }),
   tar_target(setores_base, montar_setores(bq_rais_pe, bq_cnae, bq_cnae_grupos, rd)),
   tar_target(saida_territorio, exportar_territorio(territorio, setores_base), format = "file"),

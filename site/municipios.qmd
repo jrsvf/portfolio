@@ -57,7 +57,7 @@ usd = x => x == null || x === 0 ? "–" : x >= 1e9 ? "US$ " + nf(x / 1e9, 2) + "
 AZUL = "#1F4E79"; LAR = "#E07A1F"; CINZA = "#B8C4CF"
 terr = FileAttachment("dados/territorio_municipios.json").json()
 regs = FileAttachment("dados/regioes.json").json()
-import {blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra, listaMaiores} from "./territorio.js"
+import {blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra, listaMaiores, listaCursos, blocoAssociativas} from "./territorio.js"
 t = terr.find(d => d.id === m.id) ?? {}
 nichos = new Set(regs.flatMap(r => (r.cadeias ?? []).filter(c => c.grupo === "nicho").map(c => c.cadeia_id)))
 rdDe = regs.find(r => r.municipios.some(x => x.id === m.id))
@@ -329,9 +329,27 @@ blocoQualif(t.qualificacao, {Plot, html})
 blocoEducacao(t.educacao, {Plot, html})
 ```
 
+### Cursos oferecidos
+
+```{ojs}
+//| echo: false
+listaCursos(t.formacao, {html})
+```
+
+<p class="fonte">Cursos superiores (presenciais e a distância) pelo Censo da Educação Superior e cursos técnicos pelas turmas do Censo Escolar (INEP), via Base dos Dados; cursos novos, que começaram depois do último Censo publicado, entram por config/cursos_novos.csv, com a fonte. Nos cursos a distância, as matrículas são de alunos ligados a polos aqui. A ligação com as cadeias é feita por palavras do nome do curso e é aproximada.</p>
+
 :::
 
-<p class="fonte">Fonte: RAIS (escolaridade e ocupação dos vínculos ativos em 31/12), Censo da Educação Superior e Censo Escolar (INEP), via Base dos Dados. Ensino superior: só cursos presenciais, no município de oferta.</p>
+<p class="fonte">Fonte: RAIS (escolaridade e ocupação dos vínculos ativos em 31/12), Censo da Educação Superior e Censo Escolar (INEP), via Base dos Dados. Matrículas por área e instituições: só cursos presenciais, no município de oferta.</p>
+
+## Cooperativas e associações
+
+```{ojs}
+//| echo: false
+blocoAssociativas(t.associativas, {html})
+```
+
+<p class="fonte">Fonte: Cadastro Nacional da Pessoa Jurídica (Receita Federal), via Base dos Dados. Estabelecimentos ativos com natureza jurídica de cooperativa, associação privada ou entidade sindical, sem organizações religiosas, condomínios e partidos. A lista mostra cooperativas e associações ligadas à produção: pela atividade principal, quando ela está numa cadeia, ou pelo nome (produtores, agricultores, apicultores, artesãos e outros), ligação marcada como "pelo nome" e aproximada.</p>
 
 ## ICMS
 
