@@ -5,6 +5,7 @@ project:
     - "*.qmd"
     - "cadeias/*.qmd"
     - "!_modelos/"
+    - "!cooperativas.qmd"
     - "!estudos.qmd"
     - "!paineis.qmd"
   resources:

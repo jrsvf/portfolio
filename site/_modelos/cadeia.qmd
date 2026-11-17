@@ -497,6 +497,9 @@ if (nrow(al) > 0) {
       list(rotulo = "Associações", valor = fmt_num(sum(al$tipo == "Associação"))),
       list(rotulo = "Entidades sindicais", valor = fmt_num(sum(al$tipo == "Entidade sindical"))),
       list(rotulo = "Municípios", valor = fmt_num(n_distinct(al$id_municipio))))),
+    mapa_municipios(malha, al %>% count(id_municipio, name = "v"), "v", "Cooperativas e associações", municipios,
+                    formato = function(x) fmt_num(x, 0), paleta = "Greens"),
+    htmltools::p(class = "fonte", htmltools::HTML('Panorama do estado em <a href="../panorama.html#cooperativas">Panorama: cooperativas e associações</a>.')),
     htmltools::div(class = "voc-tab", htmltools::HTML(knitr::kable(al %>% arrange(match(tipo, c("Cooperativa", "Associação", "Entidade sindical")), rd, municipio) %>%
       transmute(Entidade = nome, Tipo = tipo, `Município` = municipio, RD = rd, `Atividade principal` = coalesce(atividade, "–"),
                 `Ligação` = ifelse(via == "nome", "pelo nome", "pela atividade")),

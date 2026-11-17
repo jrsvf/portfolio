@@ -36,6 +36,59 @@ cartoes(list(
 ))
 ```
 
+## O que o painel mostra {#destaques}
+
+```{r}
+# Destaques: o que há de mais relevante nas outras páginas, recalculado a cada atualização
+voc_c <- opcional("vocacao_cad"); caged_c <- opcional("caged_cad"); comex_c <- opcional("comex_cad")
+form_c <- opcional("formacao"); asc_c <- opcional("associativas")
+nome_c <- setNames(cad$meta$cadeia, cad$meta$cadeia_id)
+lk <- function(href, txt) sprintf('<a href="%s">%s</a>', href, txt)
+e_ou <- function(x) if (length(x) <= 1) x else paste(paste(head(x, -1), collapse = ", "), "e", tail(x, 1))
+fr <- character()
+if (!is.null(estoque)) {
+  u <- estoque$pe %>% filter(data == max(data))
+  fr <- c(fr, paste0("<b>Emprego com carteira:</b> ", fmt_num(u$estoque), " em ", format(u$data, "%m/%Y"), ", ", sinal_pct(u$var_12m), " em 12 meses (",
+                     ifelse(u$saldo_12m > 0, "+", ""), fmt_num(u$saldo_12m), " vagas). Estimativa a partir da RAIS e do Novo CAGED; ver ", lk("#emprego-formal", "Emprego formal"), "."))
+}
+lc <- locais_cadeia %>% group_by(ano, atividade) %>% summarise(e = sum(emprego), .groups = "drop")
+u_lc <- max(lc$ano); i_lc <- u_lc - 10
+g <- lc %>% filter(ano %in% c(i_lc, u_lc)) %>% tidyr::pivot_wider(names_from = ano, values_from = e, names_prefix = "a") %>%
+  filter(.data[[paste0("a", i_lc)]] >= 1000) %>% mutate(v = .data[[paste0("a", u_lc)]] / .data[[paste0("a", i_lc)]] - 1, d = .data[[paste0("a", u_lc)]] - .data[[paste0("a", i_lc)]]) %>% arrange(desc(v))
+if (nrow(g) >= 4) {
+  sobe <- head(g, 3); desce <- tail(g, 2) %>% filter(v < 0)
+  fr <- c(fr, paste0("<b>Cadeias que mais cresceram em emprego formal de ", i_lc, " a ", u_lc, ":</b> ",
+                     e_ou(paste0(lk(paste0("cadeias/", sobe$atividade, ".html"), nome_c[sobe$atividade]), " (", sinal_pct(sobe$v), ")")),
+                     if (nrow(desce)) paste0(". Em queda: ", e_ou(paste0(lk(paste0("cadeias/", desce$atividade, ".html"), nome_c[desce$atividade]), " (", sinal_pct(desce$v), ")"))) else "", "."))
+}
+if (NROW(caged_c) && "saldo_nucleo_12m" %in% names(caged_c)) {
+  s <- caged_c %>% filter(data == max(data)) %>% arrange(desc(saldo_nucleo_12m))
+  fr <- c(fr, paste0("<b>Quem mais contratou nos últimos 12 meses</b> (saldo do Novo CAGED até ", format(max(caged_c$data), "%m/%Y"), ", só o núcleo produtivo): ",
+                     e_ou(paste0(lk(paste0("cadeias/", head(s$cadeia_id, 3), ".html"), nome_c[head(s$cadeia_id, 3)]), " (+", fmt_num(head(s$saldo_nucleo_12m, 3)), ")")),
+                     if (any(s$saldo_nucleo_12m < 0)) paste0(". Maior saldo negativo: ", nome_c[tail(s$cadeia_id, 1)], " (", fmt_num(tail(s$saldo_nucleo_12m, 1)), ")") else "", "."))
+}
+if (!is.null(voc_c)) {
+  n <- table(factor(voc_c$rd$classe, c("Consolidada", "Emergente", "Potencial")))
+  em <- voc_c$rd %>% filter(classe == "Emergente", !local) %>% arrange(desc(indice)) %>% head(3)
+  fr <- c(fr, paste0("<b>Vocações das 12 regiões:</b> ", n[["Consolidada"]], " consolidadas, ", n[["Emergente"]], " emergentes e ", n[["Potencial"]], " potenciais",
+                     if (nrow(em)) paste0(". Emergentes mais fortes: ", e_ou(paste0(tolower(em$cadeia), " no ", em$rd))) else "", ". Ver ", lk("vocacoes-cadeias.html", "Vocações por cadeia"), "."))
+}
+if (NROW(comex_c)) {
+  cx <- comex_c %>% filter(fluxo == "Exportação", ano == max(ano)) %>% group_by(cadeia_id) %>% summarise(v = sum(valor_fob, na.rm = TRUE), .groups = "drop") %>% arrange(desc(v)) %>% head(3)
+  fr <- c(fr, paste0("<b>Cadeias que mais exportam (", max(comex_c$ano), "):</b> ", e_ou(paste0(lk(paste0("cadeias/", cx$cadeia_id, ".html"), nome_c[cx$cadeia_id]), " (", fmt_usd(cx$v), ")")), "."))
+}
+if (!is.null(asc_c)) {
+  t <- asc_c$total; n_coop <- sum(t$n[t$grupo == "Cooperativa"]); n_ass <- sum(t$n[t$grupo == "Associação produtiva"])
+  fr <- c(fr, paste0("<b>Cooperativas e associações:</b> ", fmt_num(n_coop), " estabelecimentos de cooperativas e ", fmt_num(n_ass),
+                     " associações ligadas à produção ativos no CNPJ; ver ", lk("#cooperativas", "Cooperativas e associações"), "."))
+}
+if (NROW(form_c)) {
+  nv <- form_c %>% filter(tipo == "Novo (ainda fora do Censo)")
+  if (nrow(nv)) fr <- c(fr, paste0("<b>Cursos novos ainda fora do Censo:</b> ", e_ou(paste0(nv$curso, " (", nv$municipio, ")")), ". Ver a página do município."))
+}
+if (length(fr)) lista_html(lapply(fr, htmltools::HTML))
+```
+
 ## Pernambuco em `r if (!is.null(corte)) corte$ano else format(Sys.Date(), "%Y")`
 
 ```{r}
@@ -484,6 +537,80 @@ if (is.null(empresas) || !NROW(empresas$fluxo)) {
 ```
 
 <p class="fonte">Fonte: CNPJ (Receita Federal), via Base dos Dados. Estabelecimentos (matrizes e filiais) pela data de início de atividade e pela data da baixa. O ano da base só entra quando o cadastro já cobre mais da metade dele. As maiores empresas de cada cadeia aparecem no raio-X dos municípios.</p>
+
+## Cooperativas e associações {#cooperativas}
+
+```{r}
+asc_p <- opcional("associativas")
+GR <- c("Cooperativa", "Associação produtiva", "Entidade sindical", "Cooperativa de crédito", "Outra associação")
+if (is.null(asc_p) || !NROW(asc_p$contagem)) {
+  htmltools::p(class = "aviso", "As cooperativas e associações ainda não foram calculadas nesta atualização.")
+} else {
+  ca <- asc_p$contagem
+  for (k in GR) if (!k %in% names(ca)) ca[[k]] <- 0
+  ca <- municipios %>% transmute(id_municipio = as.character(id_municipio)) %>% left_join(ca %>% mutate(id_municipio = as.character(id_municipio)), by = "id_municipio") %>%
+    mutate(across(all_of(GR), ~ coalesce(.x, 0)))
+  if (!is.null(rd)) ca <- ca %>% left_join(rd %>% transmute(id_municipio = as.character(id_municipio), rd), by = "id_municipio")
+  ca_pop <- pib_pop %>% filter(!is.na(populacao)) %>% filter(ano == max(ano)) %>% transmute(id_municipio = as.character(id_municipio), populacao)
+  ca <- ca %>% left_join(ca_pop, by = "id_municipio")
+  tt <- colSums(ca[GR])
+  cartoes(list(
+    list(rotulo = "Cooperativas", valor = fmt_num(tt[["Cooperativa"]]), nota = paste(fmt_num(sum(ca$Cooperativa > 0)), "municípios; sem as de crédito")),
+    list(rotulo = "Associações de produtores e de produção", valor = fmt_num(tt[["Associação produtiva"]]), nota = "ligadas a uma cadeia ou de quem produz"),
+    list(rotulo = "Entidades sindicais", valor = fmt_num(tt[["Entidade sindical"]])),
+    list(rotulo = "Cooperativas de crédito", valor = fmt_num(tt[["Cooperativa de crédito"]]), nota = "unidades")))
+}
+```
+
+```{r}
+tem_ca <- !is.null(asc_p) && NROW(asc_p$contagem) > 0
+```
+
+::: {.panel-tabset}
+
+### Cooperativas
+
+```{r}
+if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(Cooperativa > 0, Cooperativa, NA)), "v", "Cooperativas", municipios, formato = function(x) fmt_num(x, 0), paleta = "Greens")
+```
+
+### Associações de produtores
+
+```{r}
+if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(`Associação produtiva` > 0, `Associação produtiva`, NA)), "v", "Associações ligadas à produção", municipios, formato = function(x) fmt_num(x, 0), paleta = "Oranges")
+```
+
+### Por 100 mil habitantes
+
+```{r}
+if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(populacao > 0 & (Cooperativa + `Associação produtiva`) > 0, 1e5 * (Cooperativa + `Associação produtiva`) / populacao, NA)), "v", "Coop. e assoc. por 100 mil hab.", municipios, formato = function(x) fmt_num(x, 0))
+```
+
+### Por região
+
+```{r}
+if (tem_ca && "rd" %in% names(ca)) htmltools::HTML(knitr::kable(ca %>% filter(!is.na(rd)) %>% group_by(rd) %>%
+  summarise(Cooperativas = sum(Cooperativa), `Municípios com cooperativa` = paste(sum(Cooperativa > 0), "de", n()), `Associações produtivas` = sum(`Associação produtiva`),
+            `Entidades sindicais` = sum(`Entidade sindical`), `Coop. de crédito` = sum(`Cooperativa de crédito`), .groups = "drop") %>%
+  arrange(desc(Cooperativas)) %>% rename(`Região` = rd), format = "html", align = "lrrrrr", table.attr = "class='table table-sm'"))
+```
+
+### Maiores cooperativas
+
+```{r}
+cp <- if (tem_ca && NROW(asc_p$principais)) asc_p$principais %>% filter(grupo == "Cooperativa") else tibble()
+if (nrow(cp)) {
+  tem_cap <- any(!is.na(cp$capital_social))
+  cp <- cp %>% arrange(desc(if (tem_cap) coalesce(capital_social, 0) else unidades), desc(unidades)) %>% head(15)
+  htmltools::HTML(knitr::kable(cp %>% transmute(Cooperativa = nome, Sede = municipio, RD = rd, `Atividade principal` = coalesce(atividade, "–"),
+    `Unidades em PE` = unidades, `Capital social` = ifelse(is.na(capital_social), "–", ifelse(capital_social >= 1e6, paste0("R$ ", fmt_num(capital_social / 1e6, 1), " mi"), paste0("R$ ", fmt_num(capital_social / 1e3, 0), " mil")))),
+    format = "html", align = "llllrr", table.attr = "class='table table-sm'"))
+}
+```
+
+:::
+
+<p class="fonte">Fonte: CNPJ (Receita Federal), via Base dos Dados: estabelecimentos ativos com natureza jurídica de cooperativa, associação privada ou entidade sindical, sem organizações religiosas, condomínios e partidos, por município do endereço. Associações de produtores e de produção são as ligadas a uma cadeia pela atividade ou pelo nome (aproximado). O capital social é da cooperativa inteira e não mede faturamento. A seção de cada cadeia lista as entidades dela; a lista completa está em <a href="dados/cooperativas_associacoes.csv">cooperativas_associacoes.csv</a>.</p>
 
 ## Qualificação e educação {#qualificacao-e-educacao}
 

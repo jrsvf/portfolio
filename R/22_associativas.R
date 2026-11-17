@@ -26,11 +26,11 @@ extrair_cnpj_associativas <- function(projeto, uf) {
       FROM `basedosdados.br_rf_cnpj.estabelecimentos`
       WHERE data_referencia = {SQL_CNPJ_ULT} AND sigla_uf = '{uf}' AND situacao_cadastral IN ('2', '02')),
     emp AS (
-      SELECT cnpj_basico, razao_social, natureza_juridica
+      SELECT cnpj_basico, razao_social, natureza_juridica, capital_social
       FROM `basedosdados.br_rf_cnpj.empresas`
       WHERE data_referencia = (SELECT MAX(data_referencia) FROM `basedosdados.br_rf_cnpj.empresas` WHERE data_referencia >= DATE_SUB(CURRENT_DATE(), INTERVAL 540 DAY))
         AND natureza_juridica IN ({nat}))
-    SELECT e.*, emp.razao_social, emp.natureza_juridica
+    SELECT e.*, emp.razao_social, emp.natureza_juridica, emp.capital_social
     FROM e JOIN emp USING (cnpj_basico)
     WHERE e.cnae NOT IN ({fora})"), projeto) %>%
     mutate(id_municipio = as.character(id_municipio))
@@ -61,7 +61,7 @@ montar_associativas <- function(raw, elos, meta, padroes, dir_cnae, municipios, 
   a <- a %>% left_join(cad_txt, by = "cnpj") %>%
     mutate(cadeias = coalesce(cadeias, ""),
            atividade = dir_cnae$descricao_subclasse[match(cnae, dir_cnae$subclasse)],
-           credito = substr(cnae, 1, 2) %in% c("64", "65", "66"),
+           credito = substr(cnae, 1, 2) == "64",   # crédito; planos de saúde (65, como as Unimed) ficam como cooperativa
            # produtiva: ligada a cadeia, com atividade de produção (agro, indústria, extração) ou com nome de entidade de produtores
            produtiva = !credito & (nzchar(cadeias) | as.numeric(sec) <= 33 | grepl(PADRAO_PRODUTIVO, nome_n)),
            grupo = case_when(tipo == "Cooperativa" & credito ~ "Cooperativa de crédito",
@@ -72,9 +72,23 @@ montar_associativas <- function(raw, elos, meta, padroes, dir_cnae, municipios, 
     left_join(municipios %>% select(id_municipio, municipio), by = "id_municipio") %>%
     left_join(rd %>% mutate(id_municipio = as.character(id_municipio)) %>% select(id_municipio, rd), by = "id_municipio")
   contagem <- a %>% count(id_municipio, grupo) %>% tidyr::pivot_wider(names_from = grupo, values_from = n, values_fill = 0)
+  if (!"capital_social" %in% names(a)) a$capital_social <- NA_real_
+  a <- a %>% mutate(capital_social = suppressWarnings(as.numeric(capital_social)), cnpj_basico = coalesce(cnpj_basico, substr(cnpj, 1, 8)))
   lista <- a %>% filter(grupo %in% c("Cooperativa", "Associação produtiva", "Cooperativa de crédito") | nzchar(cadeias)) %>%
     select(id_municipio, municipio, rd, nome, razao_social, tipo, grupo, atividade, cadeias, via, abertura)
-  list(data_base = Sys.Date(), contagem = contagem, lista = lista, total = a %>% count(grupo))
+  # uma linha por entidade (raiz do CNPJ): sede na matriz, unidades e municípios onde está em PE
+  principais <- a %>% filter(grupo %in% c("Cooperativa", "Cooperativa de crédito", "Associação produtiva", "Entidade sindical")) %>%
+    mutate(ordem = ifelse(matriz_filial %in% c("1", "01"), 0, 1)) %>% arrange(cnpj_basico, ordem, abertura) %>%
+    group_by(cnpj_basico) %>%
+    # unidades e municípios primeiro: no summarise, id_municipio passaria a ser só o da sede nas linhas seguintes
+    summarise(unidades = n(), municipios = n_distinct(id_municipio), nome = first(nome), razao_social = first(razao_social), grupo = first(grupo), tipo = first(tipo),
+              id_municipio = first(id_municipio), municipio = first(municipio), rd = first(rd), atividade = first(atividade),
+              cadeias = paste(setdiff(unique(unlist(strsplit(cadeias, ";"))), c("", NA)), collapse = ";"), via = first(via),
+              capital_social = suppressWarnings(max(capital_social, na.rm = TRUE)),
+              abertura = min(abertura, na.rm = TRUE), .groups = "drop") %>%
+    mutate(capital_social = ifelse(is.finite(capital_social), capital_social, NA_real_), abertura = ifelse(is.finite(abertura), abertura, NA_real_)) %>%
+    select(-cnpj_basico)
+  list(data_base = Sys.Date(), contagem = contagem, lista = lista, principais = principais, total = a %>% count(grupo))
 }
 
 # Pedaço para o JSON do território

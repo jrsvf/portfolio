@@ -1,0 +1,160 @@
+---
+title: "Cooperativas e associações"
+description: "Onde estão as cooperativas, as associações de produtores e as entidades sindicais de Pernambuco, em que cadeias atuam e quais são as maiores."
+toc: true
+---
+
+```{r}
+#| include: false
+source("_setup.R")
+asc <- tryCatch(ler_base("associativas", ""), error = function(e) NULL)
+pib_pop <- tryCatch(ler_base("pib_pop", ""), error = function(e) NULL)
+rd <- tryCatch(ler_base("rd", ""), error = function(e) NULL)
+tem <- !is.null(asc) && NROW(asc$contagem) > 0
+GRUPOS <- c("Cooperativa", "Associação produtiva", "Entidade sindical", "Cooperativa de crédito", "Outra associação")
+nome_cad <- setNames(cad$meta$cadeia, cad$meta$cadeia_id)
+if (tem) {
+  ct <- asc$contagem
+  for (g in GRUPOS) if (!g %in% names(ct)) ct[[g]] <- 0
+  ct <- ct %>% mutate(id_municipio = as.character(id_municipio))
+  pop <- if (!is.null(pib_pop)) pib_pop %>% filter(!is.na(populacao)) %>% filter(ano == max(ano)) %>% transmute(id_municipio = as.character(id_municipio), populacao) else tibble(id_municipio = character(), populacao = numeric())
+  rd_m <- if (!is.null(rd)) rd %>% transmute(id_municipio = as.character(id_municipio), rd) else tibble(id_municipio = character(), rd = character())
+  ct <- municipios %>% transmute(id_municipio = as.character(id_municipio), municipio) %>% left_join(ct, by = "id_municipio") %>%
+    mutate(across(all_of(GRUPOS), ~ coalesce(.x, 0))) %>% left_join(pop, by = "id_municipio") %>% left_join(rd_m, by = "id_municipio")
+  tot <- colSums(ct[GRUPOS])
+  pr <- asc$principais %||% tibble()
+  coop <- pr %>% filter(grupo == "Cooperativa")
+  # cadeias: entidades (raiz do CNPJ) por cadeia
+  pc <- pr %>% filter(nzchar(cadeias)) %>% mutate(cadeia_id = strsplit(cadeias, ";")) %>% tidyr::unnest(cadeia_id) %>%
+    filter(cadeia_id %in% names(nome_cad))
+  por_cad <- pc %>% group_by(cadeia_id) %>%
+    summarise(coop = sum(grupo == "Cooperativa"), assoc = sum(grupo == "Associação produtiva"), sind = sum(grupo == "Entidade sindical"),
+              municipios = n_distinct(id_municipio),
+              onde = paste(head(names(sort(table(municipio), decreasing = TRUE)), 3), collapse = ", "), .groups = "drop") %>%
+    mutate(total = coop + assoc + sind) %>% arrange(desc(total))
+  por_rd <- ct %>% filter(!is.na(rd)) %>% group_by(rd) %>%
+    summarise(coop = sum(Cooperativa), assoc = sum(`Associação produtiva`), sind = sum(`Entidade sindical`), cred = sum(`Cooperativa de crédito`),
+              mun_coop = sum(Cooperativa > 0), n_mun = n(), pop = sum(populacao, na.rm = TRUE), .groups = "drop") %>%
+    mutate(por100 = 1e5 * (coop + assoc) / pop) %>% arrange(desc(coop + assoc))
+}
+sem_dados <- function() htmltools::p(class = "aviso", "As cooperativas e associações ainda não foram calculadas nesta atualização. Rode o pipeline (targets::tar_make()) de novo.")
+```
+
+```{r}
+if (!tem) sem_dados() else cartoes(list(
+  list(rotulo = "Cooperativas", valor = fmt_num(tot[["Cooperativa"]]), nota = paste(fmt_num(sum(ct$Cooperativa > 0)), "municípios; sem contar as de crédito")),
+  list(rotulo = "Associações de produtores e de produção", valor = fmt_num(tot[["Associação produtiva"]]), nota = "ligadas a uma cadeia ou com nome de entidade de quem produz"),
+  list(rotulo = "Entidades sindicais", valor = fmt_num(tot[["Entidade sindical"]]), nota = "patronais e de trabalhadores, inclusive rurais"),
+  list(rotulo = "Cooperativas de crédito", valor = fmt_num(tot[["Cooperativa de crédito"]]), nota = "agências e postos"),
+  list(rotulo = "Outras associações", valor = fmt_num(tot[["Outra associação"]]), nota = "moradores, culturais, esportivas e outras")))
+```
+
+```{r}
+#| results: asis
+if (tem) {
+  r1 <- por_rd %>% arrange(desc(coop)); c1 <- por_cad %>% filter(coop > 0) %>% arrange(desc(coop))
+  a1 <- por_cad %>% arrange(desc(assoc))
+  cat(paste0("Pernambuco tem **", fmt_num(tot[["Cooperativa"]]), " estabelecimentos de cooperativas** ativos, sem contar as de crédito, em ",
+             fmt_num(sum(ct$Cooperativa > 0)), " dos 185 municípios. ",
+             if (nrow(r1)) paste0("A ", r1$rd[1], " concentra a maior parte (", fmt_num(r1$coop[1]), "), seguida da ", r1$rd[2], " (", fmt_num(r1$coop[2]), "). ") else "",
+             if (nrow(c1)) paste0("Entre as cadeias acompanhadas, as que mais reúnem cooperativas são ", paste(tolower(nome_cad[head(c1$cadeia_id, 3)]), collapse = ", "), ". ") else "",
+             "As **", fmt_num(tot[["Associação produtiva"]]), " associações ligadas à produção** estão mais espalhadas",
+             if (nrow(a1)) paste0(" e aparecem sobretudo em ", paste(tolower(nome_cad[head(a1$cadeia_id, 3)]), collapse = ", ")) else "",
+             ". Os números contam estabelecimentos: uma cooperativa com várias unidades aparece em cada município onde tem endereço.\n"))
+}
+```
+
+## Mapa
+
+::: {.panel-tabset}
+
+### Cooperativas
+
+```{r}
+if (tem) mapa_municipios(malha, ct %>% transmute(id_municipio, v = ifelse(Cooperativa > 0, Cooperativa, NA)), "v", "Cooperativas", municipios,
+                         formato = function(x) fmt_num(x, 0), paleta = "Greens")
+```
+
+### Associações de produtores
+
+```{r}
+if (tem) mapa_municipios(malha, ct %>% transmute(id_municipio, v = ifelse(`Associação produtiva` > 0, `Associação produtiva`, NA)), "v", "Associações ligadas à produção", municipios,
+                         formato = function(x) fmt_num(x, 0), paleta = "Oranges")
+```
+
+### Entidades sindicais
+
+```{r}
+if (tem) mapa_municipios(malha, ct %>% transmute(id_municipio, v = ifelse(`Entidade sindical` > 0, `Entidade sindical`, NA)), "v", "Entidades sindicais", municipios,
+                         formato = function(x) fmt_num(x, 0), paleta = "Purples")
+```
+
+### Por 100 mil habitantes
+
+```{r}
+if (tem) mapa_municipios(malha, ct %>% transmute(id_municipio, v = ifelse(populacao > 0 & (Cooperativa + `Associação produtiva`) > 0, 1e5 * (Cooperativa + `Associação produtiva`) / populacao, NA)),
+                         "v", "Cooperativas e associações produtivas por 100 mil hab.", municipios, formato = function(x) fmt_num(x, 0))
+```
+
+:::
+
+<p class="fonte">Estabelecimentos ativos por município do endereço. Municípios em branco não têm nenhum registro do tipo.</p>
+
+## Por Região de Desenvolvimento
+
+```{r}
+if (tem) htmltools::HTML(knitr::kable(por_rd %>% transmute(`Região` = sprintf('<a href="regioes.html?r=%s">%s</a>', utils::URLencode(rd, reserved = TRUE), rd),
+                                                        Cooperativas = fmt_num(coop), `Municípios com cooperativa` = paste(mun_coop, "de", n_mun),
+                                                        `Associações produtivas` = fmt_num(assoc), `Entidades sindicais` = fmt_num(sind),
+                                                        `Cooperativas de crédito` = fmt_num(cred), `Coop. e assoc. por 100 mil hab.` = fmt_num(por100, 0)),
+                                         format = "html", escape = FALSE, align = "lrrrrrr", table.attr = "class='table table-sm'"))
+```
+
+## Por cadeia
+
+```{r}
+if (tem && nrow(por_cad)) htmltools::div(class = "voc-tab", htmltools::HTML(knitr::kable(por_cad %>%
+  transmute(`Cadeia ou nicho` = sprintf('<a href="cadeias/%s.html">%s</a>', cadeia_id, nome_cad[cadeia_id]), Cooperativas = fmt_num(coop),
+            `Associações` = fmt_num(assoc), `Entidades sindicais` = fmt_num(sind), `Municípios` = fmt_num(municipios), `Onde mais aparecem` = onde),
+  format = "html", escape = FALSE, align = "lrrrrl", table.attr = "class='table table-sm'")))
+```
+
+<p class="fonte">Aqui cada entidade conta uma vez (pela raiz do CNPJ). A ligação com a cadeia vem da atividade principal ou do nome; a do nome é aproximada. Uma entidade pode estar em mais de uma cadeia.</p>
+
+## As maiores cooperativas
+
+```{r}
+if (tem && nrow(coop)) {
+  tem_cap <- any(!is.na(coop$capital_social))
+  top <- coop %>% arrange(desc(if (tem_cap) coalesce(capital_social, 0) else unidades), desc(unidades)) %>% head(30)
+  htmltools::tagList(
+    htmltools::div(class = "voc-tab", htmltools::HTML(knitr::kable(top %>% transmute(
+      Cooperativa = nome, `Sede em PE` = municipio, RD = rd, `Atividade principal` = coalesce(atividade, "–"),
+      Cadeias = ifelse(nzchar(cadeias), vapply(strsplit(cadeias, ";"), function(k) paste(nome_cad[k], collapse = ", "), ""), "–"),
+      `Unidades em PE` = fmt_num(unidades), `Municípios` = fmt_num(municipios),
+      `Capital social` = ifelse(is.na(capital_social), "–", ifelse(capital_social >= 1e6, paste0("R$ ", fmt_num(capital_social / 1e6, 1), " mi"), paste0("R$ ", fmt_num(capital_social / 1e3, 0), " mil"))),
+      Desde = ifelse(is.na(abertura), "–", as.character(abertura))),
+      format = "html", align = "lllllrrrr", table.attr = "class='table table-sm'"))),
+    htmltools::p(class = "fonte", if (tem_cap) "Ordenadas pelo capital social declarado à Receita, que é da cooperativa inteira e não mede faturamento nem número de cooperados." else "Ordenadas pelo número de unidades em Pernambuco."))
+}
+```
+
+## Cooperativas de crédito
+
+```{r}
+cr <- if (tem) pr %>% filter(grupo == "Cooperativa de crédito") %>% arrange(desc(unidades)) else tibble()
+if (nrow(cr)) {
+  htmltools::tagList(
+    htmltools::p(paste0(fmt_num(nrow(cr)), " cooperativas de crédito com ", fmt_num(sum(cr$unidades)), " unidades em ", fmt_num(sum(ct$`Cooperativa de crédito` > 0)), " municípios.")),
+    htmltools::HTML(knitr::kable(cr %>% head(12) %>% transmute(Cooperativa = nome, Sede = municipio, `Unidades em PE` = fmt_num(unidades), `Municípios` = fmt_num(municipios)),
+                                 format = "html", align = "llrr", table.attr = "class='table table-sm'")))
+}
+```
+
+## Como ler
+
+Os dados vêm do Cadastro Nacional da Pessoa Jurídica (Receita Federal), via Base dos Dados: estabelecimentos ativos com natureza jurídica de cooperativa, associação privada ou entidade sindical, sem organizações religiosas, condomínios e partidos. Associações "de produtores e de produção" são as ligadas a uma cadeia pela atividade principal ou pelo nome (produtores, agricultores, apicultores, artesãos, pescadores e outros); as demais associações (de moradores, culturais, esportivas) ficam em "outras". O cadastro mostra quem está registrado e ativo, não quem funciona de fato nem o tamanho da entidade. A lista completa está em <a href="dados/cooperativas_associacoes.csv">cooperativas_associacoes.csv</a>.
+
+```{r}
+if (tem) rodape_fonte(paste0("CNPJ (Receita Federal), via Base dos Dados; população: IBGE"))
+```
