@@ -8,6 +8,7 @@ toc: true
 #| include: false
 source("_setup.R")
 h <- tryCatch(ler_base("historico", ""), error = function(e) NULL)
+vg <- tryCatch(ler_base("vigia", ""), error = function(e) NULL)
 tem <- !is.null(h) && length(h$refs) > 0
 refs <- if (tem) sort(h$refs) else character()
 atual <- if (tem) tail(refs, 1) else NA_character_
@@ -25,6 +26,11 @@ dif_html <- function(d, unidade = "número") {
     sprintf('<span class="%s">%s%s</span>', ifelse(d > 0, "mud-sobe", "mud-desce"), ifelse(d > 0, "+", "−"), fmt_valor(abs(d), unidade))))
 }
 kb <- function(df, align = NULL) htmltools::HTML(knitr::kable(df, format = "html", escape = FALSE, align = align, table.attr = "class='table table-sm'"))
+```
+
+```{r}
+# alerta de fonte vazia ou parada (só aparece quando há problema)
+if (!is.null(vg)) bloco_vigia(vg, completo = FALSE)
 ```
 
 ```{r}
@@ -142,4 +148,12 @@ if (tem && length(refs) >= 3) {
 
 ```{r}
 if (tem) rodape_fonte(paste0("retratos gravados pelo pipeline em historico/, um por mês (", length(refs), " até agora)"))
+```
+
+## Situação das fontes
+
+Cada atualização confere se as fontes vieram com dados e se o dado mais recente está dentro do atraso normal de publicação de cada uma.
+
+```{r}
+if (is.null(vg)) htmltools::p(class = "aviso", "A conferência das fontes aparece a partir da próxima atualização.") else bloco_vigia(vg)
 ```

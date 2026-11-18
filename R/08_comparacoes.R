@@ -164,7 +164,7 @@ fontes_e_datas <- function(rais_pe, caged, comex, pib_pop, sidra, ipca, mip_ano)
   tibble::tribble(
     ~fonte, ~orgao, ~cobertura, ~onde,
     "RAIS (vínculos e estabelecimentos)", "MTE", sprintf("%d a %d (anual)", min(rais_pe$ano), max(rais_pe$ano)), "Base dos Dados / BigQuery",
-    "Novo CAGED", "MTE", sprintf("01/%d a %02d/%d (mensal)", min(caged$ano), caged_ult, max(caged$ano)), "Base dos Dados / BigQuery",
+    "Novo CAGED", "MTE", sprintf("01/%d a %02d/%d (mensal)", min(caged$ano), caged_ult, max(caged$ano)), "Base dos Dados / BigQuery; meses recentes direto do MTE (PDET)",
     "ComexStat por município", "MDIC", sprintf("%d a %d", min(comex$ano), comex_ult), "Base dos Dados / BigQuery",
     "PIB dos Municípios", "IBGE", sprintf("%d a %d", min(pib_pop$ano[!is.na(pib_pop$pib)]), max(pib_pop$ano[!is.na(pib_pop$pib)])), "Base dos Dados / BigQuery",
     "PAM, PPM e PEVS", "IBGE", if (nrow(sidra)) sprintf("%d a %d", min(sidra$ano), max(sidra$ano)) else "-", "API SIDRA",

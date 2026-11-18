@@ -55,6 +55,8 @@ sidra_url <- function(tabela, ano, uf_codigo, cl = sidra_classificacao(tabela)) 
 }
 
 sidra_baixar <- function(url, tentativas = 4) {
+  # a API do SIDRA às vezes leva mais de 60 s (o limite padrão do R) em tabelas grandes
+  op <- options(timeout = max(300, getOption("timeout"))); on.exit(options(op), add = TRUE)
   for (i in seq_len(tentativas)) {
     res <- tryCatch(jsonlite::fromJSON(url, simplifyDataFrame = TRUE),
                     error = function(e) e)

@@ -195,7 +195,7 @@ grafico_ligacoes <- function(df) {
 # Mapa coroplético (leaflet)
 # ---------------------------------------------------------------------------
 mapa_municipios <- function(malha, dados, valor, rotulo_valor, municipios, formato = function(x) fmt_num(x, 2),
-                            paleta = "Blues", quebras = NULL) {
+                            paleta = "Blues", quebras = NULL, texto_na = "sem vínculo formal") {
   m <- malha %>% left_join(dados, by = "id_municipio")
   v <- m[[valor]]
   if (is.null(v) || !is.numeric(v) || !any(is.finite(v) & v > 0)) return(htmltools::p(class = "aviso", "Sem dados suficientes para o mapa."))
@@ -207,8 +207,12 @@ mapa_municipios <- function(malha, dados, valor, rotulo_valor, municipios, forma
   }
   pal <- leaflet::colorBin(paleta, domain = v, bins = quebras, na.color = "#F2F3F4")
   rot <- sprintf("<strong>%s</strong><br/>%s: %s", m$name_muni, rotulo_valor,
-                 ifelse(is.na(v), "sem vínculo formal", formato(v))) %>% lapply(htmltools::HTML)
-  leaflet::leaflet(m, options = leaflet::leafletOptions(zoomSnap = 0.25)) %>%
+                 ifelse(is.na(v), texto_na, formato(v))) %>% lapply(htmltools::HTML)
+  # enquadra o continente: com Fernando de Noronha nos limites, o estado fica pequeno no canto do mapa
+  bb <- tryCatch(as.numeric(sf::st_bbox(m[as.character(m$id_municipio) != "2605459", ])), error = function(e) NULL)
+  mp <- leaflet::leaflet(m, options = leaflet::leafletOptions(zoomSnap = 0.25))
+  if (length(bb) == 4 && all(is.finite(bb))) mp <- mp %>% leaflet::fitBounds(bb[1], bb[2], bb[3], bb[4])
+  mp %>%
     leaflet::addPolygons(fillColor = ~pal(v), weight = 0.6, color = "white", fillOpacity = 0.85,
                          label = rot,
                          highlightOptions = leaflet::highlightOptions(weight = 2, color = "#2C3E50", bringToFront = TRUE)) %>%

@@ -231,6 +231,7 @@ window.Quarto = {
   <li><a href="#vocações-por-cadeia" id="toc-vocações-por-cadeia" class="nav-link" data-scroll-target="#vocações-por-cadeia">Vocações por cadeia</a></li>
   <li><a href="#empresas-uma-linha-por-empresa" id="toc-empresas-uma-linha-por-empresa" class="nav-link" data-scroll-target="#empresas-uma-linha-por-empresa">Empresas: uma linha por empresa</a></li>
   <li><a href="#pib-dos-municípios" id="toc-pib-dos-municípios" class="nav-link" data-scroll-target="#pib-dos-municípios">PIB dos Municípios</a></li>
+  <li><a href="#arranjo-produtivo" id="toc-arranjo-produtivo" class="nav-link" data-scroll-target="#arranjo-produtivo">Arranjo produtivo</a></li>
   <li><a href="#formação-e-cooperativas" id="toc-formação-e-cooperativas" class="nav-link" data-scroll-target="#formação-e-cooperativas">Formação e cooperativas</a></li>
   <li><a href="#histórico" id="toc-histórico" class="nav-link" data-scroll-target="#histórico">Histórico</a></li>
   <li><a href="#indicadores" id="toc-indicadores" class="nav-link" data-scroll-target="#indicadores">Indicadores</a>
@@ -336,11 +337,11 @@ window.Quarto = {
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
-<col style="width: 29%">
-<col style="width: 18%">
-<col style="width: 19%">
-<col style="width: 21%">
-<col style="width: 9%">
+<col style="width: 24%">
+<col style="width: 15%">
+<col style="width: 16%">
+<col style="width: 36%">
+<col style="width: 8%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -362,8 +363,8 @@ window.Quarto = {
 <tr class="even">
 <td style="text-align: left;">Novo CAGED</td>
 <td style="text-align: left;">MTE</td>
-<td style="text-align: left;">01/2020 a 03/2026 (mensal)</td>
-<td style="text-align: left;">Base dos Dados / BigQuery</td>
+<td style="text-align: left;">01/2020 a 09/2026 (mensal)</td>
+<td style="text-align: left;">Base dos Dados / BigQuery; meses recentes direto do MTE (PDET)</td>
 <td style="text-align: left;">17/11/2026</td>
 </tr>
 <tr class="odd">
@@ -508,6 +509,22 @@ window.Quarto = {
 <section id="pib-dos-municípios" class="level2">
 <h2 class="anchored" data-anchor-id="pib-dos-municípios">PIB dos Municípios</h2>
 <p>O PIB total e o PIB per capita existem para os 185 municípios até o último ano divulgado. A divisão do valor adicionado por setor (agropecuária, indústria, serviços e administração pública) pode parar antes: em novembro de 2026 o IBGE só a tinha divulgado até 2021, e a tabela 5938 do SIDRA trazia 2022 e 2023 sem valor por setor. A cada atualização o pipeline consulta o SIDRA e completa os anos que faltam assim que saírem.</p>
+</section>
+<section id="arranjo-produtivo" class="level2">
+<h2 class="anchored" data-anchor-id="arranjo-produtivo">Arranjo produtivo</h2>
+<p>Cada página de cadeia mostra onde o núcleo produtivo forma um arranjo, com três medidas no último ano da RAIS:</p>
+<ul>
+<li><strong>Concentração (ICN).</strong> O Índice de Concentração Normalizado de Crocco et al.&nbsp;(2006) junta o quociente locacional, o IHH modificado e a participação do município no emprego da cadeia no estado. Os pesos saem de uma análise de componentes principais feita cadeia a cadeia. O índice vai de 0 a 100 dentro de cada cadeia.</li>
+<li><strong>Vizinhança (LISA).</strong> O Moran local do QL compara cada município com os vizinhos que fazem divisa com ele, com tolerância de 100 m porque a malha é simplificada. A significância vem de 999 permutações, ao nível de 5%. “Alto-Alto” é município especializado cercado de especializados.</li>
+<li><strong>Completude dos elos.</strong> Quantos elos do núcleo da cadeia têm emprego formal no município e na mancha.</li>
+</ul>
+<p>As classes são três:</p>
+<ul>
+<li><strong>Polo do arranjo:</strong> o município está entre os 10% de maior ICN da cadeia, tem ao menos 50 empregos no núcleo e tem vizinhos especializados ou metade dos elos.</li>
+<li><strong>Parte de mancha:</strong> Alto-Alto com ao menos 10 empregos, sem ser polo.</li>
+<li><strong>Aglomeração isolada:</strong> QL de 1,5 ou mais e 50 empregos, sem vizinhos especializados.</li>
+</ul>
+<p>As manchas são grupos contíguos de polos e municípios Alto-Alto da mesma cadeia. A medida usa só o emprego formal, então subestima arranjos muito informais, como o das confecções do Agreste. A base completa está em <code>arranjo_municipios.csv</code> e <code>arranjo_manchas.csv</code>.</p>
 </section>
 <section id="formação-e-cooperativas" class="level2">
 <h2 class="anchored" data-anchor-id="formação-e-cooperativas">Formação e cooperativas</h2>

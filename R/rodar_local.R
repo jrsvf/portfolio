@@ -51,5 +51,41 @@ executar_local <- function() {
   unlink("site/_site", recursive = TRUE); dir.create("site/_site")
   file.copy(list.files(file.path(base, "site", "_site"), full.names = TRUE, all.files = TRUE, no.. = TRUE),
             "site/_site", recursive = TRUE)
+  conferir_site("site/_site", "site")
   passo("pronto:", length(list.files("site/_site", recursive = TRUE)), "arquivos. Publicar: source('R/publicar_github.R'); publicar_github()")
+}
+
+
+# Conferência do site gerado: procura erro de R impresso nas páginas, avisos de
+# "ainda não calculado" e arquivos de dados que as páginas OJS pedem e não existem.
+# Não para nada: escreve o resultado no log e em <site>/conferencia.txt.
+conferir_site <- function(dir_site, dir_fonte = "site") {
+  if (!dir.exists(dir_site)) return(invisible(NULL))
+  htmls <- list.files(dir_site, pattern = "\\.html$", recursive = TRUE, full.names = TRUE)
+  achados <- character()
+  padroes <- c(erro_r = "cell-output-error|<pre[^>]*>\\s*(##\\s*)?(Error|Erro)( in| em|:)",
+               nao_calculado = "ainda n[ãa]o (foram|foi) calculad|Rode o pipeline",
+               sem_dados = "Sem dados suficientes")
+  for (f in htmls) {
+    tx <- paste(readLines(f, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+    for (k in names(padroes)) if (grepl(padroes[[k]], tx, perl = TRUE))
+      achados <- c(achados, paste0(k, ": ", sub(paste0("^", dir_site, "/?"), "", f)))
+  }
+  # FileAttachment("dados/x.json") nas páginas OJS: o arquivo tem de existir no site
+  qmds <- list.files(dir_fonte, pattern = "\\.qmd$", recursive = TRUE, full.names = TRUE)
+  for (q in qmds) {
+    tx <- paste(readLines(q, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+    anexos <- unique(regmatches(tx, gregexpr('FileAttachment\\("([^"]+)"\\)', tx))[[1]])
+    for (a in sub('FileAttachment\\("([^"]+)"\\)', "\\1", anexos)) {
+      alvo <- file.path(dir_site, dirname(sub(paste0("^", dir_fonte, "/?"), "", q)), a)
+      if (!file.exists(alvo)) achados <- c(achados, paste0("dado_faltando: ", basename(q), " pede ", a))
+    }
+  }
+  achados <- unique(achados)
+  linhas <- c(paste("Conferência do site em", format(Sys.time(), "%d/%m/%Y %H:%M")), paste(length(htmls), "páginas"), "",
+              if (length(achados)) achados else "Nenhum problema encontrado.")
+  writeLines(linhas, file.path(dir_site, "conferencia.txt"), useBytes = TRUE)
+  cat(format(Sys.time(), "%H:%M:%S"), "| conferência do site:", if (length(achados)) paste(length(achados), "problema(s):") else "nenhum problema", "\n")
+  if (length(achados)) cat(paste0("   ", achados, "\n"), sep = "")
+  invisible(achados)
 }

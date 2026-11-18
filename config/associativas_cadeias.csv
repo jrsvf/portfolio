@@ -1,30 +1,30 @@
 cadeia_id,padrao
-avicultura,avicult|avicola|granjeir|\bovos\b|frango|criadores de galinha|galinha caipira
-bovinocultura,\bleite\b|leiteir|laticin|bovin|gado|pecuarist|queijo
-ovinocaprinocultura,caprin|ovin|\bcabra|ovinocaprin|caprinovin|bode
+avicultura,avicult|avicola|(?<!horti)granjeir|\bovos\b|criadores de galinha|galinha caipira|frango caipira|produtores de frango
+bovinocultura,produtores de leite|\bde leite\b|leiteir|laticin|bovin|\bgado\b|\bpecuaristas?\b|queijo
+ovinocaprinocultura,caprin|ovin|\bcabras?\b|ovinocaprin|caprinovin|criadores de bode
 apicultura,apicult|apiario|\bmel\b|meliponi
-aquicultura,aquicult|piscicult|tilapia|\bpeixe|pescador|\bpesca\b|colonia de pesca|colonia z
-fruticultura,fruticult|fruta|\buva\b|manga|banana|acerola|goiab|irrigant|perimetro irrigado|distrito de irrigacao
-sucroenergetico,cana de acucar|canavieir|fornecedores de cana|plantadores de cana
+aquicultura,aquicult|piscicult|tilapia|\bpeixes?\b|pescador|\bpesca\b|colonia de pesca|colonia z
+fruticultura,fruticult|\bfrutas?\b|\buva\b|produtores de manga|\bmanga\b|produtores de banana|bananicult|produtores de goiaba|acerola|irrigant|perimetro irrigado|distrito de irrigacao
+sucroenergetico,cana de acucar|canavieiros|fornecedores de cana|plantadores de cana
 textil_confeccoes,confecc|costur|faccao|vestuario|textil|\bmoda\b|jeans|sulanca
-moveleiro,moveis|moveleir|marcenar|marceneir
+moveleiro,\bmoveis\b|moveleir|marcenar|marceneir
 construcao_civil,construcao civil|construtor|olaria|tijolo
 cachaca,cachaca|aguardente
-mandiocultura,mandioca|farinha|casa de farinha|macaxeira
-cafeicultura,\bcafe\b|cafeicult
-cajucultura,\bcaju|castanha de caju
-coco,\bcoco\b|coqueir
+mandiocultura,mandioc|casa de farinha|farinha de mandioca|produtores de farinha
+cafeicultura,cafeicult|produtores de cafe|cafes? especiais|industrias do cafe
+cajucultura,\bcaju\b|castanha de caju|cajucult
+coco,produtores de coco|cocoicult|coco verde
 floricultura,floricult|plantas ornamentais|produtores de flores|flores e plantas
-cotonicultura,algodao|cotonicult
-carcinicultura,camarao|carcinicult
-calcados,calcad|couro|sapato|curtume
-ceramica_vermelha,ceramica|olaria|telha
-joias,joia|ourive|bijuteri
-turismo,turism|hotel|pousada|guias de turismo|receptivo
+cotonicultura,produtores de algodao|cotonicult|algodao (organico|agroecologico|colorido)|desc de algodao
+carcinicultura,carcinicult|criadores de camarao|produtores de camarao
+calcados,\bcalcados\b|calcadist|sapat|curtume|\bcouros\b|artigos de couro|arreio em couro
+ceramica_vermelha,ceramica|olaria|\btelhas\b
+joias,joalheri|\bourives\b|bijuteri|semijoia
+turismo,\bturism|turistic|hotel|pousada|guias de turismo|receptivo
 economia_criativa,artesa|artesanato|rendeir|bordad|cultura popular|quadrilha junina|maracatu|frevo|coco de roda|cinema|audiovisual
-economia_do_mar,pescador|marisqueir|colonia de pesca|naut|jangad
+economia_do_mar,pescador|marisqueir|colonia de pesca|esportes nauticos|barqueiros|canoeiros|\bmarina\b|jangadeiros
 bioeconomia_renovaveis,reciclag|catadores|material reciclavel|energia solar|biogas|extrativis|agroecolog
-suinocultura,suin|porco
+suinocultura,suinocult|\bsuinos?\b|criadores de porcos?
 vitivinicultura,vinho|vitivin|vinicol|\buva\b
 logistica,transport|caminhoneir|mototaxi|taxistas
 saude,saude|medic|odontolog|enfermag|hospital

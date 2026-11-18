@@ -208,6 +208,68 @@ cc <- concentracao %>% filter(atividade == CADEIA) %>% arrange(ano)
 
 Concentração espacial (HHI): `r fmt_num(cc$hhi[cc$ano == ini], 3)` em `r ini` e `r fmt_num(cc$hhi[cc$ano == ult], 3)` em `r ult`. Municípios especializados (QL ≥ `r par$indicadores$ql_minimo` e ao menos `r par$indicadores$emprego_minimo` vínculos): `r cc$n_especializados[cc$ano == ult]`.
 
+## Arranjo produtivo
+
+```{r}
+arr <- tryCatch(ler_base("arranjo", ""), error = function(e) NULL)
+am <- if (!is.null(arr)) arr$municipio %>% filter(cadeia_id == CADEIA) else tibble()
+mc <- if (!is.null(arr) && NROW(arr$manchas)) arr$manchas %>% filter(cadeia_id == CADEIA) else tibble()
+CORES_ARR <- c("Polo do arranjo" = "#1F4E79", "Parte de mancha" = "#7FB2DE", "Aglomeração isolada" = "#E07A1F")
+```
+
+```{r}
+#| results: asis
+if (!nrow(am)) {
+  cat(if (is.null(arr)) '<p class="aviso">O arranjo produtivo ainda não foi calculado nesta atualização.</p>\n'
+      else paste0('<p>A cadeia tem pouco emprego formal no núcleo produtivo (menos de ', arr$emprego_minimo, ' vínculos no estado) para medir arranjo pelo emprego.</p>\n'))
+} else {
+  np <- sum(am$classe == "Polo do arranjo", na.rm = TRUE); ni <- sum(am$classe == "Aglomeração isolada", na.rm = TRUE)
+  txt <- if (nrow(mc)) {
+    m1 <- mc %>% arrange(desc(emprego)) %>% slice(1)
+    paste0("O núcleo produtivo da cadeia forma **", nrow(mc), if (nrow(mc) == 1) " mancha" else " manchas", "** de municípios vizinhos especializados. ",
+           if (nrow(mc) == 1) "Ela reúne " else "A maior reúne ", m1$n_municipios, if (m1$n_municipios == 1) " município" else " municípios", " (", m1$municipios, "), com ",
+           fmt_num(m1$emprego), " empregos e ", m1$elos_presentes, " dos ", m1$elos_nucleo, " elos do núcleo",
+           if (nzchar(m1$polos)) paste0("; os polos são ", m1$polos) else "", ". ")
+  } else "O núcleo produtivo não forma manchas de municípios vizinhos especializados: a especialização, onde existe, é isolada. "
+  cat(paste0(txt, if (ni) paste0("Há ainda ", ni, if (ni == 1) " aglomeração isolada" else " aglomerações isoladas", " (especializada, mas sem vizinhos especializados).") else "", "\n"))
+}
+```
+
+```{r}
+if (nrow(am)) {
+  m <- malha %>% mutate(id_municipio = as.character(id_municipio)) %>% left_join(am, by = "id_municipio")
+  cor <- ifelse(is.na(m$classe), "#F2F3F4", CORES_ARR[m$classe])
+  rot <- sprintf("<strong>%s</strong><br/>%s<br/>%s empregos no núcleo · QL %s · ICN %s<br/>%s de %s elos do núcleo",
+                 m$name_muni, ifelse(is.na(m$classe), "Fora do arranjo", m$classe), fmt_num(coalesce(m$emprego, 0)),
+                 fmt_num(coalesce(m$ql, 0), 1), ifelse(is.na(m$icn), "–", fmt_num(m$icn, 0)),
+                 coalesce(m$elos_presentes, 0), coalesce(m$elos_nucleo, max(am$elos_nucleo, na.rm = TRUE))) %>% lapply(htmltools::HTML)
+  bb <- tryCatch(as.numeric(sf::st_bbox(m[m$id_municipio != "2605459", ])), error = function(e) NULL)
+  mp <- leaflet::leaflet(m, options = leaflet::leafletOptions(zoomSnap = 0.25))
+  if (length(bb) == 4) mp <- mp %>% leaflet::fitBounds(bb[1], bb[2], bb[3], bb[4])
+  mp %>% leaflet::addPolygons(fillColor = cor, weight = 0.6, color = "white", fillOpacity = 0.9, label = rot,
+                              highlightOptions = leaflet::highlightOptions(weight = 2, color = "#2C3E50", bringToFront = TRUE)) %>%
+    leaflet::addLegend("bottomright", colors = c(unname(CORES_ARR), "#F2F3F4"), labels = c(names(CORES_ARR), "Fora do arranjo"), opacity = 1)
+}
+```
+
+```{r}
+if (nrow(mc)) {
+  tabela(mc %>% arrange(desc(emprego)) %>% transmute(`Mancha` = row_number(), `Municípios` = municipios, Polos = ifelse(nzchar(polos), polos, "–"),
+                                                     `Empregos no núcleo` = emprego, `Elos do núcleo presentes` = paste(elos_presentes, "de", elos_nucleo), `Regiões` = rds))
+}
+```
+
+```{r}
+if (nrow(am)) {
+  top <- am %>% filter(!is.na(classe)) %>% arrange(match(classe, names(CORES_ARR)), desc(icn)) %>% head(25)
+  if (nrow(top)) tabela(top %>% transmute(`Município` = municipio, `Região` = rd, Classe = classe, `Empregos no núcleo` = emprego,
+                                          QL = round(ql, 1), `ICN (0 a 100)` = round(icn), Vizinhança = lisa,
+                                          `Elos presentes` = paste(elos_presentes, "de", elos_nucleo)))
+}
+```
+
+<p class="fonte">ICN: Índice de Concentração Normalizado (Crocco et al., 2006), que junta QL, IHH modificado e participação no emprego da cadeia, com pesos por componentes principais; 100 é o município mais concentrado da cadeia. Vizinhança: Moran local do QL (Alto-Alto = especializado cercado de especializados, com 95% de confiança). Só o núcleo produtivo, sem comércio e distribuição. Método completo na <a href="../metodologia.html#arranjo-produtivo">metodologia</a>.</p>
+
 ## Pernambuco frente ao Nordeste e ao Brasil
 
 ```{r}
@@ -498,7 +560,7 @@ if (nrow(al) > 0) {
       list(rotulo = "Entidades sindicais", valor = fmt_num(sum(al$tipo == "Entidade sindical"))),
       list(rotulo = "Municípios", valor = fmt_num(n_distinct(al$id_municipio))))),
     mapa_municipios(malha, al %>% count(id_municipio, name = "v"), "v", "Cooperativas e associações", municipios,
-                    formato = function(x) fmt_num(x, 0), paleta = "Greens"),
+                    formato = function(x) fmt_num(x, 0), paleta = "Greens", texto_na = "nenhuma"),
     htmltools::p(class = "fonte", htmltools::HTML('Panorama do estado em <a href="../panorama.html#cooperativas">Panorama: cooperativas e associações</a>.')),
     htmltools::div(class = "voc-tab", htmltools::HTML(knitr::kable(al %>% arrange(match(tipo, c("Cooperativa", "Associação", "Entidade sindical")), rd, municipio) %>%
       transmute(Entidade = nome, Tipo = tipo, `Município` = municipio, RD = rd, `Atividade principal` = coalesce(atividade, "–"),

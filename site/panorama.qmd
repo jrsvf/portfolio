@@ -54,12 +54,14 @@ if (!is.null(estoque)) {
 lc <- locais_cadeia %>% group_by(ano, atividade) %>% summarise(e = sum(emprego), .groups = "drop")
 u_lc <- max(lc$ano); i_lc <- u_lc - 10
 g <- lc %>% filter(ano %in% c(i_lc, u_lc)) %>% tidyr::pivot_wider(names_from = ano, values_from = e, names_prefix = "a") %>%
-  filter(.data[[paste0("a", i_lc)]] >= 1000) %>% mutate(v = .data[[paste0("a", u_lc)]] / .data[[paste0("a", i_lc)]] - 1, d = .data[[paste0("a", u_lc)]] - .data[[paste0("a", i_lc)]]) %>% arrange(desc(v))
+  filter(.data[[paste0("a", i_lc)]] >= 1000) %>% mutate(v = .data[[paste0("a", u_lc)]] / .data[[paste0("a", i_lc)]] - 1, d = .data[[paste0("a", u_lc)]] - .data[[paste0("a", i_lc)]]) %>% arrange(desc(d))
+# pelo número de vagas, não pela taxa: em cadeia pequena, a abertura ou o fechamento de uma única fábrica gera variações de 70% ou 80%
 if (nrow(g) >= 4) {
-  sobe <- head(g, 3); desce <- tail(g, 2) %>% filter(v < 0)
-  fr <- c(fr, paste0("<b>Cadeias que mais cresceram em emprego formal de ", i_lc, " a ", u_lc, ":</b> ",
-                     e_ou(paste0(lk(paste0("cadeias/", sobe$atividade, ".html"), nome_c[sobe$atividade]), " (", sinal_pct(sobe$v), ")")),
-                     if (nrow(desce)) paste0(". Em queda: ", e_ou(paste0(lk(paste0("cadeias/", desce$atividade, ".html"), nome_c[desce$atividade]), " (", sinal_pct(desce$v), ")"))) else "", "."))
+  sobe <- head(g, 3) %>% filter(d > 0); desce <- g %>% filter(d < 0) %>% arrange(d) %>% head(2)
+  vg <- function(x) paste0(ifelse(x$d > 0, "+", ""), fmt_num(x$d), " vagas, ", sinal_pct(x$v))
+  fr <- c(fr, paste0("<b>Cadeias que mais ganharam empregos formais de ", i_lc, " a ", u_lc, ":</b> ",
+                     e_ou(paste0(lk(paste0("cadeias/", sobe$atividade, ".html"), nome_c[sobe$atividade]), " (", vg(sobe), ")")),
+                     if (nrow(desce)) paste0(". As que mais perderam: ", e_ou(paste0(lk(paste0("cadeias/", desce$atividade, ".html"), nome_c[desce$atividade]), " (", vg(desce), ")"))) else "", "."))
 }
 if (NROW(caged_c) && "saldo_nucleo_12m" %in% names(caged_c)) {
   s <- caged_c %>% filter(data == max(data)) %>% arrange(desc(saldo_nucleo_12m))
@@ -571,19 +573,19 @@ tem_ca <- !is.null(asc_p) && NROW(asc_p$contagem) > 0
 ### Cooperativas
 
 ```{r}
-if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(Cooperativa > 0, Cooperativa, NA)), "v", "Cooperativas", municipios, formato = function(x) fmt_num(x, 0), paleta = "Greens")
+if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(Cooperativa > 0, Cooperativa, NA)), "v", "Cooperativas", municipios, formato = function(x) fmt_num(x, 0), paleta = "Greens", texto_na = "nenhuma")
 ```
 
 ### Associações de produtores
 
 ```{r}
-if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(`Associação produtiva` > 0, `Associação produtiva`, NA)), "v", "Associações ligadas à produção", municipios, formato = function(x) fmt_num(x, 0), paleta = "Oranges")
+if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(`Associação produtiva` > 0, `Associação produtiva`, NA)), "v", "Associações ligadas à produção", municipios, formato = function(x) fmt_num(x, 0), paleta = "Oranges", texto_na = "nenhuma")
 ```
 
 ### Por 100 mil habitantes
 
 ```{r}
-if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(populacao > 0 & (Cooperativa + `Associação produtiva`) > 0, 1e5 * (Cooperativa + `Associação produtiva`) / populacao, NA)), "v", "Coop. e assoc. por 100 mil hab.", municipios, formato = function(x) fmt_num(x, 0))
+if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(populacao > 0 & (Cooperativa + `Associação produtiva`) > 0, 1e5 * (Cooperativa + `Associação produtiva`) / populacao, NA)), "v", "Coop. e assoc. por 100 mil hab.", municipios, formato = function(x) fmt_num(x, 0), texto_na = "nenhuma")
 ```
 
 ### Por região
@@ -595,10 +597,16 @@ if (tem_ca && "rd" %in% names(ca)) htmltools::HTML(knitr::kable(ca %>% filter(!i
   arrange(desc(Cooperativas)) %>% rename(`Região` = rd), format = "html", align = "lrrrrr", table.attr = "class='table table-sm'"))
 ```
 
-### Maiores cooperativas
+### Maiores cooperativas de produção
 
 ```{r}
 cp <- if (tem_ca && NROW(asc_p$principais)) asc_p$principais %>% filter(grupo == "Cooperativa") else tibble()
+# só as com sede (matriz) em Pernambuco: o capital social é da cooperativa inteira, e uma filial de cooperativa de fora mostraria o capital de outro estado
+if (nrow(cp) && "sede_pe" %in% names(cp)) cp <- cp %>% filter(sede_pe)
+# só as de produção: agropecuária, extração e indústria (divisões 01 a 33), comércio atacadista (onde ficam as que vendem a produção dos cooperados)
+# e serviços agropecuários; ficam de fora transporte, locação, saúde e outros serviços
+if (nrow(cp) && "divisao" %in% names(cp)) cp <- cp %>% filter(suppressWarnings(as.numeric(divisao)) <= 33 | divisao == "46" |
+                                                                  grepl("agr[ií]col|agropecu|rural", paste(atividade, nome), ignore.case = TRUE))
 if (nrow(cp)) {
   tem_cap <- any(!is.na(cp$capital_social))
   cp <- cp %>% arrange(desc(if (tem_cap) coalesce(capital_social, 0) else unidades), desc(unidades)) %>% head(15)
@@ -607,6 +615,8 @@ if (nrow(cp)) {
     format = "html", align = "llllrr", table.attr = "class='table table-sm'"))
 }
 ```
+
+<p class="fonte">Cooperativas de produção com sede em Pernambuco (agropecuária, indústria, comercialização da produção e serviços agropecuários; sem as de crédito, transporte e outros serviços), pelo capital social declarado à Receita. O capital não mede faturamento nem número de cooperados.</p>
 
 :::
 

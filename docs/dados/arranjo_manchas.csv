@@ -1,0 +1,86 @@
+cadeia_id;mancha;n_municipios;polos;municipios;rds;emprego;elos_nucleo;elos_presentes;completude;cadeia
+apicultura;1;1;Belo Jardim;Belo Jardim;Agreste Central;392;2;1;0,500000000000000;Apicultura
+apicultura;2;1;Santa Cruz da Baixa Verde;Santa Cruz da Baixa Verde;Sertão do Pajeú;144;2;1;0,500000000000000;Apicultura
+aquicultura;1;1;Jaboatão dos Guararapes;Jaboatão dos Guararapes;Metropolitana;440;3;2;0,666666666666667;Aquicultura e pesca
+aquicultura;2;3;;Goiana, Igarassu, Itapissuma;Mata Norte, Metropolitana;319;3;1;0,333333333333333;Aquicultura e pesca
+aquicultura;3;2;;Petrolândia, Jatobá;Sertão de Itaparica;160;3;1;0,333333333333333;Aquicultura e pesca
+audiovisual;1;4;Recife;Recife, Olinda, Jaboatão dos Guararapes, Paulista;Metropolitana;1086;3;3;1,000000000000000;Audiovisual
+automotivo;1;3;Goiana;Goiana, Igarassu, Itambé;Mata Norte, Metropolitana;12936;2;2;1,000000000000000;Automotivo
+avicultura;1;5;São Bento do Una, Belo Jardim;São Bento do Una, Belo Jardim, Tacaimbó, Sanharó, Jupi;Agreste Central, Agreste Meridional;5895;4;4;1,000000000000000;Avicultura
+avicultura;2;1;Paudalho;Paudalho;Mata Norte;1143;4;3;0,750000000000000;Avicultura
+avicultura;3;1;Orobó;Orobó;Agreste Setentrional;855;4;2;0,500000000000000;Avicultura
+avicultura;4;2;;Bezerros, Camocim de São Félix;Agreste Central;317;4;2;0,500000000000000;Avicultura
+bebidas;1;2;Cabo de Santo Agostinho;Cabo de Santo Agostinho, Moreno;Metropolitana;1094;4;2;0,500000000000000;Bebidas
+bioeconomia_renovaveis;1;7;Vitória de Santo Antão, Joaquim Nabuco;Vitória de Santo Antão, Joaquim Nabuco, Ribeirão, Palmares, Xexéu, Primavera, Água Preta;Mata Sul;5455;4;4;1,000000000000000;Bioeconomia e energias renováveis
+bioeconomia_renovaveis;2;1;Timbaúba;Timbaúba;Mata Norte;577;4;2;0,500000000000000;Bioeconomia e energias renováveis
+bovinocultura;1;3;Canhotinho;Canhotinho, Quipapá, Jurema;Agreste Meridional, Mata Sul;797;5;4;0,800000000000000;Bovinocultura de leite e corte
+bovinocultura;2;7;;Nazaré da Mata, Limoeiro, Vicência, Carpina, Buenos Aires, São Vicente Ferrer, Aliança;Agreste Setentrional, Mata Norte;601;5;3;0,600000000000000;Bovinocultura de leite e corte
+bovinocultura;3;2;Bom Conselho;Bom Conselho, Brejão;Agreste Meridional;450;5;3;0,600000000000000;Bovinocultura de leite e corte
+bovinocultura;4;6;;Gravatá, Cortês, Barra de Guabiraba, Bonito, Amaraji, Joaquim Nabuco;Agreste Central, Mata Sul;421;5;4;0,800000000000000;Bovinocultura de leite e corte
+bovinocultura;5;2;;Pesqueira, Arcoverde;Agreste Central, Sertão do Moxotó;105;5;3;0,600000000000000;Bovinocultura de leite e corte
+cachaca;1;1;;Cabo de Santo Agostinho;Metropolitana;389;2;2;1,000000000000000;Cachaça e destilados
+cachaca;2;1;Amaraji;Amaraji;Mata Sul;160;2;1;0,500000000000000;Cachaça e destilados
+cachaca;3;1;;Aliança;Mata Norte;11;2;1;0,500000000000000;Cachaça e destilados
+cafeicultura;1;1;Garanhuns;Garanhuns;Agreste Meridional;179;2;1;0,500000000000000;Cafeicultura
+calcados;1;1;Carpina;Carpina;Mata Norte;1229;2;2;1,000000000000000;Calçados e artefatos de couro
+carcinicultura;1;3;;Goiana, Igarassu, Itapissuma;Mata Norte, Metropolitana;300;2;1;0,500000000000000;Carcinicultura
+carcinicultura;2;2;Camutanga;Camutanga, Timbaúba;Mata Norte;289;2;1;0,500000000000000;Carcinicultura
+ceramica_vermelha;1;7;Paudalho;Paudalho, Lagoa de Itaenga, Limoeiro, Nazaré da Mata, Feira Nova, Buenos Aires, Lagoa do Carro;Agreste Setentrional, Mata Norte;1460;1;1;1,000000000000000;Cerâmica vermelha
+ceramica_vermelha;2;2;Dormentes, Afrânio;Dormentes, Afrânio;Sertão do São Francisco;360;1;1;1,000000000000000;Cerâmica vermelha
+ceramica_vermelha;3;1;;São Caitano;Agreste Central;45;1;1;1,000000000000000;Cerâmica vermelha
+ceramica_vermelha;4;1;;São José do Egito;Sertão do Pajeú;12;1;1;1,000000000000000;Cerâmica vermelha
+coco;1;1;Petrolina;Petrolina;Sertão do São Francisco;172;1;1;1,000000000000000;Coco-da-baía
+coco;2;1;;Petrolândia;Sertão de Itaparica;17;1;1;1,000000000000000;Coco-da-baía
+construcao_civil;1;9;Recife, Jaboatão dos Guararapes, Olinda, Paulista, Paudalho;Recife, Jaboatão dos Guararapes, Olinda, Paulista, Paudalho, Igarassu, Camaragibe, Abreu e Lima, Tracunhaém;Mata Norte, Metropolitana;44545;4;4;1,000000000000000;Construção civil
+construcao_civil;2;1;Caruaru;Caruaru;Agreste Central;5008;4;4;1,000000000000000;Construção civil
+construcao_civil;3;3;Dormentes;Petrolina, Dormentes, Afrânio;Sertão do São Francisco;3404;4;4;1,000000000000000;Construção civil
+construcao_civil;4;1;Águas Belas;Águas Belas;Agreste Meridional;961;4;3;0,750000000000000;Construção civil
+construcao_civil;5;1;Tamandaré;Tamandaré;Mata Sul;930;4;3;0,750000000000000;Construção civil
+construcao_civil;6;2;São José do Belmonte;São José do Belmonte, Verdejante;Sertão Central;822;4;3;0,750000000000000;Construção civil
+construcao_civil;7;1;;Araripina;Sertão do Araripe;385;4;4;1,000000000000000;Construção civil
+construcao_civil;8;2;;São José do Egito, Itapetim;Sertão do Pajeú;187;4;4;1,000000000000000;Construção civil
+cotonicultura;1;1;Araripina;Araripina;Sertão do Araripe;331;2;1;0,500000000000000;Algodão
+economia_criativa;1;5;Recife, Olinda;Recife, Olinda, Jaboatão dos Guararapes, Paulista, Camaragibe;Metropolitana;25210;4;4;1,000000000000000;Economia criativa
+economia_criativa;2;1;Petrolina;Petrolina;Sertão do São Francisco;2002;4;4;1,000000000000000;Economia criativa
+economia_criativa;3;1;;Itacuruba;Sertão de Itaparica;38;4;1;0,250000000000000;Economia criativa
+economia_do_mar;1;4;Ipojuca, Jaboatão dos Guararapes;Ipojuca, Jaboatão dos Guararapes, Cabo de Santo Agostinho, Sirinhaém;Mata Sul, Metropolitana;3662;4;4;1,000000000000000;Economia do mar
+economia_do_mar;2;2;;Camutanga, Timbaúba;Mata Norte;290;4;2;0,500000000000000;Economia do mar
+economia_do_mar;3;1;;Itapissuma;Metropolitana;64;4;1;0,250000000000000;Economia do mar
+floricultura;1;2;Gravatá;Gravatá, Amaraji;Agreste Central, Mata Sul;82;1;1;1,000000000000000;Flores e plantas ornamentais
+floricultura;2;1;;Paulista;Metropolitana;12;1;1;1,000000000000000;Flores e plantas ornamentais
+fruticultura;1;3;Petrolina, Lagoa Grande;Petrolina, Lagoa Grande, Santa Maria da Boa Vista;Sertão do São Francisco;27800;3;3;1,000000000000000;Fruticultura irrigada
+fruticultura;2;5;;São Vicente Ferrer, Vicência, Macaparana, Bom Jardim, Machados;Agreste Setentrional, Mata Norte;868;3;2;0,666666666666667;Fruticultura irrigada
+fruticultura;3;3;;Floresta, Ibimirim, Itacuruba;Sertão de Itaparica, Sertão do Moxotó;95;3;2;0,666666666666667;Fruticultura irrigada
+gesso;1;5;Trindade;Trindade, Araripina, Ouricuri, Ipubi, Bodocó;Sertão do Araripe;2321;4;4;1,000000000000000;Gesso (Polo Gesseiro do Araripe)
+higiene_limpeza;1;6;Paulista;Paulista, Recife, Abreu e Lima, Igarassu, Olinda, Camaragibe;Metropolitana;4423;3;3;1,000000000000000;Higiene, limpeza e cosméticos
+joias;1;1;Recife;Recife;Metropolitana;52;1;1;1,000000000000000;Joias e bijuterias
+logistica;1;8;Jaboatão dos Guararapes, Cabo de Santo Agostinho, Ipojuca, Chã de Alegria;Jaboatão dos Guararapes, Cabo de Santo Agostinho, Ipojuca, Vitória de Santo Antão, Moreno, Escada, Chã de Alegria, Paudalho;Mata Norte, Mata Sul, Metropolitana;19925;4;4;1,000000000000000;Logística
+logistica;2;3;Saloá;Saloá, Águas Belas, Paranatama;Agreste Meridional;311;4;2;0,500000000000000;Logística
+mandiocultura;1;1;;Jupi;Agreste Meridional;34;2;1;0,500000000000000;Mandiocultura
+mandiocultura;2;1;;Ipubi;Sertão do Araripe;11;2;1;0,500000000000000;Mandiocultura
+moveleiro;1;1;Caruaru;Caruaru;Agreste Central;708;2;1;0,500000000000000;Moveleiro
+moveleiro;2;1;Tacaimbó;Tacaimbó;Agreste Central;367;2;1;0,500000000000000;Moveleiro
+moveleiro;3;3;João Alfredo;João Alfredo, Surubim, Salgadinho;Agreste Setentrional;335;2;1;0,500000000000000;Moveleiro
+moveleiro;4;1;;Vitória de Santo Antão;Mata Sul;130;2;1;0,500000000000000;Moveleiro
+moveleiro;5;1;;Camocim de São Félix;Agreste Central;13;2;1;0,500000000000000;Moveleiro
+ovinocaprinocultura;1;1;;Petrolina;Sertão do São Francisco;18;3;2;0,666666666666667;Ovinocaprinocultura
+ovinocaprinocultura;2;1;;Gravatá;Agreste Central;16;3;2;0,666666666666667;Ovinocaprinocultura
+petroquimica_plasticos;1;13;Cabo de Santo Agostinho, Abreu e Lima, Glória do Goitá;Cabo de Santo Agostinho, Jaboatão dos Guararapes, Ipojuca, Abreu e Lima, Paulista, Glória do Goitá, Moreno, Pombos, Igarassu, Vitória de Santo Antão, São Lourenço da Mata, Passira, Paudalho;Agreste Central, Agreste Setentrional, Mata Norte, Mata Sul, Metropolitana;8068;3;3;1,000000000000000;Petróleo, química e plásticos
+petroquimica_plasticos;2;1;;Toritama;Agreste Setentrional;75;3;1;0,333333333333333;Petróleo, química e plásticos
+saude;1;1;Recife;Recife;Metropolitana;58052;3;3;1,000000000000000;Complexo da saúde
+saude;2;1;Caruaru;Caruaru;Agreste Central;7152;3;3;1,000000000000000;Complexo da saúde
+saude;3;1;Afogados da Ingazeira;Afogados da Ingazeira;Sertão do Pajeú;1001;3;2;0,666666666666667;Complexo da saúde
+saude;4;2;Catende, Belém de Maria;Catende, Belém de Maria;Mata Sul;824;3;3;1,000000000000000;Complexo da saúde
+saude;5;1;Serrita;Serrita;Sertão Central;284;3;3;1,000000000000000;Complexo da saúde
+sucroenergetico;1;14;Rio Formoso, Sirinhaém;Rio Formoso, Sirinhaém, Primavera, Ipojuca, Cabo de Santo Agostinho, Ribeirão, Joaquim Nabuco, Água Preta, Escada, Gameleira, Cortês, Amaraji, Palmares, Tamandaré;Mata Sul, Metropolitana;21048;3;3;1,000000000000000;Sucroenergético
+sucroenergetico;2;13;Camutanga;Camutanga, Aliança, Vicência, Timbaúba, Itambé, Goiana, Ferreiros, Condado, Tracunhaém, Nazaré da Mata, Buenos Aires, Itaquitinga, Macaparana;Mata Norte;10413;3;3;1,000000000000000;Sucroenergético
+sucroenergetico;3;1;Lagoa de Itaenga;Lagoa de Itaenga;Mata Norte;5214;3;2;0,666666666666667;Sucroenergético
+suinocultura;1;2;Vitória de Santo Antão;Vitória de Santo Antão, São Lourenço da Mata;Mata Sul, Metropolitana;1516;3;2;0,666666666666667;Suinocultura
+textil_confeccoes;1;12;Caruaru, Santa Cruz do Capibaribe, Toritama;Caruaru, Santa Cruz do Capibaribe, Toritama, Taquaritinga do Norte, São Caitano, Brejo da Madre de Deus, Riacho das Almas, Altinho, Vertentes, Agrestina, Jataúba, Panelas;Agreste Central, Agreste Setentrional;13754;3;3;1,000000000000000;Têxtil e confecções
+ti_software;1;5;Recife;Recife, Olinda, Jaboatão dos Guararapes, Paulista, Camaragibe;Metropolitana;15519;2;2;1,000000000000000;Tecnologia da informação
+turismo;1;3;Ipojuca;Ipojuca, Cabo de Santo Agostinho, Sirinhaém;Mata Sul, Metropolitana;7354;2;2;1,000000000000000;Turismo
+turismo;2;1;Recife;Recife;Metropolitana;5202;2;2;1,000000000000000;Turismo
+turismo;3;1;Fernando de Noronha;Fernando de Noronha;Metropolitana;1151;2;2;1,000000000000000;Turismo
+turismo;4;3;Gravatá;Gravatá, Sairé, Camocim de São Félix;Agreste Central;687;2;2;1,000000000000000;Turismo
+turismo;5;1;;Barreiros;Mata Sul;30;2;1;0,500000000000000;Turismo
+vitivinicultura;1;3;Petrolina;Petrolina, Lagoa Grande, Santa Maria da Boa Vista;Sertão do São Francisco;20674;2;2;1,000000000000000;Vitivinicultura

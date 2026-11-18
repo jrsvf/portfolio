@@ -67,6 +67,22 @@ As listas de maiores empresas ordenam pelo capital social, que é da empresa int
 
 O PIB total e o PIB per capita existem para os 185 municípios até o último ano divulgado. A divisão do valor adicionado por setor (agropecuária, indústria, serviços e administração pública) pode parar antes: em novembro de 2026 o IBGE só a tinha divulgado até 2021, e a tabela 5938 do SIDRA trazia 2022 e 2023 sem valor por setor. A cada atualização o pipeline consulta o SIDRA e completa os anos que faltam assim que saírem.
 
+## Arranjo produtivo
+
+Cada página de cadeia mostra onde o núcleo produtivo forma um arranjo, com três medidas no último ano da RAIS:
+
+- **Concentração (ICN).** O Índice de Concentração Normalizado de Crocco et al. (2006) junta o quociente locacional, o IHH modificado e a participação do município no emprego da cadeia no estado. Os pesos saem de uma análise de componentes principais feita cadeia a cadeia. O índice vai de 0 a 100 dentro de cada cadeia.
+- **Vizinhança (LISA).** O Moran local do QL compara cada município com os vizinhos que fazem divisa com ele, com tolerância de 100 m porque a malha é simplificada. A significância vem de 999 permutações, ao nível de 5%. "Alto-Alto" é município especializado cercado de especializados.
+- **Completude dos elos.** Quantos elos do núcleo da cadeia têm emprego formal no município e na mancha.
+
+As classes são três:
+
+- **Polo do arranjo:** o município está entre os 10% de maior ICN da cadeia, tem ao menos 50 empregos no núcleo e tem vizinhos especializados ou metade dos elos.
+- **Parte de mancha:** Alto-Alto com ao menos 10 empregos, sem ser polo.
+- **Aglomeração isolada:** QL de 1,5 ou mais e 50 empregos, sem vizinhos especializados.
+
+As manchas são grupos contíguos de polos e municípios Alto-Alto da mesma cadeia. A medida usa só o emprego formal, então subestima arranjos muito informais, como o das confecções do Agreste. A base completa está em `arranjo_municipios.csv` e `arranjo_manchas.csv`.
+
 ## Formação e cooperativas
 
 Os cursos de cada município vêm de três fontes: o Censo da Educação Superior (cursos presenciais e a distância, estes pelos polos onde há alunos), as turmas de educação profissional do Censo Escolar (cursos técnicos, pelo código do curso e o nome na lista oficial do INEP) e o arquivo `config/cursos_novos.csv`, para cursos que começaram depois do último Censo publicado, sempre com a fonte. Os Censos saem com um a dois anos de atraso: os cursos da UFPE em Sertânia, com aulas desde setembro de 2025, só entram no Censo da Educação Superior de 2025. A ligação de um curso com uma cadeia é feita por palavras do nome (`config/cadeia_cursos.csv`) e é aproximada.

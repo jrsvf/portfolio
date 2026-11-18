@@ -81,7 +81,7 @@ montar_associativas <- function(raw, elos, meta, padroes, dir_cnae, municipios, 
     mutate(ordem = ifelse(matriz_filial %in% c("1", "01"), 0, 1)) %>% arrange(cnpj_basico, ordem, abertura) %>%
     group_by(cnpj_basico) %>%
     # unidades e municípios primeiro: no summarise, id_municipio passaria a ser só o da sede nas linhas seguintes
-    summarise(unidades = n(), municipios = n_distinct(id_municipio), nome = first(nome), razao_social = first(razao_social), grupo = first(grupo), tipo = first(tipo),
+    summarise(unidades = n(), municipios = n_distinct(id_municipio), sede_pe = any(matriz_filial %in% c("1", "01")), divisao = first(substr(cnae, 1, 2)), nome = first(nome), razao_social = first(razao_social), grupo = first(grupo), tipo = first(tipo),
               id_municipio = first(id_municipio), municipio = first(municipio), rd = first(rd), atividade = first(atividade),
               cadeias = paste(setdiff(unique(unlist(strsplit(cadeias, ";"))), c("", NA)), collapse = ";"), via = first(via),
               capital_social = suppressWarnings(max(capital_social, na.rm = TRUE)),

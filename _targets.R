@@ -60,7 +60,9 @@ list(
   tar_target(bq_rais_pe,    { bq_esquema; extrair_rais_estab_uf(projeto, uf, anos$rais_inicio) }),
   tar_target(bq_rais_br,    { bq_esquema; extrair_rais_estab_brasil(projeto, anos$rais_inicio) }),
   tar_target(bq_perfil_pe,  { bq_esquema; extrair_rais_perfil_uf(projeto, uf, anos$rais_inicio) }),
-  tar_target(bq_caged_pe,   { bq_esquema; mes_ref; extrair_caged_uf(projeto, uf, anos$caged_inicio) }),
+  tar_target(bq_caged_bd,   { bq_esquema; mes_ref; extrair_caged_uf(projeto, uf, anos$caged_inicio) }),
+  # meses recentes que a Base dos Dados ainda não liberou no acesso gratuito: direto do MTE (R/23_caged_mte.R)
+  tar_target(bq_caged_pe,   completar_caged_mte(bq_caged_bd, bq_municipios, uf_codigo), cue = tar_cue(mode = "always")),
   # celetistas da RAIS: ponto de partida do estoque mensal de emprego (se falhar, o estoque usa a RAIS sem administração pública)
   tar_target(bq_rais_clt,   { bq_esquema; tentar("RAIS celetistas", extrair_rais_clt_uf(projeto, uf, max(bq_rais_pe$ano) - 1)) }),
   tar_target(bq_comex_pe,   { bq_esquema; extrair_comex_uf(projeto, uf, anos$comex_inicio) }),
@@ -159,6 +161,8 @@ list(
   tar_target(concentracao,
              concentracao_espacial(locais_cadeia, par_ind$ql_minimo, par_ind$emprego_minimo)),
   tar_target(serie_comp, serie_comparada(bq_rais_br, cad$elos, uf)),
+  # arranjo produtivo: ICN, LISA e completude dos elos (R/25_arranjo.R)
+  tar_target(arranjo, montar_arranjo(cad_mun, total_mun, cad$elos, cad$meta, malha, bq_municipios, rd)),
   tar_target(caged_cad, caged_cadeia(bq_caged_pe, cad$elos)),
   tar_target(caged_elo, caged_elos(bq_caged_pe, cad$elos)),
   # estoque mensal de emprego com carteira: RAIS de dezembro + saldos do CAGED
@@ -278,6 +282,12 @@ list(
                       cad$meta$cadeia_id)),
 
   # ---------------------------------------------------------------- saídas
+  # vigia: acusa fonte vazia ou parada no tempo (R/24_vigia.R)
+  tar_target(vigia, vigiar_fontes(list(bq_rais_pe = bq_rais_pe, bq_caged_pe = bq_caged_pe, bq_comex_pe = bq_comex_pe, bq_pib_pop = bq_pib_pop,
+                                       sidra_bruto = sidra_bruto, macro_ibcr = macro_ibcr, macro_pim = macro_pim, macro_pmc = macro_pmc,
+                                       macro_pms = macro_pms, bq_cnpj_cadeias = bq_cnpj_cadeias, bq_associativas = bq_associativas,
+                                       bq_cursos_nome = bq_cursos_nome, bq_tecnico_cursos = bq_tecnico_cursos)),
+             cue = tar_cue(mode = "always")),
   tar_target(saida_rds, {
     objs <- list(par = par, cad = cad, municipios = bq_municipios, cnae = bq_cnae, malha = malha, rd = rd,
                  cad_mun = cad_mun, locais_cadeia = locais_cadeia, locais_elo = locais_elo,
@@ -300,7 +310,7 @@ list(
                  cursos_cad = cursos_cad, escoamento_cad = escoamento_cad,
                  nereus = nereus, nereus_cad = nereus_cad, ql_mult = ql_mult, ql_vab = ql_vab,
                  caged_elo = caged_elo, estoque = estoque, vocacao_cad = vocacao_cad, historico = historico,
-                 formacao = formacao, associativas = associativas,
+                 formacao = formacao, associativas = associativas, vigia = vigia, arranjo = arranjo,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),
@@ -315,6 +325,8 @@ list(
     vocacoes_cadeias_rd      = vocacao_tabela(vocacao_cad),
     formacao_cursos          = if (NROW(formacao)) formacao else tibble::tibble(),
     cooperativas_associacoes = if (is.null(associativas)) tibble::tibble() else associativas$lista,
+    arranjo_municipios       = if (is.null(arranjo)) tibble::tibble() else arranjo$municipio %>% filter(!is.na(classe) | emprego > 0),
+    arranjo_manchas          = if (is.null(arranjo)) tibble::tibble() else arranjo$manchas,
     comex_cadeia             = comex_cad,
     producao_ibge_cadeia     = sidra_cad %>% filter(ano >= max(ano) - 10) %>% select(-any_of(c("valor_txt", "situacao"))),
     lacunas                  = lacunas
