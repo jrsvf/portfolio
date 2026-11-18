@@ -166,6 +166,8 @@ list(
   tar_target(camada_territorial, montar_camada_territorial(arq_territorio, bq_municipios, rd, uf_codigo)),
   # arranjo produtivo: ICN, LISA e completude dos elos (R/25_arranjo.R)
   tar_target(arranjo, montar_arranjo(cad_mun, total_mun, cad$elos, cad$meta, malha, bq_municipios, rd)),
+  # cadeia dominante: a especializada (QL do núcleo >= 1) com maior emprego excedente
+  tar_target(dominancia, calcular_dominancia(cad_mun, total_mun, cad$elos, cad$meta, minimo = par$indicadores$emprego_minimo)),
   tar_target(caged_cad, caged_cadeia(bq_caged_pe, cad$elos)),
   tar_target(caged_elo, caged_elos(bq_caged_pe, cad$elos)),
   # estoque mensal de emprego com carteira: RAIS de dezembro + saldos do CAGED
@@ -256,7 +258,7 @@ list(
   # --------------------------------------- vocações: todas as subclasses CNAE
   tar_target(vocacoes, montar_vocacoes(bq_rais_pe, bq_cnae, cad$elos, cad$meta, rd, bq_municipios, par_ind$emprego_minimo)),
   tar_target(saida_vocacoes, exportar_vocacoes(vocacoes), format = "file"),
-  tar_target(saida_retrato, retrato_vocacoes(locais_cadeia, cad$meta, malha, rd), format = "file"),
+  tar_target(saida_retrato, retrato_vocacoes(locais_cadeia, cad$meta, malha, rd, dominancia = dominancia), format = "file"),
   tar_target(producao_terr, montar_producao(sidra_bruto, rd)),
   tar_target(saida_producao, exportar_producao(producao_terr), format = "file"),
 
@@ -294,7 +296,7 @@ list(
              cue = tar_cue(mode = "always")),
   tar_target(saida_rds, {
     objs <- list(par = par, cad = cad, municipios = bq_municipios, cnae = bq_cnae, malha = malha, rd = rd,
-                 cad_mun = cad_mun, locais_cadeia = locais_cadeia, locais_elo = locais_elo,
+                 cad_mun = cad_mun, locais_cadeia = locais_cadeia, locais_elo = locais_elo, dominancia = dominancia,
                  concentracao = concentracao, serie_comp = serie_comp, caged_cad = caged_cad,
                  comex_cad = comex_cad, sidra_cad = sidra_cad, perfil_cad = perfil_cad,
                  perfil_estado = perfil_estado, shift_share_cad = shift_share_cad,
@@ -343,7 +345,7 @@ list(
   tar_target(raiox,
              montar_raiox(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, bq_perfil_pe, bq_caged_pe,
                           comex_anos_completos, bq_sh4_nomes, sidra_bruto, locais_cadeia, sidra_cad,
-                          comex_cad, cad$meta, krugman, ipca, locais_elo) %>% adicionar_ql_raiox(ql_mult, ql_vab)),
+                          comex_cad, cad$meta, krugman, ipca, locais_elo) %>% adicionar_ql_raiox(ql_mult, ql_vab) %>% adicionar_dominancia_raiox(dominancia)),
   tar_target(saida_raiox, exportar_raiox(raiox, malha, rd = rd), format = "file"),
   tar_target(territorio,
              montar_territorio(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, cad_mun, cad$meta, empresas,

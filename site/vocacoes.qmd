@@ -6,7 +6,7 @@ toc: false
 
 As cadeias e nichos do painel cobrem as atividades mais importantes do estado, mas não todas. Esta página mede **todas as subclasses da CNAE com emprego formal em Pernambuco**, para responder duas perguntas: em que um município ou região é especializado, e onde está uma atividade qualquer. A medida é o quociente locacional (QL) do emprego formal: o peso da atividade no território dividido pelo peso dela no estado. Acima de 1, o território é especializado.
 
-![Retrato das vocações de Pernambuco: cada município pela cadeia ou nicho em que é mais especializado.](imagens/retrato_vocacoes.png){.retrato}
+![Retrato das vocações de Pernambuco: cada município pela cadeia ou nicho que mais pesa nele.](imagens/retrato_vocacoes.png){.retrato}
 
 <p class="fonte">Baixe o retrato em <a href="imagens/retrato_vocacoes.png" download>PNG</a> ou <a href="imagens/retrato_vocacoes.pdf" download>PDF</a>.</p>
 

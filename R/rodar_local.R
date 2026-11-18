@@ -82,8 +82,21 @@ conferir_site <- function(dir_site, dir_fonte = "site") {
     }
   }
   achados <- unique(achados)
+  # cobertura das listas curadas: cadeia sem norma, sem incentivo próprio ou sem pesquisa cadastrada vira aviso
+  # (não é erro do site, é lacuna de pesquisa a fechar)
+  avisos <- tryCatch({
+    raiz <- Sys.getenv("PASTA_PROJETO", normalizePath(file.path(dir_fonte, "..")))
+    meta <- readRDS(file.path(raiz, "dados", "cad.rds"))$meta
+    rg <- utils::read.csv(file.path(raiz, "config", "regulacao_cadeias.csv"), encoding = "UTF-8")
+    rf <- utils::read.csv(file.path(raiz, "config", "referencias_cadeias.csv"), encoding = "UTF-8")
+    proprio <- unique(rg$cadeia_id[rg$tipo == "Incentivo fiscal" & !grepl("SUDENE|PRODEPE|PROIND", rg$instrumento)])
+    c(sprintf("sem_norma: %s", setdiff(meta$cadeia_id, rg$cadeia_id)),
+      sprintf("sem_incentivo_proprio: %s", setdiff(meta$cadeia_id, proprio)),
+      sprintf("sem_pesquisa: %s", setdiff(meta$cadeia_id, rf$cadeia_id)))
+  }, error = function(e) character())
   linhas <- c(paste("Conferência do site em", format(Sys.time(), "%d/%m/%Y %H:%M")), paste(length(htmls), "páginas"), "",
-              if (length(achados)) achados else "Nenhum problema encontrado.")
+              if (length(achados)) achados else "Nenhum problema encontrado.",
+              if (length(avisos)) c("", paste0("Lacunas das listas curadas (", length(avisos), "), para pesquisar:"), avisos))
   writeLines(linhas, file.path(dir_site, "conferencia.txt"), useBytes = TRUE)
   cat(format(Sys.time(), "%H:%M:%S"), "| conferência do site:", if (length(achados)) paste(length(achados), "problema(s):") else "nenhum problema", "\n")
   if (length(achados)) cat(paste0("   ", achados, "\n"), sep = "")

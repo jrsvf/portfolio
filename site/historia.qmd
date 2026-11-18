@@ -244,12 +244,14 @@ cartao_hoje(c("fruticultura", "vitivinicultura"))
 
 Em meados do século XX, em Santa Cruz do Capibaribe, retalhos de tecido viraram roupa vendida em feira: era a sulanca. Caruaru entrou nos anos 1970, Toritama em 1980, especializada em jeans. O polo cresceu quase sem plano e com muita informalidade, e ganhou endereço próprio: o centro de compras de Toritama em 2001, o Polo Caruaru em 2004 e o Moda Center, em Santa Cruz, em 2006, com cerca de 10 mil boxes e lojas. Em 2014 a RAIS contava 2.182 confecções formais no polo; o Sebrae estima mais de 100 mil pessoas na produção e na venda.
 
+Um empurrão grande veio da estrada. Em 2004 a BR-232 ficou duplicada do Recife a Caruaru, e o Agreste passou a estar a uma pista dupla da capital, do porto e do aeroporto. Segundo o governo do estado, o número de empresas da região cresceu mais de 300% depois da obra. Os centros de compra do polo nasceram nesses mesmos anos, de 2001 a 2006, e o Moda Center abriu dois anos depois da duplicação.
+
 No extremo oeste, outro ciclo nasceu debaixo da terra. A gipsita do Araripe virou gesso em calcinadoras de Araripina, Trindade, Ipubi, Ouricuri e Bodocó. Em 1999 Pernambuco já produzia 87,6% da gipsita do país; hoje o polo responde por cerca de 95% do gesso nacional.
 
 ::: {.h-ficha}
 ::: {.puxou}
 **O que puxou**
-Feira como canal de venda, redes de família, matéria-prima local e baixo custo de entrada.
+Feira como canal de venda, redes de família, matéria-prima local, baixo custo de entrada e a BR-232 duplicada.
 :::
 ::: {.derrubou}
 **O que trava**
@@ -391,16 +393,16 @@ Com o Trem 2, contratado por R$ 4,9 bilhões, a Abreu e Lima passa de 130 mil pa
 :::
 
 ::: {.h-fut}
-[Logística · sem data]{.h-fut-tag}
+[Logística · em obra e sem data]{.h-fut-tag}
 
-#### A Transnordestina em Pernambuco
+#### Trilho e estrada até o Sertão
 
-O trecho Custódia-Arcoverde foi licitado e teve vencedora homologada em 2026. O Salgueiro-Suape, parado há mais de dez anos, segue sem data, à espera do TCU. É o trilho que ligaria o gesso do Araripe e o Sertão ao porto.
+Na Transnordestina, o trecho Custódia-Arcoverde foi licitado e teve vencedora homologada em 2026; o Salgueiro-Suape, parado há mais de dez anos, segue sem data, à espera do TCU. Na estrada, a duplicação da BR-232 de São Caetano a Serra Talhada (264,9 km, no Novo PAC) começa pelo trecho até Belo Jardim. Se a 232 duplicada fez o polo de confecções no Agreste, a próxima etapa pode fazer o mesmo pelo Sertão e pelo gesso do Araripe.
 
 **O que pesa contra:** a obra começou em 2006, com entrega prevista para 2010.
 
 ::: {.h-fut-fonte}
-[Diario de Pernambuco, 10/2025](https://www.diariodepernambuco.com.br/economia/2025/10/11699452-transnordestina-tem-edital-de-licitacao-publicado-entenda-a-historia-da-ferrovia.html); [Movimento Econômico, 07/2026](https://movimentoeconomico.com.br/geral/infraestrutura/transnordestina/2026/07/03/ferrovia-salgueiro-suape-segue-sem-data-para-retomada-das-obras/)
+[Diario de Pernambuco, 10/2025](https://www.diariodepernambuco.com.br/economia/2025/10/11699452-transnordestina-tem-edital-de-licitacao-publicado-entenda-a-historia-da-ferrovia.html); [Movimento Econômico, 06/2025](https://movimentoeconomico.com.br/economia/transporte/2025/06/06/raquel-lyra-br-232/); [Movimento Econômico, 07/2026](https://movimentoeconomico.com.br/geral/infraestrutura/transnordestina/2026/07/03/ferrovia-salgueiro-suape-segue-sem-data-para-retomada-das-obras/)
 :::
 :::
 

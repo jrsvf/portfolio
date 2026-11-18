@@ -198,11 +198,13 @@ det = m.cadeias_det ?? {}
 um = u => ({"Toneladas": "t", "Cabeças": "cabeças", "Mil litros": "mil litros", "Mil dúzias": "mil dúzias", "Quilogramas": "kg", "Milheiros": "milheiros"}[u] ?? u ?? "")
 cardCadeia = d => {
   const x = det[d.cadeia_id] ?? {elos: [], producao: [], destinos: []};
-  const esp = d.ql >= 1;
+  const qlN = d.ql_nucleo ?? d.ql;
+  const esp = qlN >= 1;
   return html`<div class="rx-cc ${esp ? "rx-cc-esp" : ""}">
     <div class="rx-cc-topo">
       <a class="rx-cc-nome" href="cadeias/${d.cadeia_id}.html">${d.cadeia}${nichos.has(d.cadeia_id) ? html` <span class="rx-nicho">nicho</span>` : ""}</a>
-      ${d.ql != null ? html`<span class="rx-ql" title="Quociente locacional: peso da cadeia no emprego do município dividido pelo peso no estado">QL ${nf(d.ql, 2)}</span>` : ""}
+      ${m.dominante === d.cadeia_id ? html`<span class="rx-dom" title="A cadeia que mais pesa no município: a especializada com maior emprego excedente">dominante</span>` : ""}
+      ${qlN != null ? html`<span class="rx-ql" title="Quociente locacional do núcleo produtivo (sem os elos de comércio): peso da cadeia no emprego do município dividido pelo peso no estado">QL ${nf(qlN, 2)}</span>` : ""}
     </div>
     <div class="rx-cc-nums">
       <div><b>${nf(d.emprego)}</b><span>empregos formais</span></div>
@@ -211,7 +213,7 @@ cardCadeia = d => {
       ${d.ex_usd ? html`<div><b>${usd(d.ex_usd)}</b><span>exportado em ${m.comex.ano}</span></div>` : ""}
     </div>
     ${[d.ql_empresas, d.ql_exportacoes, d.ql_producao].some(v => v != null) ? html`<div class="rx-cc-qls" title="Quociente locacional medido de quatro jeitos: emprego formal, empresas ativas com MEI, exportações e valor da produção do IBGE">
-      ${[["emprego", d.ql], ["empresas", d.ql_empresas], ["exportações", d.ql_exportacoes], ["produção", d.ql_producao]].filter(q => q[1] != null)
+      ${[["emprego", qlN], ["empresas", d.ql_empresas], ["exportações", d.ql_exportacoes], ["produção", d.ql_producao]].filter(q => q[1] != null)
         .map(q => html`<span class="${q[1] >= 1 ? "rx-ql-alto" : ""}">QL ${q[0]} <b>${nf(q[1], 2)}</b></span>`)}
       ${d.pct_mei != null && d.empresas ? html`<span>${nf(d.empresas)} empresas, ${nf(100 * d.pct_mei, 0)}% MEI</span>` : ""}</div>` : ""}
     ${x.producao.length ? html`<div class="rx-cc-bloco"><h5>Produção (IBGE)</h5><table class="rx-tab"><tbody>
@@ -224,9 +226,22 @@ cardCadeia = d => {
     ${x.destinos.length ? html`<div class="rx-cc-bloco"><h5>Principais destinos</h5><p>${x.destinos.map(p => `${p.pais} (${usd(p.v)})`).join(" · ")}</p></div>` : ""}
   </div>`;
 }
+ordemCad = {
+  // principais: especializadas em alguma medida (QL >= 1 no núcleo do emprego, nas exportações ou na produção);
+  // vão primeiro pelo emprego excedente (tamanho e especialização juntos), depois pelo valor da produção
+  const espec = d => ((d.ql_nucleo ?? d.ql) >= 1 && (d.emprego_nucleo ?? d.emprego) >= 10) || (d.ql_exportacoes >= 1 && d.ex_usd > 0) || (d.ql_producao >= 1 && d.vp_mil > 0);
+  const princ = m.cadeias.filter(espec).sort((a, b) => (b.excedente ?? 0) - (a.excedente ?? 0) || (b.vp_mil ?? 0) - (a.vp_mil ?? 0) || (b.emprego ?? 0) - (a.emprego ?? 0));
+  const resto = m.cadeias.filter(d => !espec(d)).sort((a, b) => (b.emprego ?? 0) - (a.emprego ?? 0) || (b.vp_mil ?? 0) - (a.vp_mil ?? 0));
+  if (!princ.length) return {princ: resto.slice(0, 3), resto: resto.slice(3), semEsp: true};
+  return {princ, resto, semEsp: false};
+}
 m.cadeias.length === 0 ? html`<p>Nenhuma das cadeias e nichos acompanhados tem emprego formal ou produção registrada aqui.</p>` :
-html`<p>Cada cartão junta o que o município tem em cada cadeia e nicho acompanhados: emprego formal por elo, produção do IBGE, exportações e as maiores empresas ativas. O QL aparece medido de até quatro jeitos (emprego formal, empresas ativas com MEI, exportações e valor da produção); em verde, os que passam de 1. Os cartões vão do maior para o menor quociente locacional; em destaque, as cadeias em que ${m.nome} é especializado (QL ≥ 1). O nome leva à página da cadeia.</p>
-<div class="rx-ccs">${m.cadeias.slice().sort((a, b) => (b.ql ?? -1) - (a.ql ?? -1)).map(cardCadeia)}</div>`
+html`<p>${ordemCad.semEsp ? html`${m.nome} não é especializado em nenhuma das cadeias e nichos acompanhados; abaixo, as três com mais emprego formal.` :
+  html`Em destaque, ${ordemCad.princ.length === 1 ? "a única cadeia" : "as " + ordemCad.princ.length + " cadeias e nichos"} em que ${m.nome} é especializado (QL maior ou igual a 1 no emprego do núcleo produtivo, nas exportações ou na produção), da que mais pesa para a que menos pesa no município: primeiro pelo emprego excedente, o que o município tem a mais do que a média do estado. ${m.dominante ? html`A <b>dominante</b> é a cadeia com maior emprego excedente.` : ""}`}
+Cada cartão junta emprego formal por elo, produção do IBGE, exportações e as maiores empresas ativas, com o QL medido de até quatro jeitos; em verde, os que passam de 1. O nome leva à página da cadeia.</p>
+<div class="rx-ccs">${ordemCad.princ.map(cardCadeia)}</div>
+${ordemCad.resto.length ? html`<details class="rx-mais"><summary>Ver as outras ${ordemCad.resto.length} cadeias e nichos com presença menor aqui</summary>
+<div class="rx-ccs">${ordemCad.resto.map(cardCadeia)}</div></details>` : ""}`
 ```
 
 <p class="fonte">Fonte: RAIS (emprego e QL), IBGE (PAM e PPM) e ComexStat, via Base dos Dados e SIDRA.</p>

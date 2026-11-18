@@ -263,3 +263,9 @@ $azul: #1F4E79; $lar: #E07A1F; $cinza: #5D6D7E; $fio: #DCE3EA;
 .voc-leg i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
 .voc-est { display: inline-block; font-size: .74rem; font-weight: 600; border-radius: 10px; padding: 0 8px; color: #fff; }
 .mud-sobe { color: #1E8449; font-weight: 600; } .mud-desce { color: #B03A2E; font-weight: 600; } .mud-igual { color: #95A5A6; }
+
+/* cadeia dominante e lista recolhida das cadeias de presença menor */
+.rx-dom { font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; background: #2C3E50; color: #fff; white-space: nowrap; }
+details.rx-mais { margin-top: .8rem; }
+details.rx-mais > summary { cursor: pointer; font-weight: 600; color: #5D6D7E; padding: .4rem 0; }
+details.rx-mais[open] > summary { margin-bottom: .6rem; }

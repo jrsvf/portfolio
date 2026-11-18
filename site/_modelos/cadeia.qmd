@@ -606,6 +606,8 @@ if (!nrow(rg)) {
   tab <- rg %>% transmute(Instrumento = sprintf('<a href="%s" target="_blank">%s</a>', link, htmltools::htmlEscape(instrumento)), Tipo = tipo,
                           `O que é` = htmltools::htmlEscape(descricao), Norma = htmltools::htmlEscape(norma))
   cat(knitr::kable(tab, format = "html", escape = FALSE, table.attr = "class='table table-sm'"), "\n")
+  if (!any(rg$tipo == "Incentivo fiscal" & !grepl("SUDENE|PRODEPE|PROIND", rg$instrumento)))
+    cat('<p>Nenhum incentivo fiscal estadual próprio desta cadeia foi encontrado na consulta à legislação tributária de Pernambuco por assunto (SEFAZ-PE); valem os instrumentos gerais acima.</p>\n')
   cat(paste0('<p class="fonte">Normas e instrumentos que valem para a cadeia, conferidos em ', max(rg$conferido_em), '. Não é orientação jurídica: confira sempre a versão vigente da norma.</p>\n'))
 }
 ```

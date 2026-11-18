@@ -54,18 +54,22 @@ exportar_vocacoes <- function(v, destino = caminho("site", "dados", "vocacoes.js
   destino
 }
 
-# Retrato de PE: cada município colorido pela cadeia ou nicho de maior QL
-# (com pelo menos 50 empregos formais nela), com o contorno das RDs e, ao
+# Retrato de PE: cada município colorido pela cadeia ou nicho dominante
+# (maior emprego excedente no núcleo, entre as especializadas, com pelo menos 50 empregos), com o contorno das RDs e, ao
 # lado, as três vocações mais fortes de cada RD.
-retrato_vocacoes <- function(locais_cadeia, cad_meta, malha, rd, destino = caminho("site", "imagens")) {
+retrato_vocacoes <- function(locais_cadeia, cad_meta, malha, rd, destino = caminho("site", "imagens"), dominancia = NULL) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) { msg("ggplot2 ausente: retrato pulado"); return(character()) }
   library(ggplot2)
   ult <- max(locais_cadeia$ano)
   nome <- setNames(cad_meta$cadeia, cad_meta$cadeia_id)
   macro <- setNames(cad_meta$macrossetor, cad_meta$cadeia_id)
-  lc <- locais_cadeia %>% filter(ano == ult, emprego >= 50, ql >= 1)
-  top <- lc %>% group_by(id_municipio) %>% slice_max(ql, n = 1, with_ties = FALSE) %>% ungroup() %>%
-    mutate(macro = unname(macro[atividade]), cadeia = unname(nome[atividade]))
+  # cadeia ou nicho de maior emprego excedente no núcleo produtivo (R/27_dominancia.R), com ao menos 50 empregos;
+  # sem a tabela de dominância, cai no critério antigo (maior QL do emprego total)
+  top <- if (NROW(dominancia)) dominancia %>% filter(especializada, emprego_nucleo >= 50) %>%
+    group_by(id_municipio) %>% slice_max(excedente, n = 1, with_ties = FALSE) %>% ungroup() %>%
+    transmute(id_municipio, atividade = cadeia_id, ql = ql_nucleo) else
+    locais_cadeia %>% filter(ano == ult, emprego >= 50, ql >= 1) %>% group_by(id_municipio) %>% slice_max(ql, n = 1, with_ties = FALSE) %>% ungroup()
+  top <- top %>% mutate(macro = unname(macro[atividade]), cadeia = unname(nome[atividade]))
   m <- malha %>% filter(id_municipio != "2605459") %>% left_join(top %>% select(id_municipio, macro, cadeia, ql), by = "id_municipio")
   m$macro[is.na(m$macro)] <- "Sem especialização forte"
   rdg <- m %>% left_join(rd %>% select(id_municipio, rd), by = "id_municipio") %>% group_by(rd) %>% summarise(.groups = "drop")
@@ -91,7 +95,7 @@ retrato_vocacoes <- function(locais_cadeia, cad_meta, malha, rd, destino = camin
     geom_sf(data = rdg, fill = NA, color = "#1E2B38", linewidth = 0.45) +
     scale_fill_manual(values = cores, breaks = names(cores), name = NULL, drop = TRUE) +
     labs(title = "Retrato das vocações de Pernambuco",
-         subtitle = paste0("Cada município pela cadeia ou nicho em que é mais especializado (QL do emprego formal maior ou igual a 1, com ao menos 50 empregos), RAIS ", ult),
+         subtitle = paste0("Cada município pela cadeia ou nicho que mais pesa nele: entre as especializadas (QL do núcleo produtivo maior ou igual a 1, com ao menos 50 empregos), a de maior emprego excedente. RAIS ", ult),
          caption = paste0("As duas vocações mais fortes de cada Região de Desenvolvimento (QL entre parênteses):\n", leg,
                           "\n\nFonte: RAIS (MTE), via Base dos Dados. Elaboração própria. Fernando de Noronha fora do mapa.")) +
     theme_void(base_size = 11) +

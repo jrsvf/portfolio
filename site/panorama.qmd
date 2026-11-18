@@ -430,18 +430,25 @@ tabela(k %>% transmute(Município = municipio, `Índice de Krugman` = round(krug
 
 ### Cadeia dominante
 
+A cadeia dominante é a que mais pesa no município: entre as cadeias em que ele é especializado (QL do núcleo produtivo maior ou igual a 1, sem os elos de comércio), a de maior **emprego excedente**, o emprego que o município tem a mais do que teria se seguisse a média do estado. A medida junta tamanho e especialização, para que uma cadeia pequena e muito concentrada não passe na frente da que de fato move a economia local.
+
 ```{r}
-dom <- locais_cadeia %>% filter(ano == ult, emprego >= par$indicadores$emprego_minimo,
-                               atividade %in% cad$meta$cadeia_id[cad$meta$grupo == "cadeia"]) %>%
-  group_by(id_municipio) %>% slice_max(ql, n = 1, with_ties = FALSE) %>% ungroup() %>%
-  left_join(cad$meta %>% select(cadeia_id, cadeia), by = c("atividade" = "cadeia_id"))
+dominancia <- opcional("dominancia")
+dom <- if (NROW(dominancia)) cadeia_dominante(dominancia, cad$meta, par$indicadores$emprego_minimo) %>%
+    transmute(id_municipio, cadeia, ql = ql_nucleo, emprego = emprego_nucleo, excedente) else
+  locais_cadeia %>% filter(ano == ult, emprego >= par$indicadores$emprego_minimo, ql >= 1,
+                           atividade %in% cad$meta$cadeia_id[cad$meta$grupo == "cadeia"]) %>%
+    mutate(excedente = emprego * (1 - 1 / ql)) %>%
+    group_by(id_municipio) %>% slice_max(excedente, n = 1, with_ties = FALSE) %>% ungroup() %>%
+    left_join(cad$meta %>% select(cadeia_id, cadeia), by = c("atividade" = "cadeia_id")) %>% select(id_municipio, cadeia, ql, emprego, excedente)
 m <- malha %>% left_join(dom, by = "id_municipio")
 pal <- leaflet::colorFactor(PALETA$categorias, domain = m$cadeia, na.color = "#F2F3F4")
 leaflet(m) %>%
   addPolygons(fillColor = ~pal(cadeia), weight = 0.6, color = "white", fillOpacity = 0.85,
-              label = ~lapply(sprintf("<strong>%s</strong><br/>%s<br/>QL %s", name_muni, coalesce(cadeia, "sem cadeia acompanhada"),
-                                      fmt_num(ql, 2)), htmltools::HTML)) %>%
-  addLegend("bottomright", pal = pal, values = ~cadeia, title = "Cadeia com maior QL", na.label = "Nenhuma")
+              label = ~lapply(ifelse(is.na(cadeia), sprintf("<strong>%s</strong><br/>nenhuma cadeia especializada", name_muni),
+                                     sprintf("<strong>%s</strong><br/>%s<br/>%s empregos no núcleo, QL %s<br/>%s a mais que a média do estado",
+                                             name_muni, cadeia, fmt_num(emprego), fmt_num(ql, 2), fmt_num(excedente))), htmltools::HTML)) %>%
+  addLegend("bottomright", pal = pal, values = ~cadeia, title = "Cadeia dominante", na.label = "Nenhuma especializada")
 ```
 
 :::
