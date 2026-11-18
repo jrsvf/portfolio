@@ -15,7 +15,7 @@ lt <- readr::read_csv(file.path(Sys.getenv("PASTA_PROJETO"), "config", "linha_do
                       col_types = readr::cols(.default = "c"), na = "")
 lt[is.na(lt)] <- ""
 perfil <- tryCatch(ler_base("perfil_cad"), error = function(e) NULL)
-n_marcos <- sum(lt$tipo %in% c("marco", "fator"))
+n_marcos <- sum(lt$tipo %in% c("marco", "fator", "previsto"))
 n_ativ <- sum(lt$tipo == "trilha")
 anos_hist <- as.integer(format(Sys.Date(), "%Y")) - 1535
 
@@ -64,12 +64,14 @@ O açúcar fez a capitania, o gado e o algodão abriram o interior, as fábricas
 #| echo: false
 cat(sprintf('<div class="h-numeros"><div><b>%d</b><span>anos desde Duarte Coelho</span></div><div><b>%d</b><span>atividades na linha do tempo</span></div><div><b>%d</b><span>marcos e fatores, cada um com fonte</span></div></div>', anos_hist, n_ativ, n_marcos))
 ```
+
+![Do sertão ao mar: o que cada região faz, em ilustração.](imagens/panorama_pe.svg){.h-panorama fig-alt="Ilustração de Pernambuco de oeste a leste: fruta irrigada e vinhedos no São Francisco, mandacarus, gesso, vento e sol no Sertão e no Araripe, gado, feira e confecção no Agreste, cana e usina na Mata, cidade, porto e mar no litoral."}
 :::
 
 ## A linha do tempo {.unnumbered}
 
 ::: {.h-corpo}
-Cada faixa é uma atividade. A cor diz em que fase ela estava: surgindo, no auge, em declínio ou se refazendo. Os pontos são marcos; passe o mouse para ler e clique para fixar e abrir a fonte. O nome da atividade leva ao capítulo. A escala do tempo muda de ritmo nas linhas pontilhadas: os séculos coloniais aparecem comprimidos para dar espaço ao que aconteceu depois de 1850.
+Cada faixa é uma atividade. A cor diz em que fase ela estava: surgindo, no auge, em declínio ou se refazendo. Os pontos são marcos; passe o mouse para ler e clique para fixar e abrir a fonte. O nome da atividade leva ao capítulo. A escala do tempo muda de ritmo nas linhas pontilhadas: os séculos coloniais aparecem comprimidos para dar espaço ao que aconteceu depois de 1850. Depois da linha de hoje, os círculos tracejados são o que já está contratado ou previsto.
 :::
 
 ```{r}
@@ -87,6 +89,7 @@ cat('<script type="application/json" id="dados-linha">', jsonlite::toJSON(lt, da
       <span><i class="lt-sw" style="background:#2C5BA8"></i>Retomada</span>
       <span><i class="lt-sw aprox"></i>Início aproximado</span>
       <span><i class="lt-sw marco"></i>Marco</span>
+      <span><i class="lt-sw prev"></i>Previsto</span>
     </div>
     <label><input type="checkbox" id="lt-fatores" checked> Mostrar fatores transversais</label>
   </div>
@@ -103,9 +106,9 @@ cat('<script type="application/json" id="dados-linha">', jsonlite::toJSON(lt, da
 
 ## [1]{.h-num} O açúcar que fez a capitania
 
-Duarte Coelho chegou em 1535 com cana trazida da Ilha da Madeira e a ideia de que a terra molhada da várzea pagaria a aventura. Pagou. Nos primeiros anos já havia cerca de trinta engenhos, e ao longo do século XVI Pernambuco foi a colônia mais rica que Portugal tinha no Brasil. O engenho era fábrica, fazenda e vila ao mesmo tempo, e o trabalho era de africanos escravizados, porque a mão de obra indígena não bastava.
+Duarte Coelho chegou em 1535 com cana trazida da Ilha da Madeira e a ideia de que a terra molhada da várzea pagaria a aventura. Pagou. Nos primeiros anos já havia cerca de trinta engenhos, e Pernambuco se tornou o centro da economia açucareira da colônia. O engenho era fábrica, fazenda e vila ao mesmo tempo, e o trabalho era de africanos escravizados, porque a mão de obra indígena não bastava.
 
-A riqueza atraiu os holandeses, que ficaram de 1630 a 1654. A guerra quebrou engenhos, a Bahia passou à frente, e depois da expulsão os próprios holandeses levaram a técnica para o Caribe, que virou concorrente. O açúcar nunca saiu da Mata, mas Pernambuco não voltou a ser o centro do mundo açucareiro.
+A riqueza atraiu os holandeses, que ficaram de 1630 a 1654. A guerra quebrou engenhos e, depois da expulsão, os próprios holandeses levaram a técnica para o Caribe, que virou concorrente. O açúcar nunca saiu da Mata, mas Pernambuco não voltou a ser o centro do mundo açucareiro.
 
 ::: {.h-ficha}
 ::: {.puxou}
@@ -270,9 +273,9 @@ cartao_hoje(c("textil_confeccoes", "gesso"))
 
 ## [7]{.h-num} Porto, refinaria e carro
 
-Suape nasceu no papel em 7 de novembro de 1978 e recebeu o primeiro navio em 1983. Passou duas décadas como promessa, até virar, nos anos 2000, o lugar do maior ciclo de investimento da história recente do estado. Em 2005 foi fundado o Estaleiro Atlântico Sul, que lançou seu primeiro navio em 2010; em 2014 a Refinaria Abreu e Lima começou a operar, e o combustível passou a liderar as exportações do estado.
+Suape foi fundado em 7 de novembro de 1978 e passou quase três décadas como promessa, até virar, nos anos 2000, o lugar do maior ciclo de investimento recente do estado. Em 2007 começaram as obras do Estaleiro Atlântico Sul, cujo primeiro navio, o João Cândido, encerrou mais de dez anos sem construção naval no país; em 2014 a Refinaria Abreu e Lima começou a operar, e o combustível passou a liderar as exportações do estado.
 
-A crise da Petrobras e da indústria naval derrubou o ciclo: o estaleiro parou em 2019 e só voltou em outubro de 2021. A refinaria recebe nova rodada de investimento, de R$ 12 bilhões. No norte, em Goiana, a fábrica da Jeep começou a produzir em 2015 e passou de um milhão de veículos em 2023, trazendo fornecedores para uma região até então de cana.
+A crise da Petrobras e da indústria naval derrubou o ciclo: dos 22 navios encomendados ao estaleiro, 7 foram cancelados, e o quadro, que chegou a cerca de 7 mil funcionários, encolheu. A refinaria agora recebe nova rodada de investimento, de R$ 12 bilhões. No norte, em Goiana, a fábrica da Jeep começou a produzir em 2015 e passou de um milhão de veículos em 2023, trazendo fornecedores para uma região até então de cana.
 
 ::: {.h-ficha}
 ::: {.puxou}
@@ -301,14 +304,14 @@ cartao_hoje(c("petroquimica_plasticos", "automotivo"))
 
 ## [8]{.h-num} Código e vento
 
-Em julho de 2000 o Recife Antigo, onde ficava o porto do tempo dos holandeses, virou Porto Digital, com dinheiro da venda da Celpe e gente formada no Centro de Informática da UFPE. Em 2020 eram mais de 330 empresas e 11 mil trabalhadores. É o primeiro ciclo de Pernambuco que não depende de terra, água ou porto.
+Em 2000 o Recife Antigo, onde ficava o porto do tempo dos holandeses, virou Porto Digital, então um projeto incipiente. Vinte e cinco anos depois, são mais de 475 empresas e 21,5 mil empregos diretos. É o primeiro ciclo de Pernambuco que não depende de terra, água ou porto.
 
 O mais novo é o do vento e do sol. Em 2015 entrou em operação em Tacaratu o primeiro parque híbrido do país, eólico e solar no mesmo lugar, ampliado em 2021. O Sertão, que por séculos foi lugar de seca, passa a vender energia.
 
 ::: {.h-ficha}
 ::: {.puxou}
 **O que puxou**
-Universidade, incentivo municipal e estadual, vento constante e sol forte.
+Universidades, empresas reunidas no mesmo bairro, vento constante e sol forte.
 :::
 ::: {.derrubou}
 **O que trava**
@@ -335,6 +338,120 @@ O que a história explica dos dados
 Quase nenhum ciclo de Pernambuco acabou de verdade: cada um deixou cidades, empresas e saberes que continuam no mapa das vocações. A cana segue na Mata, o leite no Agreste, a confecção no polo da sulanca, o gesso no Araripe, a fruta no Vale. O que muda é o peso de cada um e quem chega por cima. Para ver onde cada atividade está hoje, veja as [vocações por cadeia](vocacoes-cadeias.qmd), o [panorama](panorama.qmd) e as páginas de cada [cadeia e nicho](cadeias/index.qmd).
 :::
 
+::: {#futuro .h-capitulo}
+::: {.h-kicker}
+Daqui para a frente
+:::
+
+## [10]{.h-num} O que vem por aí
+
+Os próximos ciclos vão depender dos mesmos fatores que fizeram e desfizeram os anteriores: água, energia, estrada e porto, tributo e gente. A diferença é que, desta vez, quase todos estão em obra ou em transição ao mesmo tempo. Abaixo, o que já está contratado ou previsto, e o que pesa contra cada aposta. As datas são as de quem executa e podem mudar.
+
+::: {.h-futuro}
+::: {.h-fut}
+[Água · 2026]{.h-fut-tag}
+
+#### O São Francisco chega ao Agreste
+
+Hoje cerca de 900 mil pessoas em 10 cidades recebem água da transposição. A 1ª etapa da Adutora do Agreste deve chegar a 23 municípios e cerca de 1,3 milhão de pessoas até o fim de 2026. É a região da confecção e do leite, que cresceu com pouca água.
+
+**O que pesa contra:** a 2ª etapa, para mais 45 municípios, ainda depende de recursos federais.
+
+::: {.h-fut-fonte}
+[Movimento Econômico, 08/2025](https://movimentoeconomico.com.br/geral/infraestrutura/2025/08/26/mais-de-900-mil-pessoas-recebem-agua-do-sao-francisco-em-pernambuco/); [Agência Gov, 01/2026](https://agenciagov.ebc.com.br/noticias/202601/adutora-do-agreste-avanca-e-transforma-abastecimento-de-agua-no-interior-de-pernambuco)
+:::
+:::
+
+::: {.h-fut}
+[Energia · 2026]{.h-fut-tag}
+
+#### Vento e sol viram combustível
+
+Suape recebe a primeira fábrica de e-metanol do país, da European Energy, com R$ 2 bilhões. O combustível é feito com energia renovável, e o vento e o sol do Sertão ganham um comprador industrial dentro do estado.
+
+**O que pesa contra:** é um mercado novo, com preço e demanda internacionais ainda em formação.
+
+::: {.h-fut-fonte}
+[Movimento Econômico, 04/2024](https://movimentoeconomico.com.br/economia/energia/2024/04/12/pe-tera-1a-industria-de-e-metanol-do-brasil-com-investimento-de-r-2-bilhoes/)
+:::
+:::
+
+::: {.h-fut}
+[Refino · 2029]{.h-fut-tag}
+
+#### A refinaria dobra de tamanho
+
+Com o Trem 2, contratado por R$ 4,9 bilhões, a Abreu e Lima passa de 130 mil para 260 mil barris por dia e vira a segunda maior refinaria da Petrobras.
+
+**O que pesa contra:** a transição energética encurta o horizonte do combustível fóssil.
+
+::: {.h-fut-fonte}
+[eixos, 06/2025](https://eixos.com.br/combustiveis-e-bioenergia/petrobras-assina-contrato-de-49-bilhoes-de-reais-com-consag-engenharia-para-construcao-do-trem-2-da-rnest/)
+:::
+:::
+
+::: {.h-fut}
+[Logística · sem data]{.h-fut-tag}
+
+#### A Transnordestina em Pernambuco
+
+O trecho Custódia-Arcoverde foi licitado e teve vencedora homologada em 2026. O Salgueiro-Suape, parado há mais de dez anos, segue sem data, à espera do TCU. É o trilho que ligaria o gesso do Araripe e o Sertão ao porto.
+
+**O que pesa contra:** a obra começou em 2006, com entrega prevista para 2010.
+
+::: {.h-fut-fonte}
+[Diario de Pernambuco, 10/2025](https://www.diariodepernambuco.com.br/economia/2025/10/11699452-transnordestina-tem-edital-de-licitacao-publicado-entenda-a-historia-da-ferrovia.html); [Movimento Econômico, 07/2026](https://movimentoeconomico.com.br/geral/infraestrutura/transnordestina/2026/07/03/ferrovia-salgueiro-suape-segue-sem-data-para-retomada-das-obras/)
+:::
+:::
+
+::: {.h-fut}
+[Tributo · 2027 a 2033]{.h-fut-tag}
+
+#### O fim da guerra fiscal
+
+A reforma tributária acaba com os incentivos de ICMS até 2033, e a cobrança passa para o destino, o que favorece estados consumidores como Pernambuco. Atrair empresas vai depender mais de infraestrutura, segurança jurídica e inovação do que de desconto de imposto.
+
+**O que pesa contra:** dois sistemas convivendo até 2033, com risco de disputa sobre créditos e benefícios.
+
+::: {.h-fut-fonte}
+[Movimento Econômico, 07/2026](https://movimentoeconomico.com.br/geral/redacao/2026/07/30/reforma-tributaria-pernambuco-cria-duas-frentes-para-a-transicao/)
+:::
+:::
+
+::: {.h-fut}
+[Gente · contínuo]{.h-fut-tag}
+
+#### O ciclo que depende de cabeça
+
+Aos 25 anos, o Porto Digital passa de 475 empresas e 21,5 mil empregos diretos. É o primeiro ciclo do estado em que o insumo principal é gente formada, e não terra, água ou porto.
+
+**O que pesa contra:** a disputa por talentos agora é com o mundo inteiro, no trabalho remoto.
+
+::: {.h-fut-fonte}
+[Movimento Econômico, 12/2025](https://movimentoeconomico.com.br/tecnologia/2025/12/12/porto-digital-25-anos-hub-de-tecnologia-e-talentos-transforma-economia-do-ne/)
+:::
+:::
+:::
+
+::: {.h-citacao}
+Se a história serve de guia, o próximo ciclo vai nascer onde água, energia e logística chegarem primeiro.
+:::
+:::
+
+::: {#leituras .h-capitulo}
+## Para ir mais fundo {.unnumbered}
+
+::: {.h-leituras}
+- **Celso Furtado, *Formação Econômica do Brasil* (1959).** A economia do açúcar, a pecuária como extensão dela e a concorrência das Antilhas.
+- **Caio Prado Jr., *História Econômica do Brasil* (1945).** O renascimento agrícola do fim do século XVIII, com o algodão, e a economia do Império.
+- **Manuel Correia de Andrade, *A Terra e o Homem no Nordeste* (1963).** Mata, Agreste e Sertão: cana, gado e algodão, região por região.
+- **Evaldo Cabral de Mello, *Olinda Restaurada* (1975) e *O Norte Agrário e o Império* (1984).** A guerra holandesa e o açúcar; o Norte perdendo escravizados e poder para o café.
+- **Peter Eisenberg, *Modernização sem mudança* (1977).** Engenhos centrais, usinas, ferrovia e abolição no açúcar de Pernambuco, de 1840 a 1910.
+- **Francisco de Oliveira, *Elegia para uma re(li)gião* (1977).** A SUDENE, o planejamento e os conflitos do Nordeste.
+- **Gadiel Perruci, *A República das Usinas* (1978).** O açúcar pernambucano na Primeira República.
+:::
+:::
+
 ::: {.h-capitulo}
 ## Os marcos em tabela {.unnumbered}
 
@@ -342,9 +459,9 @@ Quase nenhum ciclo de Pernambuco acabou de verdade: cada um deixou cidades, empr
 
 ```{r}
 trilhas <- lt %>% dplyr::filter(tipo %in% c("trilha", "trilha_fator")) %>% dplyr::select(trilha, nome = titulo)
-tab <- lt %>% dplyr::filter(tipo %in% c("marco", "fator")) %>%
+tab <- lt %>% dplyr::filter(tipo %in% c("marco", "fator", "previsto")) %>%
   dplyr::left_join(trilhas, by = "trilha") %>%
-  dplyr::mutate(ano = as.integer(inicio), Quando = ifelse(fim != "", paste(inicio, "a", fim), inicio),
+  dplyr::mutate(ano = as.integer(inicio), Quando = ifelse(tipo == "previsto", paste(inicio, "(previsto)"), ifelse(fim != "", paste(inicio, "a", fim), inicio)),
                 Fonte = purrr::map2_chr(fonte, link, function(f, l) {
                   fs <- strsplit(f, " | ", fixed = TRUE)[[1]]; ls <- strsplit(l, " | ", fixed = TRUE)[[1]]
                   paste(ifelse(nzchar(ls[seq_along(fs)]) & !is.na(ls[seq_along(fs)]),

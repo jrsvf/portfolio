@@ -90,3 +90,33 @@ body.historia main.content { max-width: 1100px; }
 @media (max-width: 760px) { .h-ficha { grid-template-columns: 1fr; } .h-ficha > div + div { border-left: none; border-top: 1px solid #E6DED2; } }
 @media print { .linha-tempo .lt-controles label { display: none; } .lt-dica { display: none !important; } }
 .historia .h-capitulo p.fonte { font: .8rem/1.4 "Inter", sans-serif; color: #7F8C8D; }
+
+.historia .h-leituras li { font-family: "Source Serif 4", Georgia, serif; font-size: 1.02rem; line-height: 1.55; color: #2B2620; margin-bottom: .6rem; max-width: 72ch; }
+
+.lt-era.futuro { fill: #F1ECE3; }
+.lt-hoje { stroke: #8A6D3B; stroke-width: 1.5; }
+.lt-tracejado { stroke: #8C8073; stroke-width: 1.5; stroke-dasharray: 3 4; }
+.lt-previsto { cursor: pointer; transition: opacity .15s; }
+.lt-ponto-prev { fill: #FBF8F3; stroke: #8A6D3B; stroke-width: 2; stroke-dasharray: 3 2; }
+.lt-previsto:hover .lt-ponto-prev, .lt-previsto:focus .lt-ponto-prev { fill: #E0A63C; }
+.lt-sw.prev { width: 10px; height: 10px; border-radius: 50%; background: #FBF8F3; border: 2px dashed #8A6D3B; }
+.historia .h-kicker { display: flex; align-items: center; gap: 12px; }
+.h-icone { color: #8A6D3B; display: inline-flex; width: 44px; height: 44px; border: 1px solid #E6DED2; border-radius: 50%; align-items: center; justify-content: center; background: #FFFDF9; }
+.h-icone svg { width: 30px; height: 30px; }
+.h-panorama { margin: 1.6rem 0 0; }
+.h-panorama img { width: 100%; height: auto; display: block; }
+.h-panorama figcaption { font-size: .78rem; color: #8C8073; margin-top: .3rem; }
+.h-futuro { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 1.4rem 0; }
+.h-fut { background: #FFFDF9; border: 1px solid #E6DED2; border-radius: 12px; padding: 16px 18px; position: relative; }
+.h-fut .h-fut-tag { font: 600 .7rem "Inter", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #8A6D3B; }
+.h-fut .h-fut-ano { position: absolute; top: 14px; right: 16px; font: 700 1.2rem "Fraunces", Georgia, serif; color: #C9BBA8; }
+.h-fut h4 { font: 700 1.12rem/1.25 "Fraunces", Georgia, serif; margin: .35rem 0 .45rem; color: #1F1A14; }
+.historia .h-fut p { font: .92rem/1.5 "Inter", sans-serif; color: #3A332B; margin: 0 0 .5rem; }
+.historia .h-fut p.h-fut-risco { color: #9A3B2E; font-size: .85rem; }
+.h-fut .h-fut-fonte { font-size: .72rem; color: #8C8073; }
+.h-fut .h-fut-fonte a { color: #2C5BA8; }
+.historia .h-fut strong { color: #9A3B2E; }
+.historia .h-fut .h-fut-fonte p { font-size: .72rem; color: #8C8073; margin: .2rem 0 0; }
+.historia .h-fut h4 { font: 700 1.12rem/1.25 "Fraunces", Georgia, serif; margin: .35rem 0 .45rem; color: #1F1A14; }
+.historia .h-panorama img, .h-hero img.h-panorama { width: 100%; height: auto; margin-top: 1.6rem; }
+.historia figcaption, .historia .figure-caption { color: #8C8073 !important; font-size: .8rem; }

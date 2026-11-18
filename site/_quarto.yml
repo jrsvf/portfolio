@@ -11,6 +11,7 @@ project:
   resources:
     - "imagens/*.pdf"
     - "imagens/*.docx"
+    - "imagens/*.svg"
     - "dados/*.csv"
     - "dados/*.json"
     - "dados/*.geojson"
