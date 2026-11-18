@@ -10,10 +10,12 @@ project:
     - "!paineis.qmd"
   resources:
     - "imagens/*.pdf"
+    - "imagens/*.docx"
     - "dados/*.csv"
     - "dados/*.json"
     - "dados/*.geojson"
     - "territorio.js"
+    - "historia.js"
 
 lang: pt-BR
 
@@ -46,6 +48,8 @@ website:
             href: vocacoes-cadeias.qmd
           - text: "Vocações (todas as atividades)"
             href: vocacoes.qmd
+      - text: "História"
+        href: historia.qmd
       - text: "Sobre os dados"
         menu:
           - text: "Metodologia"

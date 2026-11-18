@@ -146,3 +146,9 @@ export function blocoAssociativas(a, {html}) {
         <td style="text-align:left">${d.atividade ?? "–"}</td><td style="text-align:left">${etiquetasCad(d.cadeias, html)}${d.via === "nome" ? html`<span class="voc-cod"> pelo nome</span>` : ""}</td></tr>`)}</tbody></table></div>
       ${a.total_lista > a.lista.length ? html`<p class="fonte">Mostrando ${a.lista.length} de ${nf(a.total_lista)} cooperativas e associações ligadas à produção.</p>` : ""}` : ""}</div>`;
 }
+
+// Território: semiárido, tipologia rural-urbana, rede de cidades, acesso aos centros e água
+export function blocoTerritorio(t, {html}) {
+  if (!t || !t.length) return html`<p>A camada territorial ainda não foi calculada nesta atualização.</p>`;
+  return cartoes(html, t.map(d => [d.rotulo, d.valor, d.nota ?? ""]));
+}

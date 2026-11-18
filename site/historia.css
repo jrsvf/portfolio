@@ -1,0 +1,92 @@
+/* História econômica: página editorial, papel quente e serifa nos títulos */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap');
+
+body.historia { background: #FBF8F3; }
+body.historia #quarto-content, body.historia main { background: transparent; }
+body.historia #title-block-header { display: none; }
+body.historia main.content { max-width: 1100px; }
+
+.historia .h-corpo p, .historia .h-capitulo p { font-family: "Source Serif 4", Georgia, serif; font-size: 1.12rem; line-height: 1.72; color: #2B2620; max-width: 68ch; }
+.historia h2, .historia h3, .historia .h-hero h1 { font-family: "Fraunces", Georgia, serif; letter-spacing: -0.01em; color: #1F1A14; }
+
+/* abertura */
+.h-hero { padding: 3.2rem 0 1.6rem; border-bottom: 1px solid #E6DED2; margin-bottom: 2rem; }
+.historia .h-hero .h-sobre, .historia .h-hero .h-sobre p { font: 600 .78rem/1 "Inter", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #8A6D3B; margin-bottom: .9rem; }
+.h-hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 700; line-height: 1.04; margin: 0 0 1rem; max-width: 20ch; }
+.historia .h-hero .h-lead, .historia .h-hero .h-lead p { font-family: "Source Serif 4", Georgia, serif; font-size: 1.3rem; line-height: 1.55; color: #4A4238; max-width: 60ch; }
+.h-numeros { display: flex; gap: 2.4rem; flex-wrap: wrap; margin-top: 1.8rem; }
+.h-numeros div { min-width: 120px; }
+.h-numeros b { display: block; font: 700 2.2rem/1 "Fraunces", Georgia, serif; color: #1F1A14; }
+.h-numeros span { font-size: .85rem; color: #6B6052; }
+
+/* linha do tempo */
+.linha-tempo { position: relative; margin: 1.2rem 0 2.6rem; background: #FFFDF9; border: 1px solid #E6DED2; border-radius: 10px; padding: 14px 10px 6px; }
+.lt-controles { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; padding: 0 8px 8px; font-size: .86rem; color: #4A4238; }
+.lt-legenda { display: flex; gap: 16px; flex-wrap: wrap; }
+.lt-legenda span { display: inline-flex; align-items: center; gap: 6px; }
+.lt-sw { display: inline-block; width: 18px; height: 10px; border-radius: 3px; }
+.lt-sw.aprox { background: linear-gradient(90deg, rgba(110,96,82,0), #6E6052); }
+.lt-sw.marco { width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 2px solid #2B2620; }
+.lt-controles label { display: inline-flex; gap: 6px; align-items: center; margin-left: auto; cursor: pointer; }
+.lt-tela { overflow-x: auto; }
+.lt-tela svg { display: block; font-family: "Inter", sans-serif; }
+.lt-era { fill: transparent; } .lt-era.par { fill: #F6F1E8; }
+.lt-era-rot { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; fill: #A3968A; font-weight: 600; }
+.lt-grade { stroke: #EFE8DD; stroke-width: 1; }
+.lt-quebra { stroke: #C9BBA8; stroke-width: 1; stroke-dasharray: 2 4; }
+.lt-ano { font-size: 11px; fill: #8C8073; font-variant-numeric: tabular-nums; }
+.lt-trilho { stroke: #E6DED2; stroke-width: 1; } .lt-trilho.f { stroke: #EFE8DD; }
+.lt-rotulo text { font-size: 13px; font-weight: 600; fill: #2B2620; cursor: pointer; }
+.lt-rotulo:hover text, .lt-rotulo:focus text { fill: #8A6D3B; text-decoration: underline; }
+.lt-rotulo-f { font-size: 12px; fill: #6B6052; }
+.lt-fase { transition: opacity .15s; cursor: pointer; }
+.lt-marco { cursor: pointer; transition: opacity .15s; }
+.lt-alvo { fill: transparent; }
+.lt-ponto { fill: #fff; stroke: #2B2620; stroke-width: 2; }
+.lt-marco:hover .lt-ponto, .lt-marco:focus .lt-ponto { fill: #2B2620; }
+.apagado { opacity: .18; }
+.lt-secao { font: 600 11px "Inter", sans-serif; letter-spacing: .12em; text-transform: uppercase; fill: #8A6D3B; }
+.lt-divisa { stroke: #D9CDBC; }
+.lt-fator { cursor: pointer; }
+.lt-faixa { fill: #D9CDBC; opacity: .7; }
+.lt-losango { fill: #6E6052; stroke: #FFFDF9; stroke-width: 2; }
+.lt-fator.secas .lt-faixa { fill: #E3C9A4; }
+.lt-fator:hover .lt-losango, .lt-fator:focus .lt-losango { fill: #2B2620; }
+.lt-regua { stroke: #8A6D3B; stroke-width: 1; opacity: 0; pointer-events: none; }
+.lt-regua-ano { font-size: 11px; font-weight: 700; fill: #8A6D3B; opacity: 0; pointer-events: none; }
+.lt-dica { display: none; position: absolute; z-index: 20; width: 300px; background: #fff; border: 1px solid #E0D6C8; border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(43, 38, 32, .14); padding: 12px 14px; font-size: .85rem; color: #2B2620; }
+.lt-dica.fixa { border-color: #8A6D3B; }
+.lt-dica-anos { font-size: .75rem; color: #8A6D3B; font-weight: 700; display: flex; gap: 6px; align-items: center; letter-spacing: .04em; }
+.lt-dica-tit { font: 700 1.02rem/1.25 "Fraunces", Georgia, serif; margin: 3px 0 5px; }
+.lt-dica-txt { line-height: 1.45; }
+.lt-dica-fonte { font-size: .74rem; color: #6B6052; margin-top: 8px; line-height: 1.35; }
+.lt-dica-fonte a { color: #2C5BA8; }
+.lt-dica-ajuda { font-size: .7rem; color: #A3968A; margin-top: 6px; }
+.lt-nota { font-size: .8rem; color: #6B6052; padding: 4px 8px 6px; }
+
+/* capítulos */
+.h-capitulo { padding: 2.4rem 0 1rem; border-top: 1px solid #E6DED2; }
+.historia .h-kicker, .historia .h-kicker p { font: 600 .76rem/1 "Inter", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #8A6D3B; margin-bottom: .6rem; }
+.h-capitulo h2 { font-size: 2rem; font-weight: 700; margin: 0 0 1rem; border: none; }
+.h-capitulo .h-num { font: 400 1rem "Fraunces", serif; color: #A3968A; margin-right: .4rem; }
+.h-ficha { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 1.4rem 0 1.2rem; border: 1px solid #E6DED2; border-radius: 10px; background: #FFFDF9; max-width: 900px; }
+.h-ficha > div { padding: 14px 16px; }
+.historia .h-ficha p { font: .95rem/1.5 "Inter", sans-serif; color: #3A332B; margin: 0; }
+.h-ficha > div + div { border-left: 1px solid #E6DED2; }
+.h-ficha strong { display: block; font: 600 .72rem "Inter", sans-serif; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.h-ficha .puxou strong { color: #1E7F68; } .h-ficha .derrubou strong { color: #9A3B2E; } .h-ficha .ficou strong { color: #2C5BA8; }
+.h-hoje { display: flex; flex-wrap: wrap; gap: 12px; margin: .4rem 0 1rem; }
+.h-hoje a.h-cartao { display: flex; gap: 14px; align-items: center; padding: 10px 14px; border-radius: 10px; background: #fff; border: 1px solid #E6DED2;
+  text-decoration: none; color: #2B2620; min-width: 300px; }
+.h-hoje a.h-cartao:hover { border-color: #8A6D3B; }
+.h-cartao .h-cad { font-size: .78rem; color: #6B6052; }
+.h-cartao .h-val { font: 700 1.35rem/1.1 "Fraunces", serif; }
+.h-cartao .h-var { font-size: .78rem; color: #6B6052; }
+.h-cartao svg { flex: none; }
+.historia .h-citacao, .historia .h-citacao p { font: 400 1.5rem/1.4 "Fraunces", Georgia, serif; color: #4A4238; border-left: 3px solid #E0A63C; padding: .2rem 0 .2rem 1.2rem; margin: 1.6rem 0; max-width: 40ch; }
+.h-fontes { font-size: .85rem; color: #4A4238; }
+.h-fontes li { margin-bottom: .35rem; }
+@media (max-width: 760px) { .h-ficha { grid-template-columns: 1fr; } .h-ficha > div + div { border-left: none; border-top: 1px solid #E6DED2; } }
+@media print { .linha-tempo .lt-controles label { display: none; } .lt-dica { display: none !important; } }
+.historia .h-capitulo p.fonte { font: .8rem/1.4 "Inter", sans-serif; color: #7F8C8D; }

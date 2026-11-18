@@ -559,6 +559,8 @@ if (tem_ct) {
   grupo_ish <- function(x) dplyr::case_when(grepl("^m[ií]n", x, ignore.case = TRUE) ~ "Mínima", grepl("^baix", x, ignore.case = TRUE) ~ "Baixa",
                                             grepl("^m[eé]d", x, ignore.case = TRUE) ~ "Média", grepl("^alt", x, ignore.case = TRUE) ~ "Alta",
                                             grepl("^m[aá]x", x, ignore.case = TRUE) ~ "Máxima", TRUE ~ NA_character_)
+  for (cc in c("semiarido", "tipologia", "hierarquia", "seguranca_hidrica", "acessibilidade_classe", "distancia_metropole", "abastecimento", "manancial"))
+    if (!cc %in% names(ct)) ct[[cc]] <- NA
   ct <- ct %>% mutate(semiarido_txt = ifelse(is.na(semiarido), NA, ifelse(semiarido, "No semiárido", "Fora do semiárido")),
                       tip = grupo_tip(tipologia), reg = grupo_reg(hierarquia), ish = grupo_ish(seguranca_hidrica))
   pop <- opcional("pib_pop")
