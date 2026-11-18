@@ -161,6 +161,9 @@ list(
   tar_target(concentracao,
              concentracao_espacial(locais_cadeia, par_ind$ql_minimo, par_ind$emprego_minimo)),
   tar_target(serie_comp, serie_comparada(bq_rais_br, cad$elos, uf)),
+  # camada territorial: semiárido, tipologia rural-urbana, acessibilidade, REGIC e água (R/26_camada_territorial.R)
+  tar_target(arq_territorio, baixar_territorio(), cue = tar_cue(mode = "always")),
+  tar_target(camada_territorial, montar_camada_territorial(arq_territorio, bq_municipios, rd, uf_codigo)),
   # arranjo produtivo: ICN, LISA e completude dos elos (R/25_arranjo.R)
   tar_target(arranjo, montar_arranjo(cad_mun, total_mun, cad$elos, cad$meta, malha, bq_municipios, rd)),
   tar_target(caged_cad, caged_cadeia(bq_caged_pe, cad$elos)),
@@ -286,7 +289,8 @@ list(
   tar_target(vigia, vigiar_fontes(list(bq_rais_pe = bq_rais_pe, bq_caged_pe = bq_caged_pe, bq_comex_pe = bq_comex_pe, bq_pib_pop = bq_pib_pop,
                                        sidra_bruto = sidra_bruto, macro_ibcr = macro_ibcr, macro_pim = macro_pim, macro_pmc = macro_pmc,
                                        macro_pms = macro_pms, bq_cnpj_cadeias = bq_cnpj_cadeias, bq_associativas = bq_associativas,
-                                       bq_cursos_nome = bq_cursos_nome, bq_tecnico_cursos = bq_tecnico_cursos)),
+                                       bq_cursos_nome = bq_cursos_nome, bq_tecnico_cursos = bq_tecnico_cursos,
+                                       camada_territorial = camada_territorial)),
              cue = tar_cue(mode = "always")),
   tar_target(saida_rds, {
     objs <- list(par = par, cad = cad, municipios = bq_municipios, cnae = bq_cnae, malha = malha, rd = rd,
@@ -310,7 +314,7 @@ list(
                  cursos_cad = cursos_cad, escoamento_cad = escoamento_cad,
                  nereus = nereus, nereus_cad = nereus_cad, ql_mult = ql_mult, ql_vab = ql_vab,
                  caged_elo = caged_elo, estoque = estoque, vocacao_cad = vocacao_cad, historico = historico,
-                 formacao = formacao, associativas = associativas, vigia = vigia, arranjo = arranjo,
+                 formacao = formacao, associativas = associativas, vigia = vigia, arranjo = arranjo, camada_territorial = camada_territorial,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),
@@ -327,6 +331,7 @@ list(
     cooperativas_associacoes = if (is.null(associativas)) tibble::tibble() else associativas$lista,
     arranjo_municipios       = if (is.null(arranjo)) tibble::tibble() else arranjo$municipio %>% filter(!is.na(classe) | emprego > 0),
     arranjo_manchas          = if (is.null(arranjo)) tibble::tibble() else arranjo$manchas,
+    camada_territorial       = camada_territorial,
     comex_cadeia             = comex_cad,
     producao_ibge_cadeia     = sidra_cad %>% filter(ano >= max(ano) - 10) %>% select(-any_of(c("valor_txt", "situacao"))),
     lacunas                  = lacunas
@@ -343,7 +348,7 @@ list(
   tar_target(territorio,
              montar_territorio(bq_municipios, rd, bq_pib_pop, bq_pop, rais_secao, cad_mun, cad$meta, empresas,
                                empresas_maiores, qualificacao, educacao, icms, agro_familiar, credito_rural, infraestrutura,
-                               formacao, associativas, cad$elos, vocacao_cad)),
+                               formacao, associativas, cad$elos, vocacao_cad, camada_territorial)),
   tar_target(bq_cnae_grupos, { bq_esquema; extrair_cnae_grupos(projeto) }),
   tar_target(setores_base, montar_setores(bq_rais_pe, bq_cnae, bq_cnae_grupos, rd)),
   tar_target(saida_territorio, exportar_territorio(territorio, setores_base), format = "file"),

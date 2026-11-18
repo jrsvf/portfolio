@@ -128,7 +128,7 @@ pedaco_cadeias <- function(cad_mun, emp_tot, cad_meta, ids, ult, elos = NULL, es
 # ---------------------------------------------------------------------------
 montar_territorio <- function(municipios, rd, pib_pop, pop, rais_secao, cad_mun, cad_meta, empresas, empresas_maiores,
                               qualificacao, educacao, icms, agro_familiar, credito_rural, infraestrutura,
-                              formacao = NULL, associativas = NULL, elos = NULL, vocacao = NULL) {
+                              formacao = NULL, associativas = NULL, elos = NULL, vocacao = NULL, camada = NULL) {
   nomes_cad <- setNames(cad_meta$cadeia, cad_meta$cadeia_id)
   pop_all <- bind_rows(pop, pib_pop %>% select(ano, id_municipio, populacao)) %>% filter(!is.na(populacao)) %>%
     distinct(ano, id_municipio, .keep_all = TRUE)
@@ -141,6 +141,7 @@ montar_territorio <- function(municipios, rd, pib_pop, pop, rais_secao, cad_mun,
     list(empresas = pedaco_empresas(empresas, ids), qualificacao = pedaco_qualif(qualificacao, ids),
          educacao = pedaco_educ(educacao, ids), icms = pedaco_icms(icms, ids, p), agro = pedaco_agro(agro_familiar, credito_rural, ids),
          formacao = pedaco_formacao(formacao, ids, nomes_cad), associativas = pedaco_associativas(associativas, ids, nomes_cad),
+         territorio = if (exists("pedaco_territorio")) pedaco_territorio(camada, ids, municipios) else NULL,
          infra = if (NROW(infraestrutura)) infraestrutura %>% filter(id_municipio %in% ids) %>% select(tipo, nome, nota) else NULL)
   }
   mun <- lapply(municipios$id_municipio, function(id) {

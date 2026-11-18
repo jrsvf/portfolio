@@ -593,6 +593,41 @@ if (is.null(mc) || nrow(mc) == 0) {
 }
 ```
 
+## Regulação e instrumentos
+
+```{r}
+#| results: asis
+arq_reg <- file.path(Sys.getenv("PASTA_PROJETO"), "config", "regulacao_cadeias.csv")
+rg <- if (file.exists(arq_reg)) readr::read_csv(arq_reg, col_types = readr::cols(.default = "c"), show_col_types = FALSE) else tibble()
+rg <- if (nrow(rg)) rg %>% filter(cadeia_id == CADEIA) %>% arrange(match(tipo, c("Indicação Geográfica", "Sanitária", "Incentivo fiscal", "Ambiental"))) else rg
+if (!nrow(rg)) {
+  cat('<p>Ainda não há normas ou instrumentos cadastrados para esta cadeia.</p>\n')
+} else {
+  tab <- rg %>% transmute(Instrumento = sprintf('<a href="%s" target="_blank">%s</a>', link, htmltools::htmlEscape(instrumento)), Tipo = tipo,
+                          `O que é` = htmltools::htmlEscape(descricao), Norma = htmltools::htmlEscape(norma))
+  cat(knitr::kable(tab, format = "html", escape = FALSE, table.attr = "class='table table-sm'"), "\n")
+  cat(paste0('<p class="fonte">Normas e instrumentos que valem para a cadeia, conferidos em ', max(rg$conferido_em), '. Não é orientação jurídica: confira sempre a versão vigente da norma.</p>\n'))
+}
+```
+
+## Pesquisas sobre a cadeia
+
+```{r}
+#| results: asis
+arq_ref <- file.path(Sys.getenv("PASTA_PROJETO"), "config", "referencias_cadeias.csv")
+refs <- if (file.exists(arq_ref)) readr::read_csv(arq_ref, col_types = readr::cols(.default = "c"), show_col_types = FALSE) else tibble()
+refs <- if (nrow(refs)) refs %>% filter(cadeia_id == CADEIA) %>% arrange(desc(suppressWarnings(as.numeric(gsub("\\D", "", ano))))) else refs
+if (!nrow(refs)) {
+  cat('<p>Ainda não há pesquisas cadastradas para esta cadeia.</p>\n')
+} else {
+  itens <- sprintf('<li><b><a href="%s" target="_blank">%s</a></b><br/>%s (%s). %s. <span class="voc-cod">%s · %s</span><br/>%s</li>',
+                   refs$link, htmltools::htmlEscape(refs$titulo), htmltools::htmlEscape(refs$autores), refs$ano, htmltools::htmlEscape(refs$fonte),
+                   htmltools::htmlEscape(refs$tipo), htmltools::htmlEscape(refs$recorte), htmltools::htmlEscape(refs$resumo))
+  cat('<ul class="refs">\n', paste(itens, collapse = "\n"), '\n</ul>\n')
+  cat('<p class="fonte">Estudos, diagnósticos e artigos sobre a cadeia em Pernambuco e no Nordeste, com o recorte de cada um. Os mais antigos ajudam a entender a trajetória, mas não descrevem a situação atual.</p>\n')
+}
+```
+
 ## O que os dados públicos não mostram
 
 ```{r}

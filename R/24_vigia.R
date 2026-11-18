@@ -30,7 +30,8 @@ FONTES_VIGIADAS <- tibble::tribble(
   "bq_cnpj_cadeias",   "CNPJ: empresas por cadeia",                NA,
   "bq_associativas",   "CNPJ: cooperativas e associações",         NA,
   "bq_cursos_nome",    "Censo da Educação Superior",               36,
-  "bq_tecnico_cursos", "Censo Escolar (cursos técnicos)",          30
+  "bq_tecnico_cursos", "Censo Escolar (cursos técnicos)",          30,
+  "camada_territorial","Camada territorial (IBGE, SUDENE, ANA)",   NA
 )
 
 # Data de referência do dado mais recente de um objeto (tabela ou lista de tabelas)

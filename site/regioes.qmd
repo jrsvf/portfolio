@@ -15,7 +15,7 @@ geo = ({type: "FeatureCollection", features: geo0.features.map(f => {
   const coords = g.type === "Polygon" ? rev(g.coordinates) : g.coordinates.map(rev);
   return {...f, geometry: {...g, coordinates: coords}};
 })})
-import {cartoes, blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra, listaCursos, blocoAssociativas} from "./territorio.js"
+import {cartoes, blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra, listaCursos, blocoAssociativas, blocoTerritorio} from "./territorio.js"
 PROD = FileAttachment("dados/producao.json").json()
 tabProd = (linhas, n = 15, total = null) => {
   if (!linhas || !linhas.length) return html`<p>Sem produção agropecuária registrada pelo IBGE.</p>`;
@@ -157,6 +157,15 @@ listaCursos(r.formacao, {html})
 <p class="fonte">Cursos superiores (presenciais e a distância) pelo Censo da Educação Superior e cursos técnicos pelas turmas do Censo Escolar (INEP), via Base dos Dados; cursos novos, que começaram depois do último Censo publicado, entram por config/cursos_novos.csv, com a fonte. Nos cursos a distância, as matrículas são de alunos ligados a polos aqui. A ligação com as cadeias é feita por palavras do nome do curso e é aproximada.</p>
 
 :::
+
+## Território
+
+```{ojs}
+//| echo: false
+blocoTerritorio(r.territorio, {html})
+```
+
+<p class="fonte">Fontes: semiárido, delimitação da SUDENE (lista do IBGE, 2022); tipo de município, classificação rural-urbana do IBGE (2017); rede de cidades, REGIC 2018 (IBGE); acesso aos centros, acessibilidade geográfica do IBGE (2018); água, Atlas Águas 2021 (ANA). Mapas do estado no <a href="panorama.html#territorio">Panorama</a>.</p>
 
 ## Cooperativas e associações
 

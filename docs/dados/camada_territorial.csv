@@ -1,0 +1,186 @@
+id_municipio;municipio;rd;semiarido;tipologia;acessibilidade;acessibilidade_classe;distancia_metropole;hierarquia;seguranca_hidrica;abastecimento;manancial
+2607307;Ipubi;Sertão do Araripe;TRUE;IntermediarioAdjacente;1,2235207028900;Muito acessível;510;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2609907;Ouricuri;Sertão do Araripe;TRUE;IntermediarioAdjacente;1,2643047263200;Muito acessível;527;Centro Sub-Regional A (3A);Média;Ampliação do sistema;Manancial Não Vulnerável
+2605301;Exu;Sertão do Araripe;TRUE;RuralAdjacente;1,1395535958300;Muito acessível;475;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2614303;Moreilândia;Sertão do Araripe;TRUE;RuralAdjacente;1,1899338600700;Muito acessível;496;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2615607;Trindade;Sertão do Araripe;TRUE;Urbano;1,2643047263200;Muito acessível;527;Centro Local (5);Alta;Ampliação do sistema;Manancial Não Vulnerável
+2612455;Santa Cruz;Sertão do Araripe;TRUE;RuralAdjacente;1,3578680741900;Acessível;566;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2606309;Granito;Sertão do Araripe;TRUE;RuralAdjacente;1,2043282212800;Muito acessível;502;Centro Local (5);Alta;Ampliação do sistema;Manancial Não Vulnerável
+2612554;Santa Filomena;Sertão do Araripe;TRUE;RuralAdjacente;1,4370370608500;Acessível;599;Centro Local (5);Alta;Ampliação do sistema;Manancial Não Vulnerável
+2601102;Araripina;Sertão do Araripe;TRUE;IntermediarioAdjacente;1,1995301008800;Muito acessível;500;Centro Sub-Regional B (3B) - Município integrante do Arranjo Populacional de Araripina/PE;Alta;Ampliação do sistema;Manancial Não Vulnerável
+2602001;Bodocó;Sertão do Araripe;TRUE;RuralAdjacente;1,2211216426900;Acessível;509;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2613503;São José do Belmonte;Sertão Central;TRUE;RuralAdjacente;1,0651827295800;Muito acessível;444;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2609303;Mirandiba;Sertão Central;TRUE;RuralAdjacente;1,0771780305900;Muito acessível;449;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2604304;Cedro;Sertão Central;TRUE;RuralAdjacente;1,1611451376500;Muito acessível;484;Centro Local (5);Baixa;Satisfatório;Manancial com Média Vulnerabilidade
+2614006;Serrita;Sertão Central;TRUE;RuralAdjacente;1,1995301008800;Acessível;500;Centro Local (5);Alta;Adequação do Sistema;Manancial com Baixa Vulnerabilidade
+2616100;Verdejante;Sertão Central;TRUE;RuralAdjacente;1,1275582948200;Acessível;470;Centro Local (5);Alta;Adequação do Sistema;Manancial com Baixa Vulnerabilidade
+2610400;Parnamirim;Sertão Central;TRUE;RuralAdjacente;1,2523094253100;Acessível;522;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2612208;Salgueiro;Sertão Central;TRUE;Urbano;1,1467507764400;Acessível;478;Centro Sub-Regional B (3B);Alta;Adequação do Sistema;Manancial com Baixa Vulnerabilidade
+2612471;Santa Cruz da Baixa Verde;Sertão do Pajeú;TRUE;RuralAdjacente;0,9068447562630;Muito acessível;378;Centro Local (5);Mínima;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2615706;Triunfo;Sertão do Pajeú;TRUE;RuralAdjacente;0,8948494552540;Muito acessível;373;Centro Local (5);Média;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2603405;Calumbi;Sertão do Pajeú;TRUE;RuralAdjacente;0,9068447562630;Muito acessível;378;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2605608;Flores;Sertão do Pajeú;TRUE;RuralAdjacente;0,8588635522280;Muito acessível;358;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2613909;Serra Talhada;Sertão do Pajeú;TRUE;Urbano;0,9428306592890;Muito acessível;393;Centro Sub-Regional A (3A);Média;Ampliação do sistema;Manancial Não Vulnerável
+2607703;Itapetim;Sertão do Pajeú;TRUE;RuralAdjacente;0,7245161809290;Muito acessível;302;Centro Local (5);Alta;Ampliação do sistema;Manancial Não Vulnerável
+2602506;Brejinho;Sertão do Pajeú;TRUE;RuralAdjacente;0,7437086625430;Muito acessível;310;Centro Local (5);Média;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2611533;Quixaba;Sertão do Pajeú;TRUE;RuralAdjacente;0,8372720104120;Muito acessível;349;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2607109;Ingazeira;Sertão do Pajeú;TRUE;RuralAdjacente;0,7533049033500;Muito acessível;314;Centro Local (5);Alta;Adequação do Sistema;Manancial com Baixa Vulnerabilidade
+2614600;Tabira;Sertão do Pajeú;TRUE;IntermediarioAdjacente;0,7676992645610;Muito acessível;320;Centro de Zona B (4B);Média;Ampliação do sistema;Manancial Não Vulnerável
+2614402;Solidão;Sertão do Pajeú;TRUE;RuralAdjacente;0,8012861073850;Muito acessível;334;Centro Local (5);Média;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2612802;Santa Terezinha;Sertão do Pajeú;TRUE;RuralAdjacente;0,7748964451660;Muito acessível;323;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2615904;Tuparetama;Sertão do Pajeú;TRUE;RuralAdjacente;0,7053236993150;Muito acessível;294;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2600104;Afogados da Ingazeira;Sertão do Pajeú;TRUE;Urbano;0,7700983247630;Muito acessível;321;Centro Sub-Regional B (3B);Média;Ampliação do sistema;Manancial Não Vulnerável
+2603900;Carnaíba;Sertão do Pajeú;TRUE;RuralAdjacente;0,8132814083940;Muito acessível;339;Centro Local (5);Máxima;Satisfatório;Manancial Não Vulnerável
+2613602;São José do Egito;Sertão do Pajeú;TRUE;IntermediarioAdjacente;0,7101218197190;Muito acessível;296;Centro de Zona B (4B);Média;Ampliação do sistema;Manancial Não Vulnerável
+2606903;Iguaraci;Sertão do Pajeú;TRUE;RuralAdjacente;0,7341124217360;Muito acessível;306;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2601201;Arcoverde;Sertão do Moxotó;TRUE;Urbano;0,5613800872100;Muito acessível;234;Centro Sub-Regional A (3A);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2605103;Custódia;Sertão do Moxotó;TRUE;IntermediarioAdjacente;0,7605020839560;Muito acessível;317;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2614105;Sertânia;Sertão do Moxotó;TRUE;IntermediarioAdjacente;0,6933283983070;Muito acessível;289;Centro Local (5);Média;Satisfatório;Manancial com Baixa Vulnerabilidade
+2606606;Ibimirim;Sertão do Moxotó;TRUE;IntermediarioAdjacente;0,7341124217360;Acessível;306;Centro Local (5);Média;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2607000;Inajá;Sertão do Moxotó;TRUE;RuralAdjacente;0,8588635522280;Acessível;358;Centro Local (5);Média;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2609154;Manari;Sertão do Moxotó;TRUE;RuralAdjacente;0,8012861073850;Acessível;334;Centro Local (5);Média;Satisfatório;Manancial com Média Vulnerabilidade
+2601805;Betânia;Sertão do Moxotó;TRUE;RuralAdjacente;0,9068447562630;Muito acessível;378;Centro Local (5);Média;Satisfatório;Manancial com Média Vulnerabilidade
+2600203;Afrânio;Sertão do São Francisco;TRUE;RuralAdjacente;1,3050887497500;Acessível;544;Centro Local (5);Alta;Ampliação do sistema;Manancial Não Vulnerável
+2605152;Dormentes;Sertão do São Francisco;TRUE;RuralAdjacente;1,3482718333900;Acessível;562;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2608750;Lagoa Grande;Sertão do São Francisco;TRUE;IntermediarioAdjacente;1,1659432580500;Muito acessível;486;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2609808;Orocó;Sertão do São Francisco;TRUE;RuralAdjacente;1,2643047263200;Acessível;527;Centro Local (5);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2612604;Santa Maria da Boa Vista;Sertão do São Francisco;TRUE;RuralAdjacente;1,2858962681400;Acessível;536;Centro Local (5);Média;Adequação do Sistema;Manancial Não Vulnerável
+2611101;Petrolina;Sertão do São Francisco;TRUE;Urbano;1,0555864887700;Muito acessível;440;Capital Regional C (2C) - Município integrante do Arranjo Populacional de Petrolina/PE - Juazeiro/BA;Média;Ampliação do sistema;Manancial Não Vulnerável
+2615201;Terra Nova;Sertão Central;TRUE;RuralAdjacente;1,2355160039000;Acessível;515;Centro Local (5);Alta;Adequação do Sistema;Manancial com Baixa Vulnerabilidade
+2603009;Cabrobó;Sertão do São Francisco;TRUE;IntermediarioAdjacente;1,1827366794600;Acessível;493;Centro Local (5);Média;Adequação do Sistema;Manancial Não Vulnerável
+2603926;Carnaubeira da Penha;Sertão de Itaparica;TRUE;RuralAdjacente;1,1107648734100;Acessível;463;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2611002;Petrolândia;Sertão de Itaparica;TRUE;IntermediarioAdjacente;0,8924503950520;Muito acessível;372;Centro de Zona B (4B);Alta;Satisfatório;Manancial Não Vulnerável
+2614808;Tacaratu;Sertão de Itaparica;TRUE;RuralAdjacente;0,9404315990870;Muito acessível;392;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2605707;Floresta;Sertão de Itaparica;TRUE;IntermediarioAdjacente;0,9836146827190;Acessível;410;Centro de Zona B (4B);Alta;Satisfatório;Manancial Não Vulnerável
+2608057;Jatobá;Sertão de Itaparica;TRUE;RuralAdjacente;0,9500278398940;Muito acessível;396;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2601607;Belém do São Francisco;Sertão de Itaparica;TRUE;IntermediarioAdjacente;1,1011686326000;Acessível;459;Centro Local (5);Média;Adequação do Sistema;Manancial Não Vulnerável
+2607406;Itacuruba;Sertão de Itaparica;TRUE;IntermediarioRemoto;1,0603846091700;Remoto;442;Centro Local (5);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2600500;Águas Belas;Agreste Meridional;TRUE;IntermediarioAdjacente;0,6957274585080;Muito acessível;290;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2616001;Venturosa;Agreste Meridional;TRUE;RuralAdjacente;0,5397885453940;Muito acessível;225;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2615805;Tupanatinga;Agreste Meridional;TRUE;RuralAdjacente;0,6885302779030;Muito acessível;287;Centro Local (5);Máxima;Satisfatório;Manancial Não Vulnerável
+2610806;Pedra;Agreste Meridional;TRUE;RuralAdjacente;0,5661782076140;Muito acessível;236;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2607505;Itaíba;Agreste Meridional;TRUE;RuralAdjacente;0,7844926859730;Acessível;327;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2602803;Buíque;Agreste Meridional;TRUE;RuralAdjacente;0,6261547126570;Muito acessível;261;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2611705;Riacho das Almas;Agreste Central;TRUE;RuralAdjacente;0,2734928630000;Muito acessível;114;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2604106;Caruaru;Agreste Central;TRUE;Urbano;0,2710938027980;Muito acessível;113;Capital Regional B (2B);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2601904;Bezerros;Agreste Central;TRUE;Urbano;0,2111172977540;Muito acessível;88;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2606408;Gravatá;Agreste Central;TRUE;Urbano;0,1679342141230;Muito acessível;70;Centro de Zona A (4A);Média;Ampliação do sistema;Manancial Não Vulnerável
+2603108;Cachoeirinha;Agreste Central;TRUE;Urbano;0,3622580904650;Muito acessível;151;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2608008;Jataúba;Agreste Central;TRUE;RuralAdjacente;0,4438261373240;Muito acessível;185;Centro Local (5);Média;Adequação do Sistema;Manancial Não Vulnerável
+2613107;São Caitano;Agreste Central;TRUE;IntermediarioAdjacente;0,3070797058240;Muito acessível;128;Centro Local (5);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2602605;Brejo da Madre de Deus;Agreste Central;TRUE;Urbano;0,4054411740960;Muito acessível;169;Centro Local (5);Baixa;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2603801;Capoeiras;Agreste Meridional;TRUE;RuralAdjacente;0,5133988831750;Muito acessível;214;Centro Local (5) - Município integrante do Arranjo Populacional de Caetés - Capoeiras/PE;Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2614709;Tacaimbó;Agreste Central;TRUE;RuralAdjacente;0,3502627894560;Muito acessível;146;Centro Local (5);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2610905;Pesqueira;Agreste Central;TRUE;Urbano;0,4606195587370;Muito acessível;192;Centro de Zona A (4A);Média;Ampliação do sistema;Manancial Não Vulnerável
+2600609;Alagoinha;Agreste Central;TRUE;RuralAdjacente;0,4942064015610;Muito acessível;206;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2611200;Poção;Agreste Central;TRUE;RuralAdjacente;0,5205960637800;Acessível;217;Centro Local (5);Máxima;Satisfatório;Manancial Não Vulnerável
+2613008;São Bento do Una;Agreste Central;TRUE;IntermediarioAdjacente;0,4390280169210;Muito acessível;183;Centro Local (5);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2601706;Belo Jardim;Agreste Central;TRUE;Urbano;0,3838496322800;Muito acessível;160;Centro Sub-Regional B (3B);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2612406;Sanharó;Agreste Central;TRUE;RuralAdjacente;0,4198355353070;Muito acessível;175;Centro Local (5);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2616209;Vertentes;Agreste Setentrional;TRUE;RuralAdjacente;0,2998825252190;Muito acessível;125;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2614501;Surubim;Agreste Setentrional;TRUE;Urbano;0,2423050803770;Muito acessível;101;Centro Sub-Regional B (3B);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2612703;Santa Maria do Cambucá;Agreste Setentrional;TRUE;RuralAdjacente;0,2806900436050;Muito acessível;117;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2605806;Frei Miguelinho;Agreste Setentrional;TRUE;RuralAdjacente;0,2902862844120;Muito acessível;121;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2616183;Vertente do Lério;Agreste Setentrional;TRUE;RuralAdjacente;0,2830891038070;Muito acessível;118;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2604155;Casinhas;Agreste Setentrional;TRUE;RuralAdjacente;0,2734928630000;Muito acessível;114;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2615003;Taquaritinga do Norte;Agreste Setentrional;TRUE;IntermediarioAdjacente;0,3190750068330;Muito acessível;133;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2615409;Toritama;Agreste Setentrional;TRUE;Urbano;0,3286712476400;Muito acessível;137;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2612505;Santa Cruz do Capibaribe;Agreste Setentrional;TRUE;Urbano;0,3670562108680;Muito acessível;153;Centro Sub-Regional B (3B);Alta;Satisfatório;Manancial Não Vulnerável
+2613800;São Vicente Ferrer;Agreste Setentrional;TRUE;IntermediarioAdjacente;0,2423050803770;Muito acessível;101;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2609105;Machados;Agreste Setentrional;TRUE;RuralAdjacente;0,2255116589650;Muito acessível;94;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2605400;Feira Nova;Agreste Setentrional;TRUE;Urbano;0,1559389131140;Muito acessível;65;Centro Local (5);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2602209;Bom Jardim;Agreste Setentrional;TRUE;RuralAdjacente;0,3598590302630;Muito acessível;150;Centro Local (5);Média;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2612109;Salgadinho;Agreste Setentrional;TRUE;RuralAdjacente;0,2351078997720;Muito acessível;98;Centro Local (5);Alta;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2608107;João Alfredo;Agreste Setentrional;TRUE;IntermediarioAdjacente;0,2135163579560;Muito acessível;89;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2610509;Passira;Agreste Setentrional;TRUE;RuralAdjacente;0,2111172977540;Muito acessível;88;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2608909;Limoeiro;Agreste Setentrional;TRUE;Urbano;0,1559389131140;Muito acessível;65;Centro Sub-Regional B (3B);Média;Ampliação do sistema;Manancial Não Vulnerável
+2609709;Orobó;Agreste Setentrional;TRUE;RuralAdjacente;0,2375069599740;Muito acessível;99;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2604908;Cumaru;Agreste Setentrional;TRUE;RuralAdjacente;0,2423050803770;Muito acessível;101;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2606002;Garanhuns;Agreste Meridional;TRUE;Urbano;0,4918073413590;Muito acessível;205;Capital Regional C (2C);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2604700;Correntes;Agreste Meridional;TRUE;RuralAdjacente;0,4990045219650;Muito acessível;208;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2608255;Jucati;Agreste Meridional;TRUE;RuralAdjacente;0,4678167393420;Muito acessível;195;Centro Local (5);Média;Satisfatório;Manancial com Alta Vulnerabilidade
+2603702;Canhotinho;Agreste Meridional;TRUE;RuralAdjacente;0,4078402342980;Muito acessível;170;Centro Local (5);Média;Satisfatório;Manancial com Baixa Vulnerabilidade
+2606507;Iati;Agreste Meridional;TRUE;RuralAdjacente;0,6237556524560;Muito acessível;260;Centro Local (5);Alta;Satisfatório;Manancial Não Vulnerável
+2608404;Jurema;Agreste Meridional;TRUE;RuralAdjacente;0,4054411740960;Muito acessível;169;Centro Local (5);Média;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2602407;Brejão;Agreste Meridional;TRUE;RuralAdjacente;0,5421876055960;Muito acessível;226;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2615102;Terezinha;Agreste Meridional;TRUE;RuralAdjacente;0,5589810270080;Muito acessível;233;Centro Local (5);Baixa;Satisfatório;Manancial com Alta Vulnerabilidade
+2603306;Calçado;Agreste Meridional;TRUE;RuralAdjacente;0,4414270771230;Muito acessível;184;Centro Local (5);Média;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2602100;Bom Conselho;Agreste Meridional;TRUE;Urbano;0,5973659902360;Muito acessível;249;Centro Local (5);Média;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2610301;Paranatama;Agreste Meridional;TRUE;RuralAdjacente;0,5421876055960;Muito acessível;226;Centro Local (5);Baixa;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2608305;Jupi;Agreste Meridional;TRUE;RuralAdjacente;0,4462251975260;Muito acessível;186;Centro Local (5);Mínima;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2612307;Saloá;Agreste Meridional;TRUE;RuralAdjacente;0,5733753882190;Muito acessível;239;Centro Local (5);Baixa;Satisfatório;Manancial com Alta Vulnerabilidade
+2608800;Lajedo;Agreste Meridional;TRUE;Urbano;0,4174364751050;Muito acessível;174;Centro de Zona B (4B);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2613206;São João;Agreste Meridional;TRUE;RuralAdjacente;0,4558214383330;Muito acessível;190;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2601003;Angelim;Agreste Meridional;TRUE;RuralAdjacente;0,4318308363160;Muito acessível;180;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2610103;Palmeirina;Agreste Meridional;TRUE;RuralAdjacente;0,4750139199470;Muito acessível;198;Centro Local (5);Alta;Satisfatório;Manancial com Baixa Vulnerabilidade
+2603207;Caetés;Agreste Meridional;TRUE;RuralAdjacente;0,5373894851930;Muito acessível;224;Centro Local (5) - Município integrante do Arranjo Populacional de Caetés - Capoeiras/PE;Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2608602;Lagoa do Ouro;Agreste Meridional;TRUE;RuralAdjacente;0,5397885453940;Muito acessível;225;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2603504;Camocim de São Félix;Agreste Central;TRUE;Urbano;0,2447041405790;Muito acessível;102;Centro Local (5);Média;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2612000;Sairé;Agreste Central;TRUE;RuralAdjacente;0,2351078997720;Muito acessível;98;Centro Local (5);Média;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2610202;Panelas;Agreste Central;TRUE;RuralAdjacente;0,3646571506660;Muito acessível;152;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2606705;Ibirajuba;Agreste Central;TRUE;RuralAdjacente;0,3814505720790;Muito acessível;159;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2605004;Cupira;Agreste Central;TRUE;Urbano;0,3478637292540;Muito acessível;145;Centro Local (5);Média;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2602308;Bonito;Agreste Central;FALSE;IntermediarioAdjacente;0,2638966221930;Muito acessível;110;Centro Local (5);Baixa;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2608701;Lagoa dos Gatos;Agreste Central;TRUE;RuralAdjacente;0,3334693680440;Muito acessível;139;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2601300;Barra de Guabiraba;Agreste Central;FALSE;Urbano;0,2495022609820;Muito acessível;104;Centro Local (5);Média;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2613305;São Joaquim do Monte;Agreste Central;TRUE;IntermediarioAdjacente;0,2686947425960;Muito acessível;112;Centro Local (5);Baixa;Satisfatório;Manancial com Alta Vulnerabilidade
+2600302;Agrestina;Agreste Central;TRUE;IntermediarioAdjacente;0,3094787660260;Muito acessível;129;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2600807;Altinho;Agreste Central;TRUE;IntermediarioAdjacente;0,3286712476400;Muito acessível;137;Centro Local (5);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2610608;Paudalho;Mata Norte;FALSE;Urbano;0,0887652274649;Muito acessível;37;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2607653;Itambé;Mata Norte;TRUE;Urbano;0,1799295151310;Muito acessível;75;Centro Local (5) - Município integrante do Arranjo Populacional de Itambé/PE - Pedras de Fogo/PB;Baixa;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2607802;Itaquitinga;Mata Norte;FALSE;Urbano;0,1631360937190;Muito acessível;68;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2616308;Vicência;Mata Norte;TRUE;IntermediarioAdjacente;0,1703332743240;Muito acessível;71;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2600708;Aliança;Mata Norte;TRUE;IntermediarioAdjacente;0,1727323345260;Muito acessível;72;Centro Local (5);Média;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2615300;Timbaúba;Mata Norte;TRUE;Urbano;0,2015210569470;Muito acessível;84;Centro Sub-Regional B (3B);Média;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2605509;Ferreiros;Mata Norte;TRUE;IntermediarioAdjacente;0,2231125987630;Muito acessível;93;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2606200;Goiana;Mata Norte;FALSE;Urbano;0,1271501906930;Muito acessível;53;Centro Sub-Regional B (3B);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2604601;Condado;Mata Norte;FALSE;Urbano;0,1583379733160;Muito acessível;66;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2609006;Macaparana;Mata Norte;TRUE;IntermediarioAdjacente;0,2471032007810;Muito acessível;103;Centro Local (5);Média;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2603603;Camutanga;Mata Norte;TRUE;Urbano;0,2255116589650;Muito acessível;94;Centro Local (5) - Município integrante do Arranjo Populacional de Itambé/PE - Pedras de Fogo/PB;Média;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2608503;Lagoa de Itaenga;Mata Norte;TRUE;Urbano;0,1295492508950;Muito acessível;54;Centro Local (5);Máxima;Satisfatório;Manancial Não Vulnerável
+2615508;Tracunhaém;Mata Norte;TRUE;Urbano;0,1175539498860;Muito acessível;49;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2604007;Carpina;Mata Norte;TRUE;Urbano;0,1127558294820;Muito acessível;47;Centro Sub-Regional B (3B);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2608453;Lagoa do Carro;Mata Norte;TRUE;IntermediarioAdjacente;0,1247511304910;Muito acessível;52;Centro Local (5);Alta;Adequação do Sistema;Manancial Não Vulnerável
+2602704;Buenos Aires;Mata Norte;TRUE;RuralAdjacente;0,1775304549300;Muito acessível;74;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2609501;Nazaré da Mata;Mata Norte;TRUE;Urbano;0,1367464315000;Muito acessível;57;Centro Local (5);Baixa;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2606101;Glória do Goitá;Mata Norte;TRUE;IntermediarioAdjacente;0,1271501906930;Muito acessível;53;Centro Local (5);Média;Ampliação do sistema;Manancial Não Vulnerável
+2616407;Vitória de Santo Antão;Mata Sul;TRUE;Urbano;0,0983614682719;Muito acessível;41;Centro Sub-Regional B (3B);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2604403;Chã de Alegria;Mata Norte;FALSE;IntermediarioAdjacente;0,1031595886750;Muito acessível;43;Centro Local (5);Média;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2611309;Pombos;Agreste Central;TRUE;IntermediarioAdjacente;0,1247511304910;Muito acessível;52;Centro Local (5);Média;Satisfatório;Manancial com Alta Vulnerabilidade
+2604502;Chã Grande;Mata Sul;TRUE;IntermediarioAdjacente;0,1655351539210;Muito acessível;69;Centro Local (5);Média;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2616506;Xexéu;Mata Sul;FALSE;RuralAdjacente;0,2734928630000;Muito acessível;114;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2610004;Palmares;Mata Sul;FALSE;Urbano;0,2375069599740;Muito acessível;99;Centro Sub-Regional B (3B);Baixa;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2612901;São Benedito do Sul;Mata Sul;FALSE;RuralAdjacente;0,3382674884470;Muito acessível;141;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2604205;Catende;Mata Sul;FALSE;Urbano;0,2782909834030;Muito acessível;116;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2601508;Belém de Maria;Mata Sul;FALSE;IntermediarioAdjacente;0,3142768864300;Muito acessível;131;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2600401;Água Preta;Mata Sul;FALSE;IntermediarioAdjacente;0,2519013211840;Muito acessível;105;Centro Local (5);Baixa;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2608206;Joaquim Nabuco;Mata Sul;FALSE;Urbano;0,2231125987630;Muito acessível;93;Centro Local (5);Baixa;Satisfatório;Manancial com Alta Vulnerabilidade
+2607950;Jaqueira;Mata Sul;FALSE;RuralAdjacente;0,2926853446140;Muito acessível;122;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2609204;Maraial;Mata Sul;FALSE;RuralAdjacente;0,3070797058240;Muito acessível;128;Centro Local (5);Mínima;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2605905;Gameleira;Mata Sul;FALSE;IntermediarioAdjacente;0,1871266957370;Muito acessível;78;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2613404;São José da Coroa Grande;Mata Sul;FALSE;Urbano;0,2255116589650;Muito acessível;94;Centro Local (5) - Município integrante do Arranjo Populacional de Maragogi/AL - São José da Coroa Grande/PE;Baixa;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2614857;Tamandaré;Mata Sul;FALSE;IntermediarioAdjacente;0,1943238763420;Muito acessível;81;Centro Local (5);Baixa;Satisfatório;Manancial com Média Vulnerabilidade
+2611903;Rio Formoso;Mata Sul;FALSE;IntermediarioAdjacente;0,1679342141230;Muito acessível;70;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2614204;Sirinhaém;Mata Sul;FALSE;IntermediarioAdjacente;0,1463426723070;Muito acessível;61;Centro Local (5);Baixa;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2601409;Barreiros;Mata Sul;FALSE;Urbano;0,2063191773510;Muito acessível;86;Centro de Zona A (4A);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2611507;Quipapá;Mata Sul;FALSE;RuralAdjacente;0,3550609098590;Muito acessível;148;Centro Local (5);Média;Satisfatório;Manancial com Alta Vulnerabilidade
+2611408;Primavera;Mata Sul;FALSE;RuralAdjacente;0,1607370335170;Muito acessível;67;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2605202;Escada;Mata Sul;FALSE;Urbano;0,1199530100880;Muito acessível;50;Centro Sub-Regional B (3B);Baixa;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2604809;Cortês;Mata Sul;FALSE;RuralAdjacente;0,2183144783600;Muito acessível;91;Centro Local (5);Média;Satisfatório;Manancial com Alta Vulnerabilidade
+2600906;Amaraji;Mata Sul;FALSE;Urbano;0,1823285753330;Muito acessível;76;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2611804;Ribeirão;Mata Sul;FALSE;Urbano;0,1679342141230;Muito acessível;70;Centro Local (5);Baixa;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2607752;Itapissuma;Metropolitana;FALSE;Urbano;0,0719718060526;Muito acessível;30;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2601052;Araçoiaba;Metropolitana;FALSE;Urbano;0,1103567692810;Muito acessível;46;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Mínima;Ampliação do sistema;Manancial com Alta Vulnerabilidade
+2606804;Igarassu;Metropolitana;FALSE;Urbano;0,0551783846403;Muito acessível;23;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2607604;Ilha de Itamaracá;Metropolitana;FALSE;Urbano;0,0983614682719;Muito acessível;41;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Satisfatório;Manancial com Alta Vulnerabilidade
+2610707;Paulista;Metropolitana;FALSE;Urbano;0,0263896622193;Muito acessível;11;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2600054;Abreu e Lima;Metropolitana;FALSE;Urbano;0,0383849632280;Muito acessível;16;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2603454;Camaragibe;Metropolitana;FALSE;Urbano;0,0287887224210;Muito acessível;12;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Média;Adequação do Sistema;Manancial com Baixa Vulnerabilidade
+2609402;Moreno;Metropolitana;FALSE;Urbano;0,0551783846403;Muito acessível;23;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Adequação do Sistema;Manancial com Alta Vulnerabilidade
+2613701;São Lourenço da Mata;Metropolitana;FALSE;Urbano;0,0455821438333;Muito acessível;19;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Média;Satisfatório;Manancial com Baixa Vulnerabilidade
+2609600;Olinda;Metropolitana;FALSE;Urbano;0,0143943612105;Muito acessível;6;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Média Vulnerabilidade
+2607901;Jaboatão dos Guararapes;Metropolitana;FALSE;Urbano;0,0263896622193;Muito acessível;11;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2611606;Recife;Metropolitana;FALSE;Urbano;0,0000000000000;Muito acessível;0;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2607208;Ipojuca;Metropolitana;FALSE;Urbano;0,0983614682719;Muito acessível;41;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Adequação do Sistema;Manancial com Média Vulnerabilidade
+2602902;Cabo de Santo Agostinho;Metropolitana;FALSE;Urbano;0,0671736856491;Muito acessível;28;Metrópole (1C) - Município integrante do Arranjo Populacional do Recife/PE;Baixa;Ampliação do sistema;Manancial com Baixa Vulnerabilidade
+2605459;Fernando de Noronha;Metropolitana;FALSE;RuralRemoto;1,4370370608500;Remoto;599;Centro Local (5);Média;Adequação do Sistema;Manancial com Baixa Vulnerabilidade

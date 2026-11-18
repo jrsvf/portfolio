@@ -540,6 +540,105 @@ if (is.null(empresas) || !NROW(empresas$fluxo)) {
 
 <p class="fonte">Fonte: CNPJ (Receita Federal), via Base dos Dados. Estabelecimentos (matrizes e filiais) pela data de início de atividade e pela data da baixa. O ano da base só entra quando o cadastro já cobre mais da metade dele. As maiores empresas de cada cadeia aparecem no raio-X dos municípios.</p>
 
+## Território: semiárido, rural e urbano, cidades e água {#territorio}
+
+```{r}
+ct <- opcional("camada_territorial")
+tem_ct <- !is.null(ct) && NROW(ct) > 0
+if (tem_ct) {
+  grupo_tip <- function(x) dplyr::case_when(grepl("^urbano", x, ignore.case = TRUE) ~ "Urbano",
+                                            grepl("intermedi.*adjac", x, ignore.case = TRUE) ~ "Intermediário adjacente",
+                                            grepl("intermedi.*remot", x, ignore.case = TRUE) ~ "Intermediário remoto",
+                                            grepl("rural.*adjac", x, ignore.case = TRUE) ~ "Rural adjacente",
+                                            grepl("rural.*remot", x, ignore.case = TRUE) ~ "Rural remoto", TRUE ~ NA_character_)
+  grupo_reg <- function(x) dplyr::case_when(grepl("metr", x, ignore.case = TRUE) ~ "Metrópole",
+                                            grepl("capital regional", x, ignore.case = TRUE) ~ "Capital regional",
+                                            grepl("sub-?regional", x, ignore.case = TRUE) ~ "Centro sub-regional",
+                                            grepl("centro de zona", x, ignore.case = TRUE) ~ "Centro de zona",
+                                            grepl("centro local", x, ignore.case = TRUE) ~ "Centro local", TRUE ~ NA_character_)
+  grupo_ish <- function(x) dplyr::case_when(grepl("^m[ií]n", x, ignore.case = TRUE) ~ "Mínima", grepl("^baix", x, ignore.case = TRUE) ~ "Baixa",
+                                            grepl("^m[eé]d", x, ignore.case = TRUE) ~ "Média", grepl("^alt", x, ignore.case = TRUE) ~ "Alta",
+                                            grepl("^m[aá]x", x, ignore.case = TRUE) ~ "Máxima", TRUE ~ NA_character_)
+  ct <- ct %>% mutate(semiarido_txt = ifelse(is.na(semiarido), NA, ifelse(semiarido, "No semiárido", "Fora do semiárido")),
+                      tip = grupo_tip(tipologia), reg = grupo_reg(hierarquia), ish = grupo_ish(seguranca_hidrica))
+  pop <- opcional("pib_pop")
+  if (!is.null(pop)) ct <- ct %>% left_join(pop %>% filter(!is.na(populacao)) %>% filter(ano == max(ano)) %>%
+                                              transmute(id_municipio = as.character(id_municipio), populacao), by = "id_municipio")
+  if (!"populacao" %in% names(ct)) ct$populacao <- NA_real_
+}
+```
+
+```{r}
+if (!tem_ct) htmltools::p(class = "aviso", "A camada territorial ainda não foi calculada nesta atualização.") else {
+  n_semi <- sum(ct$semiarido, na.rm = TRUE)
+  cartoes(Filter(Negate(is.null), list(
+    if (any(!is.na(ct$semiarido))) list(rotulo = "Municípios no semiárido", valor = paste(n_semi, "de", nrow(ct)),
+                                        nota = paste0(fmt_num(100 * sum(ct$populacao[ct$semiarido %in% TRUE], na.rm = TRUE) / sum(ct$populacao, na.rm = TRUE), 0), "% da população")),
+    if (any(!is.na(ct$tip))) list(rotulo = "Municípios rurais pela tipologia do IBGE", valor = fmt_num(sum(grepl("^Rural", ct$tip))),
+                                  nota = paste(sum(ct$tip == "Rural remoto", na.rm = TRUE), "deles remotos")),
+    if (any(!is.na(ct$reg))) list(rotulo = "Centros regionais (REGIC)", valor = fmt_num(sum(ct$reg %in% c("Metrópole", "Capital regional", "Centro sub-regional"))),
+                                  nota = "metrópole, capitais regionais e centros sub-regionais"),
+    if (any(!is.na(ct$ish))) list(rotulo = "Segurança hídrica baixa ou mínima", valor = fmt_num(sum(ct$ish %in% c("Mínima", "Baixa"))),
+                                  nota = "municípios, no abastecimento urbano (ANA)"))))
+}
+```
+
+A especialização produtiva acontece num território com condições muito diferentes. Esta seção junta o que o emprego não mostra: se o município está no semiárido, se é urbano ou rural e quão longe fica dos centros, que papel tem na rede de cidades e quão seguro é o abastecimento de água.
+
+::: {.panel-tabset}
+
+### Semiárido
+
+```{r}
+if (tem_ct && any(!is.na(ct$semiarido))) mapa_categorias(malha, ct, "semiarido_txt", c("No semiárido" = "#D9A441", "Fora do semiárido" = "#9CC5A1"), "Semiárido", municipios)
+```
+
+### Rural e urbano
+
+```{r}
+if (tem_ct && any(!is.na(ct$tip))) mapa_categorias(malha, ct, "tip", c("Urbano" = "#1F4E79", "Intermediário adjacente" = "#5B8DB8", "Intermediário remoto" = "#A7C4DE",
+                                                                       "Rural adjacente" = "#9CC5A1", "Rural remoto" = "#4E8F57"), "Tipologia (IBGE)", municipios)
+```
+
+### Rede de cidades
+
+```{r}
+if (tem_ct && any(!is.na(ct$reg))) mapa_categorias(malha, ct, "reg", c("Metrópole" = "#08306B", "Capital regional" = "#2171B5", "Centro sub-regional" = "#6BAED6",
+                                                                       "Centro de zona" = "#C6DBEF", "Centro local" = "#F0F4F8"), "Hierarquia (REGIC)", municipios)
+```
+
+### Acesso aos centros
+
+```{r}
+if (tem_ct && any(!is.na(ct$acessibilidade_classe))) mapa_categorias(malha, ct %>% mutate(acessibilidade_classe = stringr::str_to_sentence(acessibilidade_classe)),
+  "acessibilidade_classe", c("Muito acessível" = "#1F4E79", "Acessível" = "#6FA8DC", "Pouco acessível" = "#F4B26B", "Remoto" = "#C0392B"),
+  "Acesso aos centros (IBGE)", municipios)
+```
+
+### Água
+
+```{r}
+if (tem_ct && any(!is.na(ct$ish))) mapa_categorias(malha, ct, "ish", c("Mínima" = "#A50F15", "Baixa" = "#EF6548", "Média" = "#FDD49E", "Alta" = "#74C476", "Máxima" = "#238B45"),
+                                                   "Segurança hídrica", municipios)
+```
+
+### Por região
+
+```{r}
+if (tem_ct) {
+  r <- ct %>% filter(!is.na(rd)) %>% group_by(rd) %>%
+    summarise(`Municípios` = n(), `No semiárido` = sum(semiarido %in% TRUE), `Rurais (IBGE)` = sum(grepl("^Rural", tip)),
+              `Centros regionais` = sum(reg %in% c("Metrópole", "Capital regional", "Centro sub-regional")),
+              `Segurança hídrica baixa ou mínima` = sum(ish %in% c("Mínima", "Baixa")),
+              `Distância média à metrópole (km)` = round(mean(distancia_metropole, na.rm = TRUE)), .groups = "drop") %>% arrange(rd)
+  htmltools::HTML(knitr::kable(r %>% rename(`Região` = rd), format = "html", align = "lrrrrrr", table.attr = "class='table table-sm'"))
+}
+```
+
+:::
+
+<p class="fonte">Fontes: semiárido, delimitação da SUDENE (lista do IBGE, 2022); tipologia rural-urbana (IBGE, 2017); acessibilidade geográfica (IBGE, 2018), que classifica cada município pela distância e pelo custo de chegar aos centros que oferecem bens e serviços; hierarquia urbana (REGIC 2018, IBGE); segurança hídrica do abastecimento urbano (Atlas Águas 2021, ANA). Base completa em <a href="dados/camada_territorial.csv">camada_territorial.csv</a>.</p>
+
 ## Cooperativas e associações {#cooperativas}
 
 ```{r}
@@ -594,7 +693,7 @@ if (tem_ca) mapa_municipios(malha, ca %>% transmute(id_municipio, v = ifelse(pop
 if (tem_ca && "rd" %in% names(ca)) htmltools::HTML(knitr::kable(ca %>% filter(!is.na(rd)) %>% group_by(rd) %>%
   summarise(Cooperativas = sum(Cooperativa), `Municípios com cooperativa` = paste(sum(Cooperativa > 0), "de", n()), `Associações produtivas` = sum(`Associação produtiva`),
             `Entidades sindicais` = sum(`Entidade sindical`), `Coop. de crédito` = sum(`Cooperativa de crédito`), .groups = "drop") %>%
-  arrange(desc(Cooperativas)) %>% rename(`Região` = rd), format = "html", align = "lrrrrr", table.attr = "class='table table-sm'"))
+  arrange(desc(Cooperativas)) %>% rename(`Região` = rd), format = "html", align = "lrrrrrr", table.attr = "class='table table-sm'"))
 ```
 
 ### Maiores cooperativas de produção

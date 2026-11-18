@@ -57,7 +57,7 @@ usd = x => x == null || x === 0 ? "–" : x >= 1e9 ? "US$ " + nf(x / 1e9, 2) + "
 AZUL = "#1F4E79"; LAR = "#E07A1F"; CINZA = "#B8C4CF"
 terr = FileAttachment("dados/territorio_municipios.json").json()
 regs = FileAttachment("dados/regioes.json").json()
-import {blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra, listaMaiores, listaCursos, blocoAssociativas} from "./territorio.js"
+import {blocoEmpresas, blocoQualif, blocoEducacao, blocoIcms, blocoAgro, blocoInfra, listaMaiores, listaCursos, blocoAssociativas, blocoTerritorio} from "./territorio.js"
 t = terr.find(d => d.id === m.id) ?? {}
 nichos = new Set(regs.flatMap(r => (r.cadeias ?? []).filter(c => c.grupo === "nicho").map(c => c.cadeia_id)))
 rdDe = regs.find(r => r.municipios.some(x => x.id === m.id))
@@ -341,6 +341,15 @@ listaCursos(t.formacao, {html})
 :::
 
 <p class="fonte">Fonte: RAIS (escolaridade e ocupação dos vínculos ativos em 31/12), Censo da Educação Superior e Censo Escolar (INEP), via Base dos Dados. Matrículas por área e instituições: só cursos presenciais, no município de oferta.</p>
+
+## Território
+
+```{ojs}
+//| echo: false
+blocoTerritorio(t.territorio, {html})
+```
+
+<p class="fonte">Fontes: semiárido, delimitação da SUDENE (lista do IBGE, 2022); tipo de município, classificação rural-urbana do IBGE (2017); rede de cidades, REGIC 2018 (IBGE); acesso aos centros, acessibilidade geográfica do IBGE (2018); água, Atlas Águas 2021 (ANA). Mapas do estado no <a href="panorama.html#territorio">Panorama</a>.</p>
 
 ## Cooperativas e associações
 
