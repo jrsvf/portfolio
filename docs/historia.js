@@ -11,8 +11,9 @@
     retomada:   { cor: "#2C5BA8", nome: "Retomada" }
   };
   // Escala que muda de ritmo: os séculos coloniais comprimidos, o século XX e o XXI abertos
-  const QUEBRAS = [[1530, 0], [1850, 0.34], [1950, 0.57], [2026, 1]];
-  const ERAS = [[1530, 1822, "Colônia"], [1822, 1889, "Império"], [1889, 1959, "República"], [1959, 2026, "Depois da SUDENE"]];
+  const QUEBRAS = [[1530, 0], [1850, 0.32], [1950, 0.54], [2026, 0.92], [2034, 1]];
+  const HOJE = 2026;
+  const ERAS = [[1530, 1822, "Colônia"], [1822, 1889, "Império"], [1889, 1959, "República"], [1959, 2026, "Depois da SUDENE"], [2026, 2034, "Previsto"]];
 
   function el(tag, attrs, pai) {
     const e = document.createElementNS(NS, tag);
@@ -29,6 +30,7 @@
     const fases = dados.filter(d => d.tipo === "fase");
     const marcos = dados.filter(d => d.tipo === "marco");
     const fatores = dados.filter(d => d.tipo === "fator");
+    const previstos = dados.filter(d => d.tipo === "previsto");
 
     const caixa = raiz.querySelector(".lt-tela");
     const dica = raiz.querySelector(".lt-dica");
@@ -54,18 +56,18 @@
 
       // eras ao fundo
       ERAS.forEach(([a, b, nome], i) => {
-        el("rect", { x: x(a), y: TOPO - 30, width: x(b) - x(a), height: H - TOPO + 18, class: i % 2 ? "lt-era par" : "lt-era" }, svg);
+        el("rect", { x: x(a), y: TOPO - 30, width: x(b) - x(a), height: H - TOPO + 18, class: nome === "Previsto" ? "lt-era futuro" : i % 2 ? "lt-era par" : "lt-era" }, svg);
         const t = el("text", { x: x(a) + 6, y: TOPO - 16, class: "lt-era-rot" }, svg); t.textContent = nome;
       });
       // eixo: anos de referência
-      const ticks = [1535, 1600, 1700, 1800, 1850, 1900, 1950, 1975, 2000, 2026];
+      const ticks = [1535, 1600, 1700, 1800, 1850, 1900, 1950, 1975, 2000, 2026, 2034];
       ticks.forEach(a => {
         el("line", { x1: x(a), x2: x(a), y1: TOPO - 4, y2: H - 22, class: "lt-grade" }, svg);
-        const t = el("text", { x: x(a), y: H - 8, class: "lt-ano", "text-anchor": "middle" }, svg); t.textContent = a === 2026 ? "hoje" : a;
+        const t = el("text", { x: x(a), y: H - 8, class: "lt-ano", "text-anchor": "middle" }, svg); t.textContent = a === HOJE ? "hoje" : a;
       });
       // onde a escala muda de ritmo
-      [1850, 1950].forEach(a => {
-        el("line", { x1: x(a), x2: x(a), y1: TOPO - 30, y2: H - 22, class: "lt-quebra" }, svg);
+      [1850, 1950, HOJE].forEach(a => {
+        el("line", { x1: x(a), x2: x(a), y1: TOPO - 30, y2: H - 22, class: a === HOJE ? "lt-hoje" : "lt-quebra" }, svg);
       });
 
       const camadaBarras = el("g", {}, svg), camadaMarcos = el("g", {}, svg);
@@ -91,7 +93,7 @@
           fill = `url(#${id})`;
         }
         const r = el("rect", { x: x0, y: y - 6, width: Math.max(2, x1 - x0), height: 12, rx: 4, fill, class: "lt-fase", "data-trilha": f.trilha }, camadaBarras);
-        alvo(r, () => ({ titulo: FASES[f.fase].nome + (f.aproximado ? " (início aproximado)" : ""), anos: `${f.inicio} a ${f.fim == 2026 ? "hoje" : f.fim}`,
+        alvo(r, () => ({ titulo: FASES[f.fase].nome + (f.aproximado ? " (início aproximado)" : ""), anos: `${f.inicio} a ${f.fim == HOJE ? "hoje" : f.fim}`,
                          texto: f.descricao, fonte: f.fonte, link: f.link, cor }));
       });
 
@@ -104,6 +106,16 @@
         alvo(g, () => ({ titulo: m.titulo, anos: m.fim ? `${m.inicio} a ${m.fim}` : `${m.inicio}`, texto: m.descricao, fonte: m.fonte, link: m.link }));
       });
 
+      const desenhaPrevisto = (p, y, camada) => {
+        const cx = x(num(p.inicio));
+        const g = el("g", { class: "lt-previsto", "data-trilha": p.trilha, tabindex: 0 }, camada);
+        el("circle", { cx, cy: y, r: 11, class: "lt-alvo" }, g);
+        el("circle", { cx, cy: y, r: 6, class: "lt-ponto-prev" }, g);
+        alvo(g, () => ({ titulo: p.titulo, anos: `${p.inicio} · previsto`, texto: p.descricao, fonte: p.fonte, link: p.link }));
+      };
+      previstos.forEach(p => { if (linhaY[p.trilha] != null) {
+        el("line", { x1: x(HOJE), x2: x(num(p.inicio)), y1: linhaY[p.trilha], y2: linhaY[p.trilha], class: "lt-tracejado" }, camadaBarras);
+        desenhaPrevisto(p, linhaY[p.trilha], camadaMarcos); } });
       if (comF) {
         const y0 = TOPO + trilhas.length * LINHA + SEP;
         const t = el("text", { x: 12, y: y0 - 14, class: "lt-secao" }, svg); t.textContent = "O que empurrou e o que travou";
@@ -124,6 +136,7 @@
           el("path", { d: `M${cx},${y - 6} L${cx + 6},${y} L${cx},${y + 6} L${cx - 6},${y} Z`, class: "lt-losango" }, g);
           alvo(g, () => ({ titulo: f.titulo, anos: b ? `${a} a ${b}` : `${a}`, texto: f.descricao, fonte: f.fonte, link: f.link }));
         });
+        previstos.forEach(p => { if (yF[p.trilha] != null) desenhaPrevisto(p, yF[p.trilha], svg); });
       }
 
       // régua que acompanha o mouse
@@ -146,7 +159,7 @@
       svg.addEventListener("mouseleave", () => { regua.style.opacity = 0; reguaAno.style.opacity = 0; });
 
       function destacar(tr) {
-        svg.querySelectorAll(".lt-fase, .lt-marco").forEach(n => n.classList.toggle("apagado", !!tr && n.dataset.trilha !== tr));
+        svg.querySelectorAll(".lt-fase, .lt-marco, .lt-previsto").forEach(n => n.classList.toggle("apagado", !!tr && n.dataset.trilha !== tr));
       }
     }
 
@@ -179,6 +192,28 @@
     render();
   }
 
-  function iniciar() { document.querySelectorAll(".linha-tempo").forEach(desenhar); }
+
+  // Ícones dos capítulos (desenho próprio, traço simples)
+  const ICONES = {
+    acucar: '<path d="M14 46V10M14 18l-6-6M14 26l7-7M14 34l-6-5M26 46V14M26 22l6-6M26 30l-6-5M26 38l6-5" />',
+    sertao: '<ellipse cx="22" cy="30" rx="13" ry="7"/><circle cx="38" cy="25" r="5"/><path d="M12 36v9M30 36v9M36 20l-3-5M41 20l3-5"/>',
+    usinas: '<path d="M6 46V26l10 6v-6l10 6v-6l10 6V10h8v36Z"/><path d="M38 6c2-3 6-3 8-1"/>',
+    planejamento: '<path d="M6 46h40M9 40h34M12 40V22M20 40V22M32 40V22M40 40V22M8 22h36L26 10Z"/>',
+    vale: '<circle cx="18" cy="26" r="4"/><circle cx="26" cy="26" r="4"/><circle cx="22" cy="33" r="4"/><circle cx="14" cy="33" r="4"/><circle cx="30" cy="33" r="4"/><circle cx="22" cy="40" r="4"/><path d="M22 22V12M22 14c5-5 12-4 14 0"/>',
+    agreste: '<path d="M26 10a4 4 0 1 1 4 4c-2 0-4 2-4 4v2M26 20 6 36h40L26 20Z"/>',
+    suape: '<path d="M4 34h44l-6 10H10Z"/><path d="M14 34v-8h8v8M24 34v-8h8v8M19 26v-7h8v7"/><path d="M40 34V10h-10"/>',
+    codigo: '<path d="M26 46V18"/><circle cx="26" cy="16" r="2.5"/><path d="M26 16 26 4M26 16l11 7M26 16l-11 7"/><path d="M8 46h36"/>',
+    futuro: '<circle cx="26" cy="26" r="18"/><path d="M26 14v12l8 6"/><path d="M26 4v4M26 44v4M4 26h4M44 26h4"/>'
+  };
+  function iconizar() {
+    Object.keys(ICONES).forEach(id => {
+      const c = document.getElementById(id); if (!c) return;
+      const k = c.querySelector(".h-kicker"); if (!k || k.querySelector(".h-icone")) return;
+      const s = document.createElement("span"); s.className = "h-icone";
+      s.innerHTML = `<svg viewBox="0 0 52 52" width="44" height="44" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONES[id]}</svg>`;
+      k.prepend(s);
+    });
+  }
+  function iniciar() { iconizar(); document.querySelectorAll(".linha-tempo").forEach(desenhar); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else iniciar();
 })();
