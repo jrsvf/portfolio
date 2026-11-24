@@ -228,16 +228,18 @@ cardCadeia = d => {
 }
 ordemCad = {
   // principais: especializadas em alguma medida (QL >= 1 no núcleo do emprego, nas exportações ou na produção);
-  // vão primeiro pelo emprego excedente (tamanho e especialização juntos), depois pelo valor da produção
+  // cadeias antes dos nichos (decisão de 24/11); dentro de cada grupo, pelo emprego excedente
+  // (tamanho e especialização juntos), depois pelo valor da produção
   const espec = d => ((d.ql_nucleo ?? d.ql) >= 1 && (d.emprego_nucleo ?? d.emprego) >= 10) || (d.ql_exportacoes >= 1 && d.ex_usd > 0) || (d.ql_producao >= 1 && d.vp_mil > 0);
-  const princ = m.cadeias.filter(espec).sort((a, b) => (b.excedente ?? 0) - (a.excedente ?? 0) || (b.vp_mil ?? 0) - (a.vp_mil ?? 0) || (b.emprego ?? 0) - (a.emprego ?? 0));
-  const resto = m.cadeias.filter(d => !espec(d)).sort((a, b) => (b.emprego ?? 0) - (a.emprego ?? 0) || (b.vp_mil ?? 0) - (a.vp_mil ?? 0));
+  const grupo = d => nichos.has(d.cadeia_id) ? 1 : 0;
+  const princ = m.cadeias.filter(espec).sort((a, b) => grupo(a) - grupo(b) || (b.excedente ?? 0) - (a.excedente ?? 0) || (b.vp_mil ?? 0) - (a.vp_mil ?? 0) || (b.emprego ?? 0) - (a.emprego ?? 0));
+  const resto = m.cadeias.filter(d => !espec(d)).sort((a, b) => grupo(a) - grupo(b) || (b.emprego ?? 0) - (a.emprego ?? 0) || (b.vp_mil ?? 0) - (a.vp_mil ?? 0));
   if (!princ.length) return {princ: resto.slice(0, 3), resto: resto.slice(3), semEsp: true};
   return {princ, resto, semEsp: false};
 }
 m.cadeias.length === 0 ? html`<p>Nenhuma das cadeias e nichos acompanhados tem emprego formal ou produção registrada aqui.</p>` :
 html`<p>${ordemCad.semEsp ? html`${m.nome} não é especializado em nenhuma das cadeias e nichos acompanhados; abaixo, as três com mais emprego formal.` :
-  html`Em destaque, ${ordemCad.princ.length === 1 ? "a única cadeia" : "as " + ordemCad.princ.length + " cadeias e nichos"} em que ${m.nome} é especializado (QL maior ou igual a 1 no emprego do núcleo produtivo, nas exportações ou na produção), da que mais pesa para a que menos pesa no município: primeiro pelo emprego excedente, o que o município tem a mais do que a média do estado. ${m.dominante ? html`A <b>dominante</b> é a cadeia com maior emprego excedente.` : ""}`}
+  html`Em destaque, ${ordemCad.princ.length === 1 ? "a única cadeia" : "as " + ordemCad.princ.length + " cadeias e nichos"} em que ${m.nome} é especializado (QL maior ou igual a 1 no emprego do núcleo produtivo, nas exportações ou na produção). As cadeias vêm antes dos nichos e, em cada grupo, da que mais pesa para a que menos pesa no município: primeiro pelo emprego excedente, o que o município tem a mais do que a média do estado. ${m.dominante ? html`A <b>dominante</b> é a cadeia com maior emprego excedente.` : ""}`}
 Cada cartão junta emprego formal por elo, produção do IBGE, exportações e as maiores empresas ativas, com o QL medido de até quatro jeitos; em verde, os que passam de 1. O nome leva à página da cadeia.</p>
 <div class="rx-ccs">${ordemCad.princ.map(cardCadeia)}</div>
 ${ordemCad.resto.length ? html`<details class="rx-mais"><summary>Ver as outras ${ordemCad.resto.length} cadeias e nichos com presença menor aqui</summary>

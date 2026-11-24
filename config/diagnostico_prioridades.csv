@@ -1,0 +1,12 @@
+ordem,acao,cadeias,fonte,custo,efeito
+1,Cadastrar as posições SH4 que faltam,Bebidas; higiene e limpeza; mandioca,cadeias.yml (o ComexStat já é lido),Baixo,Exportações passam a aparecer nas três páginas
+2,Geração de energia por usina e geração distribuída,Bioeconomia e renováveis,"ANEEL (SIGA e geração distribuída), por município",Baixo,"Mede parques eólicos e solares, que empregam pouco"
+3,Refino e etanol por unidade,Petroquímica; sucroenergético,ANP (dados abertos),Baixo,Produção industrial que o emprego não mostra
+4,CFEM por município e substância,Gesso; cerâmica vermelha,ANM (dados abertos),Baixo,Produção mineral do Araripe e das olarias
+5,Movimentação de portos e aeroportos,Logística; turismo; fruticultura,ANTAQ e ANAC,Baixo,"Carga de Suape e do Recife, passageiros e carga aérea de Petrolina"
+6,"Obras, salas e público",Audiovisual,Ancine (Observatório do Cinema e do Audiovisual),Baixo,"Escala da produção, não só do emprego"
+7,Oferta de saúde,Complexo da saúde,DataSUS (CNES e SIH),Baixo a médio,Leitos e procedimentos do polo médico
+8,Abate e leite por UF,Avicultura; bovinocultura; suinocultura,Pesquisas Trimestrais do Abate e do Leite (IBGE),Médio,Agroindústria de abate e laticínios
+9,Informalidade por município e atividade,Confecções; ovinocaprinocultura; leite; economia criativa,Microdados de trabalho do Censo Demográfico 2022,Médio,Corrige o tamanho dos polos mais informais
+10,ICMS por CNAE e município; notas fiscais interestaduais,Todas,SEFAZ-PE (acordo institucional),Médio a alto,Mede o que cada cadeia recolhe e vende para fora
+11,Levantamentos de campo,Queijarias; casas de farinha; caprinos e ovinos; confecções; joias,Pesquisa própria ou com Sebrae e universidades,Alto,Única forma de ver o informal com detalhe

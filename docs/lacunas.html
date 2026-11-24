@@ -193,7 +193,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Nesta página</h2>
    
   <ul>
-  <li><a href="#lacunas-estruturais" id="toc-lacunas-estruturais" class="nav-link active" data-scroll-target="#lacunas-estruturais">Lacunas estruturais</a></li>
+  <li><a href="#o-que-falta-para-um-diagnóstico-setorial" id="toc-o-que-falta-para-um-diagnóstico-setorial" class="nav-link active" data-scroll-target="#o-que-falta-para-um-diagnóstico-setorial">O que falta para um diagnóstico setorial</a>
+  <ul class="collapse">
+  <li><a href="#lista-priorizada" id="toc-lista-priorizada" class="nav-link" data-scroll-target="#lista-priorizada">Lista priorizada</a></li>
+  <li><a href="#cadeia-a-cadeia" id="toc-cadeia-a-cadeia" class="nav-link" data-scroll-target="#cadeia-a-cadeia">Cadeia a cadeia</a></li>
+  </ul></li>
+  <li><a href="#lacunas-estruturais" id="toc-lacunas-estruturais" class="nav-link" data-scroll-target="#lacunas-estruturais">Lacunas estruturais</a></li>
   <li><a href="#lacunas-detectadas-nos-dados" id="toc-lacunas-detectadas-nos-dados" class="nav-link" data-scroll-target="#lacunas-detectadas-nos-dados">Lacunas detectadas nos dados</a></li>
   <li><a href="#defasagem-das-fontes" id="toc-defasagem-das-fontes" class="nav-link" data-scroll-target="#defasagem-das-fontes">Defasagem das fontes</a></li>
   <li><a href="#dados-abertos" id="toc-dados-abertos" class="nav-link" data-scroll-target="#dados-abertos">Dados abertos</a></li>
@@ -258,6 +263,858 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<section id="o-que-falta-para-um-diagnóstico-setorial" class="level2">
+<h2 class="anchored" data-anchor-id="o-que-falta-para-um-diagnóstico-setorial">O que falta para um diagnóstico setorial</h2>
+<p>O painel já cobre bem o emprego formal, as empresas, as exportações de bens e a produção agropecuária. Para um diagnóstico setorial robusto faltam três coisas: medir a <strong>informalidade</strong>, que esconde o tamanho real de polos como a confecção do Agreste, o leite e a ovinocaprinocultura; medir a <strong>produção e o faturamento</strong> da indústria e dos serviços, que não existem por município em fonte pública; e incorporar <strong>fontes públicas prontas</strong> que o painel ainda não lê. A lista abaixo ordena as ações por custo e efeito; em seguida vem o quadro de cada cadeia.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="cartoes">
+<div class="cartao">
+<div class="cartao-valor">10</div>
+<div class="cartao-rotulo">Cadeias com prioridade alta</div>
+</div>
+<div class="cartao">
+<div class="cartao-valor">11</div>
+<div class="cartao-rotulo">Cadeias com prioridade média</div>
+</div>
+<div class="cartao">
+<div class="cartao-valor">16</div>
+<div class="cartao-rotulo">Cadeias com prioridade baixa</div>
+</div>
+</div>
+</div>
+</div>
+<section id="lista-priorizada" class="level3">
+<h3 class="anchored" data-anchor-id="lista-priorizada">Lista priorizada</h3>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 1%">
+<col style="width: 21%">
+<col style="width: 26%">
+<col style="width: 19%">
+<col style="width: 5%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">#</th>
+<th style="text-align: left;">Ação</th>
+<th style="text-align: left;">Cadeias</th>
+<th style="text-align: left;">Fonte</th>
+<th style="text-align: left;">Custo</th>
+<th style="text-align: left;">Efeito na leitura</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Cadastrar as posições SH4 que faltam</td>
+<td style="text-align: left;">Bebidas; higiene e limpeza; mandioca</td>
+<td style="text-align: left;">cadeias.yml (o ComexStat já é lido)</td>
+<td style="text-align: left;">Baixo</td>
+<td style="text-align: left;">Exportações passam a aparecer nas três páginas</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Geração de energia por usina e geração distribuída</td>
+<td style="text-align: left;">Bioeconomia e renováveis</td>
+<td style="text-align: left;">ANEEL (SIGA e geração distribuída), por município</td>
+<td style="text-align: left;">Baixo</td>
+<td style="text-align: left;">Mede parques eólicos e solares, que empregam pouco</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Refino e etanol por unidade</td>
+<td style="text-align: left;">Petroquímica; sucroenergético</td>
+<td style="text-align: left;">ANP (dados abertos)</td>
+<td style="text-align: left;">Baixo</td>
+<td style="text-align: left;">Produção industrial que o emprego não mostra</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">CFEM por município e substância</td>
+<td style="text-align: left;">Gesso; cerâmica vermelha</td>
+<td style="text-align: left;">ANM (dados abertos)</td>
+<td style="text-align: left;">Baixo</td>
+<td style="text-align: left;">Produção mineral do Araripe e das olarias</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">Movimentação de portos e aeroportos</td>
+<td style="text-align: left;">Logística; turismo; fruticultura</td>
+<td style="text-align: left;">ANTAQ e ANAC</td>
+<td style="text-align: left;">Baixo</td>
+<td style="text-align: left;">Carga de Suape e do Recife, passageiros e carga aérea de Petrolina</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">Obras, salas e público</td>
+<td style="text-align: left;">Audiovisual</td>
+<td style="text-align: left;">Ancine (Observatório do Cinema e do Audiovisual)</td>
+<td style="text-align: left;">Baixo</td>
+<td style="text-align: left;">Escala da produção, não só do emprego</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">Oferta de saúde</td>
+<td style="text-align: left;">Complexo da saúde</td>
+<td style="text-align: left;">DataSUS (CNES e SIH)</td>
+<td style="text-align: left;">Baixo a médio</td>
+<td style="text-align: left;">Leitos e procedimentos do polo médico</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">Abate e leite por UF</td>
+<td style="text-align: left;">Avicultura; bovinocultura; suinocultura</td>
+<td style="text-align: left;">Pesquisas Trimestrais do Abate e do Leite (IBGE)</td>
+<td style="text-align: left;">Médio</td>
+<td style="text-align: left;">Agroindústria de abate e laticínios</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">9</td>
+<td style="text-align: left;">Informalidade por município e atividade</td>
+<td style="text-align: left;">Confecções; ovinocaprinocultura; leite; economia criativa</td>
+<td style="text-align: left;">Microdados de trabalho do Censo Demográfico 2022</td>
+<td style="text-align: left;">Médio</td>
+<td style="text-align: left;">Corrige o tamanho dos polos mais informais</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10</td>
+<td style="text-align: left;">ICMS por CNAE e município; notas fiscais interestaduais</td>
+<td style="text-align: left;">Todas</td>
+<td style="text-align: left;">SEFAZ-PE (acordo institucional)</td>
+<td style="text-align: left;">Médio a alto</td>
+<td style="text-align: left;">Mede o que cada cadeia recolhe e vende para fora</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">Levantamentos de campo</td>
+<td style="text-align: left;">Queijarias; casas de farinha; caprinos e ovinos; confecções; joias</td>
+<td style="text-align: left;">Pesquisa própria ou com Sebrae e universidades</td>
+<td style="text-align: left;">Alto</td>
+<td style="text-align: left;">Única forma de ver o informal com detalhe</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Custo <strong>baixo</strong>: fonte pública pronta, que entra no pipeline com uma função nova ou um ajuste de configuração. <strong>Médio</strong>: fonte pública com tratamento pesado ou só por UF. <strong>Alto</strong>: pesquisa de campo, dado restrito ou acordo com outro órgão.</p>
+</section>
+<section id="cadeia-a-cadeia" class="level3">
+<h3 class="anchored" data-anchor-id="cadeia-a-cadeia">Cadeia a cadeia</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Prioridade alta (10)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Prioridade média (11)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Prioridade baixa (16)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<table class="table table-sm">
+<thead>
+<tr>
+<th style="text-align:left;">
+Cadeia
+</th>
+<th style="text-align:left;">
+O que falta
+</th>
+<th style="text-align:left;">
+Fonte que resolveria
+</th>
+<th style="text-align:left;">
+Custo
+</th>
+<th style="text-align:left;">
+Efeito na leitura
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/bebidas.html">Bebidas</a>
+</td>
+<td style="text-align:left;">
+Posições SH4 não cadastradas: a cadeia não tem exportação na página
+</td>
+<td style="text-align:left;">
+SH4 2201 a 2208 em cadeias.yml
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Exportações de cerveja, refrigerante e destilados passam a aparecer
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/bioeconomia_renovaveis.html">Bioeconomia e energias renováveis</a>
+</td>
+<td style="text-align:left;">
+Capacidade instalada e geração por usina; geração distribuída
+</td>
+<td style="text-align:left;">
+SIGA e dados de geração distribuída (ANEEL, por município)
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Mostra parques eólicos e solares, que empregam pouco depois de prontos
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/bovinocultura.html">Bovinocultura de leite e corte</a>
+</td>
+<td style="text-align:left;">
+Leite processado e queijo de coalho artesanal, quase todo informal; abate informal
+</td>
+<td style="text-align:left;">
+Pesquisa Trimestral do Leite (IBGE, por UF), cadastro SIE/SIM e levantamento das queijarias
+</td>
+<td style="text-align:left;">
+Médio a alto
+</td>
+<td style="text-align:left;">
+A bacia leiteira do Agreste aparece bem menor do que é
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/gesso.html">Gesso (Polo Gesseiro do Araripe)</a>
+</td>
+<td style="text-align:left;">
+Produção de gipsita e gesso por município e empresa
+</td>
+<td style="text-align:left;">
+Arrecadação da CFEM por município e substância (ANM, dados abertos)
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Mede a produção mineral do Araripe e o que fica para os municípios
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/higiene_limpeza.html">Higiene, limpeza e cosméticos</a>
+</td>
+<td style="text-align:left;">
+Posições SH4 não cadastradas
+</td>
+<td style="text-align:left;">
+SH4 3303 a 3307, 3401 e 3402 em cadeias.yml
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Exportações do setor passam a aparecer
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/logistica.html">Logística</a>
+</td>
+<td style="text-align:left;">
+Fluxos de carga, armazéns e rotas terrestres
+</td>
+<td style="text-align:left;">
+Movimentação por porto (ANTAQ) e carga por aeroporto (ANAC), já acessadas para a infraestrutura; CT-e via SEFAZ
+</td>
+<td style="text-align:left;">
+Baixo (portos e aeroportos)
+</td>
+<td style="text-align:left;">
+Mede a carga de Suape, do Recife e de Petrolina
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/ovinocaprinocultura.html">Ovinocaprinocultura</a>
+</td>
+<td style="text-align:left;">
+Abate e venda quase toda informal; a RAIS quase não vê a cadeia
+</td>
+<td style="text-align:left;">
+PPM (efetivo, já usada) e levantamento em abatedouros públicos e feiras
+</td>
+<td style="text-align:left;">
+Alto
+</td>
+<td style="text-align:left;">
+O Sertão some na leitura pelo emprego formal
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/petroquimica_plasticos.html">Petróleo, química e plásticos</a>
+</td>
+<td style="text-align:left;">
+Atividade da refinaria e do polo de PET e PTA
+</td>
+<td style="text-align:left;">
+Processamento por refinaria (ANP, dados abertos)
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Mostra a produção da RNEST, que emprega pouco
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/sucroenergetico.html">Sucroenergético</a>
+</td>
+<td style="text-align:left;">
+Moagem e produção de açúcar e etanol por usina; o emprego cai com a mecanização e engana
+</td>
+<td style="text-align:left;">
+Produção de etanol por usina (ANP) e acompanhamento da safra por unidade (MAPA)
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Mostra a produção industrial que o emprego não mostra
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/textil_confeccoes.html">Têxtil e confecções</a>
+</td>
+<td style="text-align:left;">
+Informalidade muito alta no Polo do Agreste; sem produção física
+</td>
+<td style="text-align:left;">
+Censo Demográfico 2022 (trabalho por município, quando os microdados saírem) e estudos do Sebrae sobre o polo
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+O polo aparece várias vezes menor do que é
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<table class="table table-sm">
+<thead>
+<tr>
+<th style="text-align:left;">
+Cadeia
+</th>
+<th style="text-align:left;">
+O que falta
+</th>
+<th style="text-align:left;">
+Fonte que resolveria
+</th>
+<th style="text-align:left;">
+Custo
+</th>
+<th style="text-align:left;">
+Efeito na leitura
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/aquicultura.html">Aquicultura e pesca</a>
+</td>
+<td style="text-align:left;">
+Pesca sem estatística municipal desde 2011
+</td>
+<td style="text-align:left;">
+Retomada do boletim da pesca (MPA) ou levantamento próprio nas colônias
+</td>
+<td style="text-align:left;">
+Alto
+</td>
+<td style="text-align:left;">
+A pesca artesanal do litoral fica fora
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/audiovisual.html">Audiovisual</a>
+</td>
+<td style="text-align:left;">
+Produção de obras, salas e público
+</td>
+<td style="text-align:left;">
+Observatório do Cinema e do Audiovisual (Ancine, dados abertos por UF) e editais do Funcultura
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Dá escala à produção, não só ao emprego
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/avicultura.html">Avicultura</a>
+</td>
+<td style="text-align:left;">
+Abate e produção industrial de ovos por município; parte do abate é informal
+</td>
+<td style="text-align:left;">
+Pesquisa Trimestral do Abate (IBGE, por UF) e cadastro de estabelecimentos com SIE/SIM (ADAGRO e prefeituras)
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Mede a agroindústria de abate e o tamanho real do polo de ovos do Agreste
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/cachaca.html">Cachaça e destilados</a>
+</td>
+<td style="text-align:left;">
+Produção registrada
+</td>
+<td style="text-align:left;">
+Anuário da Cachaça (MAPA, por UF e município)
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Passa a ter produção, hoje ausente
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/ceramica_vermelha.html">Cerâmica vermelha</a>
+</td>
+<td style="text-align:left;">
+Produção e uso de lenha
+</td>
+<td style="text-align:left;">
+CFEM de argila por município (ANM) e licenças da CPRH
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Mede a produção e o impacto ambiental
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/saude.html">Complexo da saúde</a>
+</td>
+<td style="text-align:left;">
+Leitos, estabelecimentos e produção hospitalar
+</td>
+<td style="text-align:left;">
+CNES e SIH (DataSUS, por município)
+</td>
+<td style="text-align:left;">
+Baixo a médio
+</td>
+<td style="text-align:left;">
+Mede a oferta do polo médico do Recife e dos polos regionais
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/construcao_civil.html">Construção civil</a>
+</td>
+<td style="text-align:left;">
+Obras em andamento e lançamentos imobiliários
+</td>
+<td style="text-align:left;">
+PAIC (IBGE, por UF), consumo de cimento por UF (SNIC) e lançamentos (ADEMI-PE)
+</td>
+<td style="text-align:left;">
+Baixo a médio
+</td>
+<td style="text-align:left;">
+Antecipa o ciclo da construção, que o emprego mostra com atraso
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/fruticultura.html">Fruticultura irrigada</a>
+</td>
+<td style="text-align:left;">
+Área irrigada e produção por perímetro; packing houses e frio
+</td>
+<td style="text-align:left;">
+Perímetros irrigados (Codevasf), outorgas de água (ANA) e Censo Agropecuário
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Separa o irrigado do sequeiro e mede a infraestrutura de exportação
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/mandiocultura.html">Mandiocultura</a>
+</td>
+<td style="text-align:left;">
+Posições SH4 não cadastradas (farinha e fécula); casas de farinha informais
+</td>
+<td style="text-align:left;">
+SH4 1106 e 1108 em cadeias.yml; levantamento das casas de farinha
+</td>
+<td style="text-align:left;">
+Baixo (SH4); alto (campo)
+</td>
+<td style="text-align:left;">
+Passa a ter exportação; o campo mediria a agroindústria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/ti_software.html">Tecnologia da informação</a>
+</td>
+<td style="text-align:left;">
+Faturamento e exportação de serviços
+</td>
+<td style="text-align:left;">
+PAS (IBGE, por UF), ISS do Recife e relatório anual do Porto Digital
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Mede receita e exportação, hoje invisíveis
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/turismo.html">Turismo</a>
+</td>
+<td style="text-align:left;">
+Fluxo de turistas, ocupação e gasto
+</td>
+<td style="text-align:left;">
+Passageiros por aeroporto (ANAC), PNAD Contínua Turismo (por UF) e Cadastur
+</td>
+<td style="text-align:left;">
+Baixo a médio
+</td>
+<td style="text-align:left;">
+Mede a demanda turística, não só o emprego em hotéis e restaurantes
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<table class="table table-sm">
+<thead>
+<tr>
+<th style="text-align:left;">
+Cadeia
+</th>
+<th style="text-align:left;">
+O que falta
+</th>
+<th style="text-align:left;">
+Fonte que resolveria
+</th>
+<th style="text-align:left;">
+Custo
+</th>
+<th style="text-align:left;">
+Efeito na leitura
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/cotonicultura.html">Algodão</a>
+</td>
+<td style="text-align:left;">
+Produção pequena e dispersa
+</td>
+<td style="text-align:left;">
+PAM (já usada)
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Ajuste fino
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/apicultura.html">Apicultura</a>
+</td>
+<td style="text-align:left;">
+Produtores informais e associações; mel exportado por intermediários de outros estados
+</td>
+<td style="text-align:left;">
+PPM (mel, já usada) e cadastro das associações
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Ajuste fino; a produção já é medida
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/automotivo.html">Automotivo</a>
+</td>
+<td style="text-align:left;">
+Produção de veículos e fornecedores de fora do estado
+</td>
+<td style="text-align:left;">
+Produção por fabricante (Anfavea) e notas fiscais de compra (acordo com a SEFAZ-PE)
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Liga o emprego de Goiana à produção
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/cacau_chocolate.html">Cacau e chocolate</a>
+</td>
+<td style="text-align:left;">
+Chocolate artesanal e cacau de pequena escala
+</td>
+<td style="text-align:left;">
+Cadastro de fabricantes e levantamento próprio
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Ajuste fino
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/cafeicultura.html">Cafeicultura</a>
+</td>
+<td style="text-align:left;">
+Torrefação e produção pequena do Agreste
+</td>
+<td style="text-align:left;">
+PAM (já usada) e cadastro de torrefações
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Ajuste fino
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/cajucultura.html">Cajucultura</a>
+</td>
+<td style="text-align:left;">
+Beneficiamento da castanha em minifábricas
+</td>
+<td style="text-align:left;">
+PAM (já usada) e levantamento das minifábricas
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Ajuste moderado
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/calcados.html">Calçados e artefatos de couro</a>
+</td>
+<td style="text-align:left;">
+Produção física e informalidade
+</td>
+<td style="text-align:left;">
+Produção por UF (Abicalçados) e CNPJ com MEI (já usado)
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Ajuste moderado
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/carcinicultura.html">Carcinicultura</a>
+</td>
+<td style="text-align:left;">
+Fazendas e licenças
+</td>
+<td style="text-align:left;">
+PPM (camarão, já usada) e licenças da CPRH
+</td>
+<td style="text-align:left;">
+Baixo
+</td>
+<td style="text-align:left;">
+Ajuste fino
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/coco.html">Coco-da-baía</a>
+</td>
+<td style="text-align:left;">
+Coco verde e seco somados na PAM
+</td>
+<td style="text-align:left;">
+PAM (já usada) e estudos da Embrapa
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Ajuste fino
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/economia_criativa.html">Economia criativa</a>
+</td>
+<td style="text-align:left;">
+Autônomos e informais; projetos culturais
+</td>
+<td style="text-align:left;">
+Censo 2022 e PNAD Contínua; projetos do Funcultura
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Parte grande do setor é autônoma
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/economia_do_mar.html">Economia do mar</a>
+</td>
+<td style="text-align:left;">
+Valor da economia do mar no estado
+</td>
+<td style="text-align:left;">
+Método do GT PIB do Mar aplicado a PE; movimentação portuária (ANTAQ)
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Dá um número para o recorte
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/floricultura.html">Flores e plantas ornamentais</a>
+</td>
+<td style="text-align:left;">
+A PAM não cobre flores
+</td>
+<td style="text-align:left;">
+Censo Agropecuário 2017 (tabelas de flores por município)
+</td>
+<td style="text-align:left;">
+Baixo a médio
+</td>
+<td style="text-align:left;">
+Passa a ter produção, hoje ausente
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/joias.html">Joias e bijuterias</a>
+</td>
+<td style="text-align:left;">
+Ourivesaria e bijuteria informais
+</td>
+<td style="text-align:left;">
+Levantamento próprio
+</td>
+<td style="text-align:left;">
+Alto
+</td>
+<td style="text-align:left;">
+Ajuste moderado
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/moveleiro.html">Moveleiro</a>
+</td>
+<td style="text-align:left;">
+Produção física; marcenarias informais
+</td>
+<td style="text-align:left;">
+PIA-Produto (IBGE, por UF) e CNPJ com MEI (já usado)
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Ajuste moderado
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/suinocultura.html">Suinocultura</a>
+</td>
+<td style="text-align:left;">
+Abate informal e produção pequena
+</td>
+<td style="text-align:left;">
+PPM (efetivo, já usada) e Pesquisa Trimestral do Abate (por UF)
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Ajuste moderado; a POF mostra consumo baixo de carne suína em PE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="cadeias/vitivinicultura.html">Vitivinicultura</a>
+</td>
+<td style="text-align:left;">
+Produção de vinho por vinícola
+</td>
+<td style="text-align:left;">
+Cadastro de vinícolas e declarações de produção (MAPA)
+</td>
+<td style="text-align:left;">
+Médio
+</td>
+<td style="text-align:left;">
+Separa a uva de mesa do vinho no Vale do São Francisco
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section id="lacunas-estruturais" class="level2">
 <h2 class="anchored" data-anchor-id="lacunas-estruturais">Lacunas estruturais</h2>
 <div class="cell">
@@ -344,49 +1201,49 @@ ul.task-list li input[type="checkbox"] {
 <section id="lacunas-detectadas-nos-dados" class="level2">
 <h2 class="anchored" data-anchor-id="lacunas-detectadas-nos-dados">Lacunas detectadas nos dados</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Produção sem emprego formal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Exportação sem base produtiva formal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Elo ausente ou invisível</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Valor omitido ou indisponível no IBGE</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Classificação ampla ou informalidade conhecida</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Defasagem da fonte</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Produção sem emprego formal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Exportação sem base produtiva formal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Elo ausente ou invisível</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Valor omitido ou indisponível no IBGE</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Classificação ampla ou informalidade conhecida</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false" href="">Defasagem da fonte</a></li></ul>
 <div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <p><em>O que faltaria:</em> Dados de ocupação informal por município e atividade (só o Censo Demográfico e o Censo Agropecuário trazem, a cada 10 anos).</p>
-<div id="htmlwidget-c1373469f83da990440f" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
+<div id="htmlwidget-159d129275af4e996264" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
 
 </div>
-<script type="application/json" data-for="htmlwidget-c1373469f83da990440f">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Aquicultura e pesca","Aquicultura e pesca","Aquicultura e pesca","Aquicultura e pesca","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Cacau e chocolate","Cafeicultura","Cafeicultura","Cafeicultura","Cafeicultura","Cafeicultura","Cafeicultura","Cajucultura","Cajucultura","Cajucultura","Carcinicultura","Carcinicultura","Carcinicultura","Carcinicultura","Coco-da-baía","Coco-da-baía","Coco-da-baía","Coco-da-baía","Coco-da-baía","Coco-da-baía","Algodão","Algodão","Algodão","Algodão","Algodão","Algodão","Fruticultura irrigada","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura"],["Araçoiaba","Araripina","Bodocó","Cabo de Santo Agostinho","Carnaíba","Exu","Ibimirim","Igarassu","Ipojuca","Ipubi","Itapetim","Jaboatão dos Guararapes","Parnamirim","Petrolina","Riacho das Almas","Rio Formoso","São José do Belmonte","Serra Talhada","Moreilândia","Trindade","Belém do São Francisco","Cabrobó","Feira Nova","Itacuruba","Águas Belas","Bodocó","Caetés","Capoeiras","Correntes","Exu","Iati","Itaíba","Lagoa do Ouro","Saloá","Serrita","Tupanatinga","Escada","Garanhuns","Paranatama","Saloá","Taquaritinga do Norte","Triunfo","Vertentes","Buíque","São José do Belmonte","Tupanatinga","Feira Nova","Ilha de Itamaracá","Jaboatão dos Guararapes","Recife","Cabo de Santo Agostinho","Cabrobó","Goiana","Rio Formoso","Tacaratu","Vitória de Santo Antão","Afogados da Ingazeira","Araripina","Ipubi","Santa Cruz","Santa Terezinha","Verdejante","Orocó","Belém de Maria","Belém do São Francisco","Bodocó","Bonito","Cabo de Santo Agostinho","Caetés","Carnaíba","Exu","Feira Nova","Glória do Goitá","Goiana","Iati","Jaboatão dos Guararapes","Jucati","Jupi","Orocó","Petrolina","Sanharó","Santa Maria da Boa Vista","São Bento do Una","São João","Tracunhaém"],["Responde por 1,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 7,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 4,9% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 5,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 9,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,9% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 14,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 4,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,7% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 2,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 4,2% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 3,9% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,8% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,6% do valor da produção estadual (IBGE, 2025) e tem 3 vínculos formais no elo primário.","Responde por 3,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 8,3% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 1,0% do valor da produção estadual (IBGE, 2025) e tem 3 vínculos formais no elo primário.","Responde por 3,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 100,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 7,9% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 72,6% do valor da produção estadual (IBGE, 2025) e tem 3 vínculos formais no elo primário.","Responde por 7,1% do valor da produção estadual (IBGE, 2025) e tem 3 vínculos formais no elo primário.","Responde por 6,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 93,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,9% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 1,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 26,0% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 1,3% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,1% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 18,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 22,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 12,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 25,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 9,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 12,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 4 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 5,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,8% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 5,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 13,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 5,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-159d129275af4e996264">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Apicultura","Aquicultura e pesca","Aquicultura e pesca","Aquicultura e pesca","Aquicultura e pesca","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Bovinocultura de leite e corte","Cacau e chocolate","Cafeicultura","Cafeicultura","Cafeicultura","Cafeicultura","Cafeicultura","Cafeicultura","Cajucultura","Cajucultura","Cajucultura","Carcinicultura","Carcinicultura","Carcinicultura","Carcinicultura","Coco-da-baía","Coco-da-baía","Coco-da-baía","Coco-da-baía","Coco-da-baía","Coco-da-baía","Algodão","Algodão","Algodão","Algodão","Algodão","Algodão","Fruticultura irrigada","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura","Mandiocultura"],["Araçoiaba","Araripina","Bodocó","Cabo de Santo Agostinho","Carnaíba","Exu","Ibimirim","Igarassu","Ipojuca","Ipubi","Itapetim","Jaboatão dos Guararapes","Parnamirim","Petrolina","Riacho das Almas","Rio Formoso","São José do Belmonte","Serra Talhada","Moreilândia","Trindade","Belém do São Francisco","Cabrobó","Feira Nova","Itacuruba","Águas Belas","Bodocó","Caetés","Capoeiras","Correntes","Exu","Iati","Itaíba","Lagoa do Ouro","Saloá","Serrita","Tupanatinga","Escada","Garanhuns","Paranatama","Saloá","Taquaritinga do Norte","Triunfo","Vertentes","Buíque","São José do Belmonte","Tupanatinga","Feira Nova","Ilha de Itamaracá","Jaboatão dos Guararapes","Recife","Cabo de Santo Agostinho","Cabrobó","Goiana","Rio Formoso","Tacaratu","Vitória de Santo Antão","Afogados da Ingazeira","Araripina","Ipubi","Santa Cruz","Santa Terezinha","Verdejante","Orocó","Belém de Maria","Belém do São Francisco","Bodocó","Bonito","Cabo de Santo Agostinho","Caetés","Carnaíba","Exu","Feira Nova","Glória do Goitá","Goiana","Iati","Jaboatão dos Guararapes","Jucati","Jupi","Orocó","Petrolina","Sanharó","Santa Maria da Boa Vista","São Bento do Una","São João","Tracunhaém"],["Responde por 1,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 7,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 4,9% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 5,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 9,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,9% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 14,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 4,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,7% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 2,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 4,2% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 3,9% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,8% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,6% do valor da produção estadual (IBGE, 2025) e tem 3 vínculos formais no elo primário.","Responde por 3,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 8,3% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 1,0% do valor da produção estadual (IBGE, 2025) e tem 3 vínculos formais no elo primário.","Responde por 3,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 100,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 7,9% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 72,6% do valor da produção estadual (IBGE, 2025) e tem 3 vínculos formais no elo primário.","Responde por 7,1% do valor da produção estadual (IBGE, 2025) e tem 3 vínculos formais no elo primário.","Responde por 6,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 93,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,9% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 1,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 26,0% do valor da produção estadual (IBGE, 2025) e tem 2 vínculos formais no elo primário.","Responde por 1,3% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,1% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 18,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 22,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 12,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 25,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 9,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 12,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 4 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 1 vínculos formais no elo primário.","Responde por 5,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,3% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,8% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,2% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,1% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 5,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 13,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,5% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 3,6% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 2,4% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 5,7% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário.","Responde por 1,0% do valor da produção estadual (IBGE, 2025) e tem 0 vínculos formais no elo primário."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <p><em>O que faltaria:</em> Origem produtiva das exportações: o ComexStat registra o domicílio fiscal da empresa, não onde o produto foi feito.</p>
-<div id="htmlwidget-ef0f9df29eedf2917390" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
+<div id="htmlwidget-debc79a07cf445e07b08" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
 
 </div>
-<script type="application/json" data-for="htmlwidget-ef0f9df29eedf2917390">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Fruticultura irrigada","Mandiocultura"],["Camaragibe","Petrolina"],["Exportou US$ 455 mil em 2025, mas não tem vínculo formal nos elos da cadeia.","Exportou US$ 5,8 mi em 2025, mas não tem vínculo formal nos elos da cadeia."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-debc79a07cf445e07b08">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Fruticultura irrigada","Mandiocultura"],["Camaragibe","Petrolina"],["Exportou US$ 455 mil em 2025, mas não tem vínculo formal nos elos da cadeia.","Exportou US$ 5,8 mi em 2025, mas não tem vínculo formal nos elos da cadeia."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
 <p><em>O que faltaria:</em> Saber se o elo está fora do estado (compra de insumos/serviços de outras UFs) ou na informalidade. Exigiria pesquisa de compras das empresas ou notas fiscais (SEFAZ).</p>
-<div id="htmlwidget-03b90f6b3e5c11c19644" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
+<div id="htmlwidget-87e8c50e0d1200b8842f" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
 
 </div>
-<script type="application/json" data-for="htmlwidget-03b90f6b3e5c11c19644">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Apicultura","Cafeicultura","Cafeicultura","Cajucultura","Mandiocultura","Ovinocaprinocultura","Ovinocaprinocultura","Ovinocaprinocultura","Suinocultura","Suinocultura","Cacau e chocolate","Algodão"],["-","-","-","-","-","-","-","-","-","-","-","-"],["O elo \"Produção primária\" tem apenas 9 vínculos formais no estado (2025).","O elo \"Comércio atacadista\" tem apenas 6 vínculos formais no estado (2025).","O elo \"Cultivo\" tem apenas 10 vínculos formais no estado (2025).","O elo \"Cultivo\" tem apenas 11 vínculos formais no estado (2025).","O elo \"Cultivo\" tem apenas 17 vínculos formais no estado (2025).","O elo \"Abate\" tem apenas 20 vínculos formais no estado (2025).","O elo \"Caprinocultura\" tem apenas 42 vínculos formais no estado (2025).","O elo \"Ovinocultura\" tem apenas 49 vínculos formais no estado (2025).","O elo \"Abate e frigoríficos\" tem apenas 0 vínculos formais no estado (2025).","O elo \"Produção primária\" tem apenas 35 vínculos formais no estado (2025).","O elo \"Cultivo de cacau\" tem apenas 0 vínculos formais no estado (2025).","O elo \"Cultivo\" tem apenas 0 vínculos formais no estado (2025)."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-87e8c50e0d1200b8842f">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Apicultura","Cafeicultura","Cafeicultura","Cajucultura","Mandiocultura","Ovinocaprinocultura","Ovinocaprinocultura","Ovinocaprinocultura","Suinocultura","Suinocultura","Cacau e chocolate","Algodão"],["-","-","-","-","-","-","-","-","-","-","-","-"],["O elo \"Produção primária\" tem apenas 9 vínculos formais no estado (2025).","O elo \"Comércio atacadista\" tem apenas 6 vínculos formais no estado (2025).","O elo \"Cultivo\" tem apenas 10 vínculos formais no estado (2025).","O elo \"Cultivo\" tem apenas 11 vínculos formais no estado (2025).","O elo \"Cultivo\" tem apenas 17 vínculos formais no estado (2025).","O elo \"Abate\" tem apenas 20 vínculos formais no estado (2025).","O elo \"Caprinocultura\" tem apenas 42 vínculos formais no estado (2025).","O elo \"Ovinocultura\" tem apenas 49 vínculos formais no estado (2025).","O elo \"Abate e frigoríficos\" tem apenas 0 vínculos formais no estado (2025).","O elo \"Produção primária\" tem apenas 35 vínculos formais no estado (2025).","O elo \"Cultivo de cacau\" tem apenas 0 vínculos formais no estado (2025).","O elo \"Cultivo\" tem apenas 0 vínculos formais no estado (2025)."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
 <p><em>O que faltaria:</em> Valores identificados pelo IBGE como sigilosos ou não coletados.</p>
-<div id="htmlwidget-9c1c09d496d635b66372" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
+<div id="htmlwidget-49b247b4761f8a823d21" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
 
 </div>
-<script type="application/json" data-for="htmlwidget-9c1c09d496d635b66372">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["-","-","-","-"],["-","-","-","-"],["Tabela 74: 104 valores municipais marcados como não disponível.","Tabela 3939: 50 valores municipais marcados como não disponível.","Tabela 3940: 22757 valores municipais marcados como não disponível.","Tabela 5457: 221875 valores municipais marcados como não disponível."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-49b247b4761f8a823d21">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["-","-","-","-"],["-","-","-","-"],["Tabela 74: 104 valores municipais marcados como não disponível.","Tabela 3939: 50 valores municipais marcados como não disponível.","Tabela 3940: 22757 valores municipais marcados como não disponível.","Tabela 5457: 221875 valores municipais marcados como não disponível."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
 <p><em>O que faltaria:</em> Recorte por subclasse CNAE, produto (PIA-Produto) ou pesquisa de campo.</p>
-<div id="htmlwidget-b31e9a0e4cd7cb8d7c30" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
+<div id="htmlwidget-269b7581fbdb554fa858" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
 
 </div>
-<script type="application/json" data-for="htmlwidget-b31e9a0e4cd7cb8d7c30">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Avicultura","Bovinocultura de leite e corte","Ovinocaprinocultura","Apicultura","Aquicultura e pesca","Fruticultura irrigada","Têxtil e confecções","Gesso (Polo Gesseiro do Araripe)","Tecnologia da informação","Audiovisual","Suinocultura","Mandiocultura","Turismo","Economia criativa","Economia do mar","Bioeconomia e energias renováveis","Cafeicultura","Vitivinicultura","Flores e plantas ornamentais","Cajucultura"],["-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"],["A ração (1066-0) atende também bovinos, suínos e aquicultura; o elo de insumos é, portanto, um teto.","Grande parte da produção de leite e do abate ocorre na informalidade e não aparece na RAIS.","Quase todo o abate de caprinos e ovinos é informal ou feito em matadouros públicos, que não aparecem como abate na RAIS.","O beneficiamento do mel não tem código próprio: está na subclasse 1099-6/99 (outros produtos alimentícios), que é um teto. A produção primária (0159-8/01) é quase toda informal.","A pesca artesanal é quase toda informal. A PPM só cobre a aquicultura e não há estatística municipal oficial de pesca desde 2011.","Abacaxi, melão e melancia são lavouras temporárias (subclasses 0119-9/01, /07 e /08). A pós-colheita (0163-6) atende outras lavouras além das frutas, mas no Vale do São Francisco é dominada pelos packing houses de manga e uva.","O polo é majoritariamente informal. Em Toritama e Santa Cruz do Capibaribe o emprego formal capta uma fração pequena da produção.","A subclasse 0810-0/05 junta gesso e caulim, e a 2330-3/99 junta artefatos de gesso com outros de cimento e concreto. Fora do Araripe, esses elos tendem a refletir outras atividades.","Exportação de serviços não aparece no ComexStat, que só cobre bens.","Grande parte dos profissionais atua como MEI ou por projeto, fora da RAIS.","A classe 1013-9 (produtos de carne) também processa carne bovina e de aves.","As casas de farinha são majoritariamente informais e familiares.","Restaurantes atendem sobretudo a população local; o elo de alimentação é um teto para o turismo.","O emprego formal não alcança boa parte da economia criativa, que é feita por autônomos e MEI. A FIRJAN usa também ocupações (CBO) criativas em empresas de outros setores, o que aqui não entra.","O turismo de sol e praia faz parte da economia do mar, mas não tem código próprio na CNAE e está na cadeia de turismo.","A CNAE não separa a geração por fonte: eólica, solar e térmica estão juntas em geração de energia elétrica. A geração por fonte está na ANEEL, ainda não integrada.","Boa parte do café de altitude é produzida por agricultores familiares sem vínculo formal; a produção do IBGE é a melhor medida do cultivo.","O cultivo de uva também entra na fruticultura irrigada; aqui ele aparece junto com o vinho, para a leitura da vitivinicultura.","O IBGE não divulga produção municipal de flores na PAM; o Censo Agropecuário de 2017 é a referência mais recente.","O beneficiamento da castanha não tem código próprio na CNAE e fica fora; a posição 0801 do comércio exterior junta castanha de caju, coco e castanha-do-pará."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-269b7581fbdb554fa858">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["Avicultura","Bovinocultura de leite e corte","Ovinocaprinocultura","Apicultura","Aquicultura e pesca","Fruticultura irrigada","Têxtil e confecções","Gesso (Polo Gesseiro do Araripe)","Tecnologia da informação","Audiovisual","Suinocultura","Mandiocultura","Turismo","Economia criativa","Economia do mar","Bioeconomia e energias renováveis","Cafeicultura","Vitivinicultura","Flores e plantas ornamentais","Cajucultura"],["-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"],["A ração (1066-0) atende também bovinos, suínos e aquicultura; o elo de insumos é, portanto, um teto.","Grande parte da produção de leite e do abate ocorre na informalidade e não aparece na RAIS.","Quase todo o abate de caprinos e ovinos é informal ou feito em matadouros públicos, que não aparecem como abate na RAIS.","O beneficiamento do mel não tem código próprio: está na subclasse 1099-6/99 (outros produtos alimentícios), que é um teto. A produção primária (0159-8/01) é quase toda informal.","A pesca artesanal é quase toda informal. A PPM só cobre a aquicultura e não há estatística municipal oficial de pesca desde 2011.","Abacaxi, melão e melancia são lavouras temporárias (subclasses 0119-9/01, /07 e /08). A pós-colheita (0163-6) atende outras lavouras além das frutas, mas no Vale do São Francisco é dominada pelos packing houses de manga e uva.","O polo é majoritariamente informal. Em Toritama e Santa Cruz do Capibaribe o emprego formal capta uma fração pequena da produção.","A subclasse 0810-0/05 junta gesso e caulim, e a 2330-3/99 junta artefatos de gesso com outros de cimento e concreto. Fora do Araripe, esses elos tendem a refletir outras atividades.","Exportação de serviços não aparece no ComexStat, que só cobre bens.","Grande parte dos profissionais atua como MEI ou por projeto, fora da RAIS.","A classe 1013-9 (produtos de carne) também processa carne bovina e de aves.","As casas de farinha são majoritariamente informais e familiares.","Restaurantes atendem sobretudo a população local; o elo de alimentação é um teto para o turismo.","O emprego formal não alcança boa parte da economia criativa, que é feita por autônomos e MEI. A FIRJAN usa também ocupações (CBO) criativas em empresas de outros setores, o que aqui não entra.","O turismo de sol e praia faz parte da economia do mar, mas não tem código próprio na CNAE e está na cadeia de turismo.","A CNAE não separa a geração por fonte: eólica, solar e térmica estão juntas em geração de energia elétrica. A geração por fonte está na ANEEL, ainda não integrada.","Boa parte do café de altitude é produzida por agricultores familiares sem vínculo formal; a produção do IBGE é a melhor medida do cultivo.","O cultivo de uva também entra na fruticultura irrigada; aqui ele aparece junto com o vinho, para a leitura da vitivinicultura.","O IBGE não divulga produção municipal de flores na PAM; o Censo Agropecuário de 2017 é a referência mais recente.","O beneficiamento da castanha não tem código próprio na CNAE e fica fora; a posição 0801 do comércio exterior junta castanha de caju, coco e castanha-do-pará."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
 <p><em>O que faltaria:</em> Indicadores de alta frequência por município (o Novo CAGED cobre só o emprego formal e começa em 2020).</p>
-<div id="htmlwidget-6270f40a4ec9e2937a31" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
+<div id="htmlwidget-f40a366eaeedefa83299" class="datatables html-widget html-fill-item" style="width:100%;height:auto;">
 
 </div>
-<script type="application/json" data-for="htmlwidget-6270f40a4ec9e2937a31">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["-","-","-","-"],["-","-","-","-"],["RAIS: último ano disponível é 2025 (1 ano(s) de atraso).","ComexStat: último ano disponível é 2025 (1 ano(s) de atraso).","PIB dos Municípios: último ano disponível é 2023 (3 ano(s) de atraso).","Produção agropecuária (SIDRA): último ano disponível é 2025 (1 ano(s) de atraso)."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-f40a366eaeedefa83299">{"x":{"filter":"none","vertical":false,"extensions":["Buttons"],"data":[["-","-","-","-"],["-","-","-","-"],["RAIS: último ano disponível é 2025 (1 ano(s) de atraso).","ComexStat: último ano disponível é 2025 (1 ano(s) de atraso).","PIB dos Municípios: último ano disponível é 2023 (3 ano(s) de atraso).","Produção agropecuária (SIDRA): último ano disponível é 2025 (1 ano(s) de atraso)."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Cadeia<\/th>\n      <th>Município<\/th>\n      <th>Detalhe<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","excel"],"pageLength":10,"language":{"url":"https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Cadeia","targets":0},{"name":"Município","targets":1},{"name":"Detalhe","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>

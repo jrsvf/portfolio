@@ -15,6 +15,53 @@ Dados públicos já permitem enxergar muito, mas não tudo. Esta página reúne,
 cartoes(lapply(split(lacunas, lacunas$tipo), function(x) list(rotulo = x$tipo[1], valor = nrow(x))))
 ```
 
+## O que falta para um diagnóstico setorial
+
+```{r}
+#| include: false
+ler_cfg <- function(n) {
+  a <- file.path(Sys.getenv("PASTA_PROJETO"), "config", n)
+  if (file.exists(a)) readr::read_csv(a, col_types = readr::cols(.default = "c"), show_col_types = FALSE) else tibble::tibble()
+}
+dg <- ler_cfg("diagnostico_cadeias.csv")
+dp <- ler_cfg("diagnostico_prioridades.csv")
+if (nrow(dg)) dg <- dg %>% left_join(cad$meta %>% select(cadeia_id, cadeia), by = "cadeia_id") %>%
+  mutate(cadeia = coalesce(cadeia, cadeia_id), prioridade = factor(prioridade, levels = c("Alta", "Média", "Baixa"))) %>% arrange(prioridade, cadeia)
+```
+
+O painel já cobre bem o emprego formal, as empresas, as exportações de bens e a produção agropecuária. Para um diagnóstico setorial robusto faltam três coisas: medir a **informalidade**, que esconde o tamanho real de polos como a confecção do Agreste, o leite e a ovinocaprinocultura; medir a **produção e o faturamento** da indústria e dos serviços, que não existem por município em fonte pública; e incorporar **fontes públicas prontas** que o painel ainda não lê. A lista abaixo ordena as ações por custo e efeito; em seguida vem o quadro de cada cadeia.
+
+```{r}
+if (nrow(dg)) cartoes(lapply(c("Alta", "Média", "Baixa"), function(p) list(rotulo = paste("Cadeias com prioridade", tolower(p)), valor = sum(dg$prioridade == p))))
+```
+
+### Lista priorizada
+
+```{r}
+if (nrow(dp)) knitr::kable(dp %>% transmute(`#` = ordem, `Ação` = acao, Cadeias = cadeias, Fonte = fonte, Custo = custo, `Efeito na leitura` = efeito))
+```
+
+Custo **baixo**: fonte pública pronta, que entra no pipeline com uma função nova ou um ajuste de configuração. **Médio**: fonte pública com tratamento pesado ou só por UF. **Alto**: pesquisa de campo, dado restrito ou acordo com outro órgão.
+
+### Cadeia a cadeia
+
+::: {.panel-tabset}
+
+```{r}
+#| results: asis
+for (p in c("Alta", "Média", "Baixa")) {
+  x <- dg %>% filter(prioridade == p)
+  if (!nrow(x)) next
+  cat("\n\n#### Prioridade ", tolower(p), " (", nrow(x), ")\n\n", sep = "")
+  tab <- x %>% transmute(Cadeia = sprintf('<a href="cadeias/%s.html">%s</a>', cadeia_id, htmltools::htmlEscape(cadeia)),
+                         `O que falta` = htmltools::htmlEscape(falta), `Fonte que resolveria` = htmltools::htmlEscape(fonte),
+                         Custo = custo, `Efeito na leitura` = htmltools::htmlEscape(efeito))
+  cat(knitr::kable(tab, format = "html", escape = FALSE, table.attr = "class='table table-sm'"), "\n")
+}
+```
+
+:::
+
 ## Lacunas estruturais
 
 ```{r}

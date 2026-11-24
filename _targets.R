@@ -80,6 +80,10 @@ list(
                readRDS(anterior)
              })),
   tar_target(malha, obter_malha(uf_codigo)),
+  # demanda das famílias (POF 2017-2018): pesquisa fixa, baixa uma vez; se vier vazia, rode targets::tar_invalidate(pof_bruto)
+  tar_target(arq_pof_cadeias, "config/pof_cadeias.csv", format = "file"),
+  tar_target(pof_bruto, tryCatch(extrair_pof(uf_codigo), error = function(e) { msg("POF indisponível: ", conditionMessage(e)); tibble::tibble() })),
+  tar_target(pof_cad, demanda_pof_cadeia(pof_bruto, ler_pof_cadeias(arq_pof_cadeias))),
   tar_target(ipca, tryCatch(extrair_ipca(), error = function(e) { msg("IPCA indisponível: ", conditionMessage(e)); NULL })),
   tar_target(rd, ler_rd()),
   tar_target(bq_pop,       { bq_esquema; extrair_pop_uf(projeto, uf) }),
@@ -317,6 +321,7 @@ list(
                  nereus = nereus, nereus_cad = nereus_cad, ql_mult = ql_mult, ql_vab = ql_vab,
                  caged_elo = caged_elo, estoque = estoque, vocacao_cad = vocacao_cad, historico = historico,
                  formacao = formacao, associativas = associativas, vigia = vigia, arranjo = arranjo, camada_territorial = camada_territorial,
+                 pof_cad = pof_cad,
                  atualizado_em = Sys.time())
     unname(imap_chr(objs, salvar_base))
   }, format = "file"),
@@ -336,6 +341,7 @@ list(
     camada_territorial       = camada_territorial,
     comex_cadeia             = comex_cad,
     producao_ibge_cadeia     = sidra_cad %>% filter(ano >= max(ano) - 10) %>% select(-any_of(c("valor_txt", "situacao"))),
+    demanda_familias_pof     = pof_cad$cadeia,
     lacunas                  = lacunas
   )), format = "file"),
   tar_target(arq_modelo_cadeia, "site/_modelos/cadeia.qmd", format = "file"),

@@ -1,49 +1,19 @@
-Conferência do site em 18/11/2026 17:23
+Conferência do site em 24/11/2026 12:48
 50 páginas
 
 Nenhum problema encontrado.
 
-Lacunas das listas curadas (43), para pesquisar:
-sem_incentivo_proprio: avicultura
-sem_incentivo_proprio: ovinocaprinocultura
-sem_incentivo_proprio: apicultura
+Lacunas das listas curadas (13), para pesquisar:
 sem_incentivo_proprio: aquicultura
-sem_incentivo_proprio: fruticultura
-sem_incentivo_proprio: sucroenergetico
 sem_incentivo_proprio: moveleiro
 sem_incentivo_proprio: construcao_civil
-sem_incentivo_proprio: ti_software
 sem_incentivo_proprio: audiovisual
-sem_incentivo_proprio: suinocultura
-sem_incentivo_proprio: mandiocultura
-sem_incentivo_proprio: bebidas
 sem_incentivo_proprio: higiene_limpeza
 sem_incentivo_proprio: economia_criativa
-sem_incentivo_proprio: bioeconomia_renovaveis
 sem_incentivo_proprio: saude
 sem_incentivo_proprio: vitivinicultura
 sem_incentivo_proprio: cacau_chocolate
 sem_incentivo_proprio: floricultura
-sem_incentivo_proprio: carcinicultura
-sem_incentivo_proprio: cachaca
-sem_incentivo_proprio: cajucultura
 sem_incentivo_proprio: coco
-sem_incentivo_proprio: cotonicultura
 sem_incentivo_proprio: calcados
-sem_incentivo_proprio: ceramica_vermelha
 sem_incentivo_proprio: joias
-sem_pesquisa: construcao_civil
-sem_pesquisa: audiovisual
-sem_pesquisa: suinocultura
-sem_pesquisa: mandiocultura
-sem_pesquisa: higiene_limpeza
-sem_pesquisa: economia_do_mar
-sem_pesquisa: bioeconomia_renovaveis
-sem_pesquisa: cafeicultura
-sem_pesquisa: cacau_chocolate
-sem_pesquisa: floricultura
-sem_pesquisa: carcinicultura
-sem_pesquisa: cajucultura
-sem_pesquisa: coco
-sem_pesquisa: cotonicultura
-sem_pesquisa: joias

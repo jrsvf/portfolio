@@ -1,0 +1,44 @@
+tabela,tipo_id,tipo,cadeia_id,peso,nota
+6972,103634,Farinha de mandioca,mandiocultura,1,
+6972,8030,Mandioca,mandiocultura,1,
+6972,103641,Açúcar refinado,sucroenergetico,1,
+6972,103642,Açúcar cristal,sucroenergetico,1,
+6972,103649,Frutas,fruticultura,1,"Todas as frutas frescas, inclusive as que Pernambuco não produz"
+6972,103655,Carne de boi de primeira,bovinocultura,1,
+6972,103656,Carne de boi de segunda,bovinocultura,1,
+6972,103665,Leites e derivados,bovinocultura,1,
+6972,103657,Carne de suíno,suinocultura,1,
+6972,103659,Pescados frescos,aquicultura,1,Inclui o pescado de captura
+6972,103661,Aves e ovos,avicultura,1,
+6972,103679,Café moído,cafeicultura,1,
+6972,103680,Refrigerantes,bebidas,1,
+6972,8862,Bebidas não alcoólicas light e diet,bebidas,1,
+6972,103681,Cervejas e chopes,bebidas,1,
+6972,103682,Outras bebidas alcoólicas,bebidas,1,Inclui cachaça e vinho
+6972,103696,Refrigerantes e outras bebidas não alcoólicas (fora do domicílio),bebidas,1,
+6972,103698,"Cervejas, chopes e outras bebidas alcoólicas (fora do domicílio)",bebidas,1,
+6972,103693,Almoço e jantar (fora do domicílio),turismo,1,Restaurantes entram no elo de alimentação do turismo
+6972,103695,Sanduíches e salgados (fora do domicílio),turismo,1,Lanchonetes entram no elo de alimentação do turismo
+6972,103697,Lanches (fora do domicílio),turismo,1,
+6715,8012,Viagens esporádicas,turismo,1,Passagens e despesas de viagem
+6715,103609,Imóveis de uso ocasional,turismo,1,
+6715,103555,Roupa de homem,textil_confeccoes,1,
+6715,103556,Roupa de mulher,textil_confeccoes,1,
+6715,103557,Roupa de criança,textil_confeccoes,1,
+6715,103560,Tecidos e armarinhos,textil_confeccoes,1,
+6715,103558,Calçados e apetrechos,calcados,1,
+6715,103559,Jóias e bijuterias,joias,1,
+6715,103569,Higiene e cuidados pessoais,higiene_limpeza,1,
+6715,8025,Artigos de limpeza,higiene_limpeza,1,
+6715,8026,Mobiliários e artigos do lar,moveleiro,1,Inclui utensílios e outros artigos do lar além dos móveis
+6715,103566,Aquisição de veículos,automotivo,1,
+6715,8011,Manutenção e acessórios de veículos,automotivo,1,
+6715,103563,Gasolina (veículo próprio),petroquimica_plasticos,1,
+6715,8022,Gás doméstico,petroquimica_plasticos,1,
+6715,103564,Álcool (veículo próprio),sucroenergetico,1,
+6715,103574,Assistência à saúde,saude,1,"Remédios, planos, consultas, exames e internações"
+6715,103619,Imóvel (aquisição),construcao_civil,1,"Investimento das famílias, não consumo"
+6715,103620,Imóvel (reforma),construcao_civil,1,"Investimento das famílias, não consumo"
+6715,8016,Recreações e esportes,economia_criativa,1,"Inclui ingressos de cinema, shows e eventos"
+6715,8015,"Periódicos, livros e revistas não didáticas",economia_criativa,1,
+6715,103607,Cerimônias e festas,economia_criativa,1,

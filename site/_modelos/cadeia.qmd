@@ -500,6 +500,28 @@ if (nrow(ev) > 0) {
 } else htmltools::p("Sem exportações registradas da cadeia com origem em Pernambuco no último ano completo.")
 ```
 
+## Demanda das famílias em Pernambuco
+
+```{r}
+pof_d <- tryCatch(ler_base("pof_cad", ""), error = function(e) NULL)
+pc <- if (!is.null(pof_d) && NROW(pof_d$cadeia)) pof_d$cadeia %>% filter(cadeia_id == CADEIA) else tibble()
+if (nrow(pc) == 1) {
+  pr  <- pof_d$renda %>% filter(cadeia_id == CADEIA) %>% mutate(p = 100 * part_demanda)
+  pit <- pof_d$itens %>% filter(cadeia_id == CADEIA) %>% arrange(desc(despesa_mensal))
+  htmltools::tagList(
+    cartoes(list(
+      list(rotulo = "Gasto médio por família, por mês", valor = paste0("R$ ", fmt_num(pc$despesa_mensal, 2)),
+           nota = paste0("Brasil: R$ ", fmt_num(pc$despesa_mensal_br, 2))),
+      list(rotulo = "Gasto das famílias de PE em um ano", valor = paste0("R$ ", fmt_num(pc$despesa_anual / 1e6), " milhões")),
+      list(rotulo = "Peso no consumo das famílias", valor = fmt_pct(pc$part_consumo),
+           nota = paste0(fmt_num(pc$indice_br, 2), "x o peso no Brasil · ", fmt_num(pc$indice_ne, 2), "x no Nordeste")))),
+    htmltools::p(paste0("Itens da POF somados aqui: ", paste(pit$tipo, collapse = "; "), ".")),
+    if (nrow(pr)) htmltools::tagList(htmltools::h4("De onde vem o gasto, por renda mensal da família (% do total gasto pelas famílias de PE)"),
+      grafico_barras_h(pr, "classe", "p", cor = PALETA$principal, formato = ",.1f")),
+    rodape_fonte("POF 2017-2018 (IBGE), tabelas 6715, 6972 e 6977. Valores de janeiro de 2018, sem correção. É o gasto das famílias do estado com os produtos da cadeia, feitos aqui ou fora; não inclui as compras de empresas e do governo"))
+} else htmltools::p("A POF não tem um item de despesa das famílias que corresponda a esta cadeia: ela vende sobretudo para empresas, governo ou outros estados.")
+```
+
 ## Formação: cursos ligados à cadeia
 
 ```{r}
@@ -599,7 +621,7 @@ if (is.null(mc) || nrow(mc) == 0) {
 #| results: asis
 arq_reg <- file.path(Sys.getenv("PASTA_PROJETO"), "config", "regulacao_cadeias.csv")
 rg <- if (file.exists(arq_reg)) readr::read_csv(arq_reg, col_types = readr::cols(.default = "c"), show_col_types = FALSE) else tibble()
-rg <- if (nrow(rg)) rg %>% filter(cadeia_id == CADEIA) %>% arrange(match(tipo, c("Indicação Geográfica", "Sanitária", "Incentivo fiscal", "Ambiental"))) else rg
+rg <- if (nrow(rg)) rg %>% filter(cadeia_id == CADEIA) %>% arrange(match(tipo, c("Indicação Geográfica", "Sanitária", "Incentivo fiscal", "Crédito estadual", "Ambiental"))) else rg
 if (!nrow(rg)) {
   cat('<p>Ainda não há normas ou instrumentos cadastrados para esta cadeia.</p>\n')
 } else {
@@ -609,6 +631,24 @@ if (!nrow(rg)) {
   if (!any(rg$tipo == "Incentivo fiscal" & !grepl("SUDENE|PRODEPE|PROIND", rg$instrumento)))
     cat('<p>Nenhum incentivo fiscal estadual próprio desta cadeia foi encontrado na consulta à legislação tributária de Pernambuco por assunto (SEFAZ-PE); valem os instrumentos gerais acima.</p>\n')
   cat(paste0('<p class="fonte">Normas e instrumentos que valem para a cadeia, conferidos em ', max(rg$conferido_em), '. Não é orientação jurídica: confira sempre a versão vigente da norma.</p>\n'))
+}
+```
+
+## Resíduos e coprodutos
+
+```{r}
+#| results: asis
+arq_res <- file.path(Sys.getenv("PASTA_PROJETO"), "config", "residuos_cadeias.csv")
+rs <- if (file.exists(arq_res)) readr::read_csv(arq_res, col_types = readr::cols(.default = "c"), show_col_types = FALSE) else tibble()
+rs <- if (nrow(rs)) rs %>% filter(cadeia_id == CADEIA) else rs
+if (!nrow(rs)) {
+  cat('<p>Ainda não há resíduos ou coprodutos cadastrados para esta cadeia.</p>\n')
+} else {
+  tab <- rs %>% transmute(`Resíduo` = htmltools::htmlEscape(residuo), Origem = htmltools::htmlEscape(origem),
+                          Aproveitamento = htmltools::htmlEscape(aproveitamento),
+                          Fonte = sprintf('<a href="%s" target="_blank">%s</a>', link, htmltools::htmlEscape(fonte)))
+  cat(knitr::kable(tab, format = "html", escape = FALSE, table.attr = "class='table table-sm'"), "\n")
+  cat(paste0('<p class="fonte">Resíduos e coprodutos da cadeia e formas de aproveitamento descritas na fonte, conferidos em ', max(rs$conferido_em), '.</p>\n'))
 }
 ```
 
@@ -650,6 +690,23 @@ if (nrow(lc_cad) > 0) {
   })
   htmltools::tags$ul(class = "lacunas", itens)
 } else htmltools::p("Nenhuma lacuna específica detectada automaticamente. Veja as lacunas gerais.")
+```
+
+## O que falta para um diagnóstico setorial
+
+```{r}
+arq_dg <- file.path(Sys.getenv("PASTA_PROJETO"), "config", "diagnostico_cadeias.csv")
+dgc <- if (file.exists(arq_dg)) readr::read_csv(arq_dg, col_types = readr::cols(.default = "c"), show_col_types = FALSE) %>% filter(cadeia_id == CADEIA) else tibble()
+if (nrow(dgc) == 1) {
+  htmltools::tagList(
+    cartoes(list(list(rotulo = "Prioridade para completar o diagnóstico", valor = dgc$prioridade),
+                 list(rotulo = "Custo para resolver", valor = dgc$custo))),
+    htmltools::tags$ul(class = "lacunas",
+      htmltools::tags$li(htmltools::strong("O que falta: "), dgc$falta),
+      htmltools::tags$li(htmltools::strong("Fonte que resolveria: "), dgc$fonte),
+      htmltools::tags$li(htmltools::strong("O que muda na leitura: "), dgc$efeito)),
+    htmltools::p(htmltools::HTML('A lista priorizada de todas as cadeias e as lacunas que valem para todas estão em <a href="../lacunas.html#o-que-falta-para-um-diagnóstico-setorial">Lacunas de dados</a>.')))
+} else htmltools::p(htmltools::HTML('Veja <a href="../lacunas.html">Lacunas de dados</a>.'))
 ```
 
 ## Dados usados nesta página

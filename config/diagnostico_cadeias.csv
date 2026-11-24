@@ -1,0 +1,38 @@
+cadeia_id,prioridade,falta,fonte,custo,efeito
+avicultura,Média,Abate e produção industrial de ovos por município; parte do abate é informal,"Pesquisa Trimestral do Abate (IBGE, por UF) e cadastro de estabelecimentos com SIE/SIM (ADAGRO e prefeituras)",Médio,Mede a agroindústria de abate e o tamanho real do polo de ovos do Agreste
+bovinocultura,Alta,"Leite processado e queijo de coalho artesanal, quase todo informal; abate informal","Pesquisa Trimestral do Leite (IBGE, por UF), cadastro SIE/SIM e levantamento das queijarias",Médio a alto,A bacia leiteira do Agreste aparece bem menor do que é
+ovinocaprinocultura,Alta,Abate e venda quase toda informal; a RAIS quase não vê a cadeia,"PPM (efetivo, já usada) e levantamento em abatedouros públicos e feiras",Alto,O Sertão some na leitura pelo emprego formal
+apicultura,Baixa,Produtores informais e associações; mel exportado por intermediários de outros estados,"PPM (mel, já usada) e cadastro das associações",Baixo,Ajuste fino; a produção já é medida
+aquicultura,Média,Pesca sem estatística municipal desde 2011,Retomada do boletim da pesca (MPA) ou levantamento próprio nas colônias,Alto,A pesca artesanal do litoral fica fora
+fruticultura,Média,Área irrigada e produção por perímetro; packing houses e frio,"Perímetros irrigados (Codevasf), outorgas de água (ANA) e Censo Agropecuário",Médio,Separa o irrigado do sequeiro e mede a infraestrutura de exportação
+sucroenergetico,Alta,Moagem e produção de açúcar e etanol por usina; o emprego cai com a mecanização e engana,Produção de etanol por usina (ANP) e acompanhamento da safra por unidade (MAPA),Baixo,Mostra a produção industrial que o emprego não mostra
+textil_confeccoes,Alta,Informalidade muito alta no Polo do Agreste; sem produção física,"Censo Demográfico 2022 (trabalho por município, quando os microdados saírem) e estudos do Sebrae sobre o polo",Médio,O polo aparece várias vezes menor do que é
+gesso,Alta,Produção de gipsita e gesso por município e empresa,"Arrecadação da CFEM por município e substância (ANM, dados abertos)",Baixo,Mede a produção mineral do Araripe e o que fica para os municípios
+moveleiro,Baixa,Produção física; marcenarias informais,"PIA-Produto (IBGE, por UF) e CNPJ com MEI (já usado)",Médio,Ajuste moderado
+construcao_civil,Média,Obras em andamento e lançamentos imobiliários,"PAIC (IBGE, por UF), consumo de cimento por UF (SNIC) e lançamentos (ADEMI-PE)",Baixo a médio,"Antecipa o ciclo da construção, que o emprego mostra com atraso"
+automotivo,Baixa,Produção de veículos e fornecedores de fora do estado,Produção por fabricante (Anfavea) e notas fiscais de compra (acordo com a SEFAZ-PE),Baixo,Liga o emprego de Goiana à produção
+petroquimica_plasticos,Alta,Atividade da refinaria e do polo de PET e PTA,"Processamento por refinaria (ANP, dados abertos)",Baixo,"Mostra a produção da RNEST, que emprega pouco"
+ti_software,Média,Faturamento e exportação de serviços,"PAS (IBGE, por UF), ISS do Recife e relatório anual do Porto Digital",Médio,"Mede receita e exportação, hoje invisíveis"
+audiovisual,Média,"Produção de obras, salas e público","Observatório do Cinema e do Audiovisual (Ancine, dados abertos por UF) e editais do Funcultura",Baixo,"Dá escala à produção, não só ao emprego"
+logistica,Alta,"Fluxos de carga, armazéns e rotas terrestres","Movimentação por porto (ANTAQ) e carga por aeroporto (ANAC), já acessadas para a infraestrutura; CT-e via SEFAZ",Baixo (portos e aeroportos),"Mede a carga de Suape, do Recife e de Petrolina"
+suinocultura,Baixa,Abate informal e produção pequena,"PPM (efetivo, já usada) e Pesquisa Trimestral do Abate (por UF)",Médio,Ajuste moderado; a POF mostra consumo baixo de carne suína em PE
+mandiocultura,Média,Posições SH4 não cadastradas (farinha e fécula); casas de farinha informais,SH4 1106 e 1108 em cadeias.yml; levantamento das casas de farinha,Baixo (SH4); alto (campo),Passa a ter exportação; o campo mediria a agroindústria
+bebidas,Alta,Posições SH4 não cadastradas: a cadeia não tem exportação na página,SH4 2201 a 2208 em cadeias.yml,Baixo,"Exportações de cerveja, refrigerante e destilados passam a aparecer"
+higiene_limpeza,Alta,Posições SH4 não cadastradas,"SH4 3303 a 3307, 3401 e 3402 em cadeias.yml",Baixo,Exportações do setor passam a aparecer
+turismo,Média,"Fluxo de turistas, ocupação e gasto","Passageiros por aeroporto (ANAC), PNAD Contínua Turismo (por UF) e Cadastur",Baixo a médio,"Mede a demanda turística, não só o emprego em hotéis e restaurantes"
+economia_criativa,Baixa,Autônomos e informais; projetos culturais,Censo 2022 e PNAD Contínua; projetos do Funcultura,Médio,Parte grande do setor é autônoma
+economia_do_mar,Baixa,Valor da economia do mar no estado,Método do GT PIB do Mar aplicado a PE; movimentação portuária (ANTAQ),Médio,Dá um número para o recorte
+bioeconomia_renovaveis,Alta,Capacidade instalada e geração por usina; geração distribuída,"SIGA e dados de geração distribuída (ANEEL, por município)",Baixo,"Mostra parques eólicos e solares, que empregam pouco depois de prontos"
+saude,Média,"Leitos, estabelecimentos e produção hospitalar","CNES e SIH (DataSUS, por município)",Baixo a médio,Mede a oferta do polo médico do Recife e dos polos regionais
+cafeicultura,Baixa,Torrefação e produção pequena do Agreste,PAM (já usada) e cadastro de torrefações,Baixo,Ajuste fino
+vitivinicultura,Baixa,Produção de vinho por vinícola,Cadastro de vinícolas e declarações de produção (MAPA),Médio,Separa a uva de mesa do vinho no Vale do São Francisco
+cacau_chocolate,Baixa,Chocolate artesanal e cacau de pequena escala,Cadastro de fabricantes e levantamento próprio,Médio,Ajuste fino
+floricultura,Baixa,A PAM não cobre flores,Censo Agropecuário 2017 (tabelas de flores por município),Baixo a médio,"Passa a ter produção, hoje ausente"
+carcinicultura,Baixa,Fazendas e licenças,"PPM (camarão, já usada) e licenças da CPRH",Baixo,Ajuste fino
+cachaca,Média,Produção registrada,"Anuário da Cachaça (MAPA, por UF e município)",Baixo,"Passa a ter produção, hoje ausente"
+cajucultura,Baixa,Beneficiamento da castanha em minifábricas,PAM (já usada) e levantamento das minifábricas,Médio,Ajuste moderado
+coco,Baixa,Coco verde e seco somados na PAM,PAM (já usada) e estudos da Embrapa,Médio,Ajuste fino
+cotonicultura,Baixa,Produção pequena e dispersa,PAM (já usada),Baixo,Ajuste fino
+calcados,Baixa,Produção física e informalidade,Produção por UF (Abicalçados) e CNPJ com MEI (já usado),Baixo,Ajuste moderado
+ceramica_vermelha,Média,Produção e uso de lenha,CFEM de argila por município (ANM) e licenças da CPRH,Baixo,Mede a produção e o impacto ambiental
+joias,Baixa,Ourivesaria e bijuteria informais,Levantamento próprio,Alto,Ajuste moderado
